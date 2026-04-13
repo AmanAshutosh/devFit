@@ -2,6 +2,9 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { generateOTP, sendOTPEmail } = require('../config/email');
 
+const OTP_RESEND_COOLDOWN_MS = 60 * 1000;   // 60 seconds
+const OTP_RESEND_MAX = 3;                    // max resends per registration
+
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
@@ -26,18 +29,20 @@ const register = async (req, res) => {
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     if (existingUser && !existingUser.isVerified) {
-      // Resend OTP to unverified user
+      // Re-registration resets the resend counter
       existingUser.otp = otp;
       existingUser.otpExpires = otpExpires;
       existingUser.password = password;
       existingUser.name = name;
       existingUser.mobile = mobile;
+      existingUser.otpResendCount = 0;
+      existingUser.otpResendLastAt = undefined;
       await existingUser.save();
       await sendOTPEmail(email, name, otp);
       return res.status(200).json({ message: 'OTP resent. Please verify your email.' });
     }
 
-    const user = new User({ name, email, password, mobile, otp, otpExpires });
+    const user = new User({ name, email, password, mobile, otp, otpExpires, otpResendCount: 0 });
     user.username = user.generateUsername();
     await user.save();
 
@@ -148,4 +153,47 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, verifyOTP, login };
+// POST /api/auth/resend-otp
+const resendOTP = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: 'Email is required.' });
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+    if (user.isVerified) return res.status(400).json({ message: 'Email already verified. Please login.' });
+
+    // Max resend attempts
+    if ((user.otpResendCount || 0) >= OTP_RESEND_MAX) {
+      return res.status(429).json({ message: 'Maximum OTP attempts reached. Please register again.' });
+    }
+
+    // 60-second cooldown
+    if (user.otpResendLastAt) {
+      const elapsed = Date.now() - new Date(user.otpResendLastAt).getTime();
+      if (elapsed < OTP_RESEND_COOLDOWN_MS) {
+        const secondsLeft = Math.ceil((OTP_RESEND_COOLDOWN_MS - elapsed) / 1000);
+        return res.status(429).json({ message: `Please wait ${secondsLeft}s before requesting a new OTP.` });
+      }
+    }
+
+    const otp = generateOTP();
+    user.otp = otp;
+    user.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+    user.otpResendCount = (user.otpResendCount || 0) + 1;
+    user.otpResendLastAt = new Date();
+    await user.save();
+
+    await sendOTPEmail(email, user.name, otp);
+
+    res.status(200).json({
+      message: 'New OTP sent to your email.',
+      attemptsLeft: OTP_RESEND_MAX - user.otpResendCount,
+    });
+  } catch (error) {
+    console.error('Resend OTP error:', error);
+    res.status(500).json({ message: 'Server error. Could not resend OTP.' });
+  }
+};
+
+module.exports = { register, verifyOTP, login, resendOTP };

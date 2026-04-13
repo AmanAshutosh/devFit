@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import ThemeToggle from '../../components/ThemeToggle/ThemeToggle';
@@ -36,10 +36,51 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [resendTimer, setResendTimer] = useState(0);
+  const [resendAttempts, setResendAttempts] = useState(0);
+  const timerRef = useRef(null);
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  // Start 60s countdown whenever OTP tab opens
+  useEffect(() => {
+    if (tab === TABS.OTP) {
+      setResendTimer(60);
+      clearInterval(timerRef.current);
+      timerRef.current = setInterval(() => {
+        setResendTimer(t => {
+          if (t <= 1) { clearInterval(timerRef.current); return 0; }
+          return t - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timerRef.current);
+  }, [tab]);
+
   const update = (field) => (e) => { setForm(p => ({ ...p, [field]: e.target.value })); setError(''); };
+
+  const startResendTimer = () => {
+    setResendTimer(60);
+    clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setResendTimer(t => {
+        if (t <= 1) { clearInterval(timerRef.current); return 0; }
+        return t - 1;
+      });
+    }, 1000);
+  };
+
+  const handleResendOTP = async () => {
+    setLoading(true); setError(''); setSuccess('');
+    try {
+      const { data } = await api.post('/auth/resend-otp', { email: form.email });
+      setSuccess(data.message || 'New OTP sent!');
+      setResendAttempts(a => a + 1);
+      startResendTimer();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to resend OTP.');
+    } finally { setLoading(false); }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -215,7 +256,22 @@ const Auth = () => {
               <button className="btn btn-primary auth-submit" type="submit" disabled={loading}>
                 {loading ? <><RiRefreshLine size={15} className="spin" /> Verifying…</> : <>Verify & Continue <RiArrowRightLine size={15} /></>}
               </button>
-              <button type="button" className="auth-back-btn" onClick={() => { setTab(TABS.REGISTER); setSuccess(''); }}>
+
+              <div className="auth-resend-wrap">
+                {resendAttempts < 3 ? (
+                  resendTimer > 0 ? (
+                    <p className="auth-resend-hint">Resend OTP in <strong>{resendTimer}s</strong></p>
+                  ) : (
+                    <button type="button" className="auth-resend-btn" onClick={handleResendOTP} disabled={loading}>
+                      <RiRefreshLine size={13} /> Resend OTP
+                    </button>
+                  )
+                ) : (
+                  <p className="auth-resend-hint auth-resend-hint--max">Max resend attempts reached. Go back and register again.</p>
+                )}
+              </div>
+
+              <button type="button" className="auth-back-btn" onClick={() => { setTab(TABS.REGISTER); setSuccess(''); setResendAttempts(0); clearInterval(timerRef.current); }}>
                 ← Back to registration
               </button>
             </form>

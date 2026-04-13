@@ -317,6 +317,55 @@
 
 .auth-back-btn:hover { color: var(--text-primary); }
 
+.auth-resend-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 32px;
+  margin: 4px 0 2px;
+}
+
+.auth-resend-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin: 0;
+}
+
+.auth-resend-hint strong {
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.auth-resend-hint--max {
+  color: var(--danger);
+  font-size: 0.76rem;
+}
+
+.auth-resend-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 6px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.auth-resend-btn:hover:not(:disabled) {
+  border-color: var(--border);
+  color: var(--text-primary);
+  box-shadow: 2px 2px 0 var(--border);
+}
+
+.auth-resend-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
 .auth-footer {
   margin-top: 24px;
   font-size: 0.78rem;

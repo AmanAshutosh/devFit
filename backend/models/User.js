@@ -15,6 +15,8 @@ const userSchema = new mongoose.Schema(
     isVerified: { type: Boolean, default: false },
     otp: { type: String },
     otpExpires: { type: Date },
+    otpResendCount: { type: Number, default: 0 },
+    otpResendLastAt: { type: Date },
     gymTime: { type: String }, // e.g. "07:00"
     streak: { type: Number, default: 0 },
     lastActiveDate: { type: Date },

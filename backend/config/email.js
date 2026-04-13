@@ -48,7 +48,11 @@ const sendOTPEmail = async (email, name, otp) => {
     `,
   };
 
-  await resend.emails.send(mailOptions);
+  const { error } = await resend.emails.send(mailOptions);
+  if (error) {
+    console.error('Resend API error:', error);
+    throw new Error(error.message || 'Failed to send email');
+  }
 };
 
 module.exports = { generateOTP, sendOTPEmail };
