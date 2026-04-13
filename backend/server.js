@@ -14,6 +14,9 @@ const analyticsRoutes = require("./routes/analytics");
 
 const app = express();
 
+// Trust Render's reverse proxy so express-rate-limit reads the real client IP
+app.set("trust proxy", 1);
+
 // Rate limiter
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -21,14 +24,25 @@ const limiter = rateLimit({
   message: "Too many requests from this IP, please try again after 15 minutes.",
 });
 
+// Allowed CORS origins — covers both www and non-www of the production domain
+const ALLOWED_ORIGINS = [
+  "https://devfit.xyz",
+  "https://www.devfit.xyz",
+  "http://localhost:3000",
+  "http://localhost:5173",
+];
+
 // Middleware
 app.use(
   cors({
-    origin: [
-      process.env.CLIENT_URL,
-      "http://localhost:3000",
-      "http://localhost:5173",
-    ],
+    origin: (origin, callback) => {
+      // Allow server-to-server calls (no origin) and listed origins
+      if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS: origin ${origin} not allowed`));
+      }
+    },
     credentials: true,
   }),
 );

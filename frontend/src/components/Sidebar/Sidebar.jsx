@@ -10,12 +10,12 @@ import {
 import './Sidebar.css';
 
 const NAV_ITEMS = [
-  { path: '/dashboard', icon: RiDashboardLine, label: 'Dashboard' },
-  { path: '/gym-plan', icon: RiCalendarCheckLine, label: 'Gym Plan' },
-  { path: '/exercises', icon: RiWeightLine, label: 'Exercises' },
-  { path: '/diet', icon: RiLeafLine, label: 'Diet' },
-  { path: '/supplements', icon: RiCapsuleLine, label: 'Supplements' },
-  { path: '/analytics', icon: RiLineChartLine, label: 'Analytics' },
+  { path: '/dashboard', icon: RiDashboardLine, label: 'Dashboard', mobileLabel: 'Home' },
+  { path: '/gym-plan', icon: RiCalendarCheckLine, label: 'Gym Plan', mobileLabel: 'Gym' },
+  { path: '/exercises', icon: RiWeightLine, label: 'Exercises', mobileLabel: 'Workout' },
+  { path: '/diet', icon: RiLeafLine, label: 'Diet', mobileLabel: 'Diet' },
+  { path: '/supplements', icon: RiCapsuleLine, label: 'Supplements', mobileLabel: 'Supps' },
+  { path: '/analytics', icon: RiLineChartLine, label: 'Analytics', mobileLabel: 'Stats' },
   { path: '/videos', icon: RiYoutubeLine, label: 'Videos' },
   { path: '/profile', icon: RiUserLine, label: 'Profile' },
 ];
@@ -75,14 +75,14 @@ const Sidebar = () => {
 
       {/* Mobile Bottom Nav */}
       <nav className="bottom-nav">
-        {NAV_ITEMS.slice(0, 6).map(({ path, icon: Icon, label }) => (
+        {NAV_ITEMS.slice(0, 6).map(({ path, icon: Icon, label, mobileLabel }) => (
           <NavLink
             key={path}
             to={path}
             className={({ isActive }) => `bottom-nav-item ${isActive ? 'bottom-nav-item--active' : ''}`}
           >
             <Icon size={20} />
-            <span>{label}</span>
+            <span>{mobileLabel || label}</span>
           </NavLink>
         ))}
       </nav>

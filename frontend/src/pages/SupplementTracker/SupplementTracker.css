@@ -35,4 +35,7 @@
 @media(max-width:600px){
   .supp-form-grid{grid-template-columns:1fr 1fr}
   .supp-form-name,.supp-form-notes{grid-column:span 2}
+  .supp-toolbar{flex-direction:column;align-items:stretch;gap:8px}
+  .supp-toolbar .form-group{width:100%}
+  .supp-toolbar .btn{width:100%;justify-content:center}
 }

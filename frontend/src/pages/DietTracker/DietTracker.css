@@ -148,7 +148,9 @@
   .diet-macros-grid{grid-template-columns:repeat(2,1fr)}
   .diet-entry-macros{gap:3px}
   .diet-micros-grid{grid-template-columns:repeat(2,1fr)}
-  .diet-toolbar{gap:8px}
+  .diet-toolbar{flex-direction:column;align-items:stretch;gap:8px}
+  .diet-toolbar .form-group{width:100%}
+  .diet-toolbar .btn{width:100%;justify-content:center}
   .diet-summary{gap:12px}
   .diet-rings{gap:8px}
   .diet-form-actions{flex-direction:column}

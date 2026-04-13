@@ -1,24 +1,14 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
-const createTransporter = () => {
-  return nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-};
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
 const sendOTPEmail = async (email, name, otp) => {
-  const transporter = createTransporter();
-
   const mailOptions = {
-    from: `"devFit" <${process.env.EMAIL_USER}>`,
+    from: `devFit <${process.env.EMAIL_FROM}>`,
     to: email,
     subject: "devFit — Verify Your Email",
     html: `
@@ -58,7 +48,7 @@ const sendOTPEmail = async (email, name, otp) => {
     `,
   };
 
-  await transporter.sendMail(mailOptions);
+  await resend.emails.send(mailOptions);
 };
 
 module.exports = { generateOTP, sendOTPEmail };
