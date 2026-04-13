@@ -1,4 +1,8 @@
 const User = require('../models/User');
+const Exercise = require('../models/Exercise');
+const Diet = require('../models/Diet');
+const Supplement = require('../models/Supplement');
+const GymPlan = require('../models/GymPlan');
 
 // GET /api/user/profile
 const getProfile = async (req, res) => {
@@ -55,4 +59,23 @@ const updateProfile = async (req, res) => {
   }
 };
 
-module.exports = { getProfile, updateProfile };
+// DELETE /api/user/reset-progress
+const resetProgress = async (req, res) => {
+  try {
+    const uid = req.user._id;
+    await Promise.all([
+      Exercise.deleteMany({ user: uid }),
+      Diet.deleteMany({ user: uid }),
+      Supplement.deleteMany({ user: uid }),
+      GymPlan.deleteMany({ user: uid }),
+    ]);
+    // Reset streak
+    await User.findByIdAndUpdate(uid, { streak: 0, lastActiveDate: null });
+    res.status(200).json({ message: 'All progress reset successfully.' });
+  } catch (error) {
+    console.error('Reset progress error:', error);
+    res.status(500).json({ message: 'Server error during reset.' });
+  }
+};
+
+module.exports = { getProfile, updateProfile, resetProgress };

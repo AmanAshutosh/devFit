@@ -5,6 +5,7 @@ import {
   RiDownload2Line, RiBellLine, RiNotificationOffLine, RiCheckLine,
   RiEditLine, RiSaveLine, RiLogoutBoxRLine, RiFireLine,
   RiCalendarLine, RiPhoneLine, RiCalendarCheckLine, RiSmartphoneLine,
+  RiDeleteBinLine,
 } from 'react-icons/ri';
 
 // Generate an .ics calendar file with daily alarm at gym time
@@ -64,6 +65,7 @@ const Profile = () => {
   const [form, setForm] = useState({ name:'', age:'', username:'', weight:'', heightFeet:'', heightInches:'', gymTime:'' });
   const [loading, setLoading] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [resetting, setResetting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [notifStatus, setNotifStatus] = useState(Notification?.permission || 'default');
@@ -120,6 +122,17 @@ const Profile = () => {
     } catch {
       setError('Failed to export report.');
     } finally { setExporting(false); }
+  };
+
+  const handleResetProgress = async () => {
+    if (!window.confirm('This will permanently delete ALL your exercises, diet logs, supplements, and gym plans. Your streak will also reset to 0.\n\nThis cannot be undone. Continue?')) return;
+    setResetting(true); setError(''); setSuccess('');
+    try {
+      await api.delete('/user/reset-progress');
+      setSuccess('All progress has been reset.');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to reset progress.');
+    } finally { setResetting(false); }
   };
 
   const handleEnableNotifications = useCallback(async () => {
@@ -325,6 +338,16 @@ const Profile = () => {
             <button type="submit" className="btn btn-primary" disabled={loading}>
               <RiSaveLine size={15}/>
               {loading ? 'Saving…' : 'Save Changes'}
+            </button>
+          </div>
+
+          {/* Danger Zone */}
+          <div className="card profile-danger-card">
+            <h2 className="profile-card-title profile-danger-title"><RiDeleteBinLine size={16}/> Danger Zone</h2>
+            <p className="profile-danger-desc">Permanently delete all your logged exercises, diet entries, supplements, and gym plans. Your account stays active but all progress is wiped. <strong>This cannot be undone.</strong></p>
+            <button type="button" className="btn profile-reset-btn" onClick={handleResetProgress} disabled={resetting}>
+              <RiDeleteBinLine size={15}/>
+              {resetting ? 'Resetting…' : 'Reset All Progress'}
             </button>
           </div>
         </form>
