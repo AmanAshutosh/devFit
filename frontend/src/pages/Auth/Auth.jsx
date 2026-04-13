@@ -164,7 +164,27 @@ const Auth = () => {
               </div>
               <div className="form-group">
                 <label className="form-label">Mobile Number</label>
-                <InputField icon={RiPhoneLine} type="tel" value={form.mobile} onChange={update('mobile')} placeholder="+91 98765 43210" required />
+                <div className="auth-input-wrap">
+                  <span className="auth-input-icon"><RiPhoneLine size={16} /></span>
+                  <span className="auth-phone-prefix">+91</span>
+                  <input
+                    className="auth-input auth-input--phone"
+                    type="tel"
+                    inputMode="numeric"
+                    value={form.mobile}
+                    onChange={(e) => {
+                      const digits = e.target.value.replace(/\D/g, '').slice(0, 10);
+                      setForm(p => ({ ...p, mobile: digits }));
+                      setError('');
+                    }}
+                    placeholder="98765 43210"
+                    required
+                    maxLength={10}
+                    pattern="[0-9]{10}"
+                    title="Enter a valid 10-digit mobile number"
+                    autoComplete="tel"
+                  />
+                </div>
               </div>
               <div className="form-group">
                 <label className="form-label">Password</label>

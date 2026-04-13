@@ -197,6 +197,22 @@
   box-shadow: 2px 2px 0 var(--border);
 }
 
+.auth-phone-prefix {
+  position: absolute;
+  left: 36px;
+  color: var(--text-primary);
+  font-size: 0.93rem;
+  font-family: var(--font-body);
+  pointer-events: none;
+  user-select: none;
+  border-right: 1.5px solid var(--border-light);
+  padding-right: 8px;
+}
+
+.auth-input--phone {
+  padding-left: 72px;
+}
+
 .auth-submit {
   width: 100%;
   padding: 12px;
