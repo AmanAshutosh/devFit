@@ -166,12 +166,35 @@ img{max-width:100%;height:auto}
   .form-input,.form-select{font-size:0.88rem}
 }
 
-/* Prevent date inputs from overflowing the viewport */
+/* Prevent date/time inputs from overflowing the viewport */
 input[type="date"],
 input[type="time"] {
-  max-width: 100%;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Toolbars — contain children so date inputs never escape viewport */
+.ex-toolbar,
+.diet-toolbar,
+.supp-toolbar {
+  width: 100%;
   min-width: 0;
-  box-sizing: border-box;
+  overflow-x: hidden;
+}
+.ex-toolbar .form-group,
+.diet-toolbar .form-group,
+.supp-toolbar .form-group {
+  min-width: 0;
+  overflow: hidden;
+}
+.ex-toolbar .form-input,
+.diet-toolbar .form-input,
+.supp-toolbar .form-input {
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
 }
 
 /* Global toolbar fix — date + action button stack vertically on all pages */
