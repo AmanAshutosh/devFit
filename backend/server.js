@@ -63,6 +63,17 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "devFit API is running" });
 });
 
+// Global error handler — ensures CORS headers are present on every error response
+app.use((err, req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+  }
+  console.error("Unhandled error:", err.message);
+  res.status(err.status || 500).json({ message: err.message || "Internal server error" });
+});
+
 // MongoDB connection
 mongoose
   .connect(process.env.MONGO_URI)

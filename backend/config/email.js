@@ -8,7 +8,7 @@ const generateOTP = () => {
 
 const sendOTPEmail = async (email, name, otp) => {
   const mailOptions = {
-    from: `devFit <${process.env.EMAIL_FROM}>`,
+    from: process.env.EMAIL_FROM,
     to: email,
     subject: "devFit — Verify Your Email",
     html: `
