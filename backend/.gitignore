@@ -1,0 +1,59 @@
+# ========================
+# Dependencies
+# ========================
+node_modules/
+
+# ========================
+# Environment Variables
+# NEVER commit .env files — they contain secrets like
+# MongoDB URI, JWT secret, and email credentials
+# ========================
+.env
+.env.local
+.env.production
+.env.staging
+# Keep .env.example committed (it documents required vars without real values)
+!.env.example
+
+# ========================
+# Logs
+# ========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ========================
+# Runtime / temp files
+# ========================
+pids/
+*.pid
+*.seed
+*.pid.lock
+tmp/
+temp/
+
+# ========================
+# Build output
+# ========================
+dist/
+build/
+
+# ========================
+# OS-specific files
+# ========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ========================
+# IDE / Editor files
+# ========================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln

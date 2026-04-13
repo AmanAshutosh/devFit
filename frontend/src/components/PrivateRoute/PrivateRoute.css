@@ -1,0 +1,46 @@
+.private-route-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.private-route-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.private-route-icon {
+  color: var(--accent);
+  animation: barbellSpin 1.2s ease-in-out infinite alternate;
+}
+
+[data-theme="dark"] .private-route-icon {
+  color: var(--neon);
+  filter: drop-shadow(0 0 10px var(--neon-glow));
+}
+
+@keyframes barbellSpin {
+  0%   { transform: rotate(-15deg) scale(1);   }
+  100% { transform: rotate(15deg)  scale(1.15); }
+}
+
+.private-route-brand {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.private-route-brand span {
+  color: var(--accent);
+}
+
+[data-theme="dark"] .private-route-brand span {
+  color: var(--neon);
+  text-shadow: 0 0 14px var(--neon-glow);
+}

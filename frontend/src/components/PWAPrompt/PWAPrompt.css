@@ -1,0 +1,93 @@
+.pwa-prompt {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-hover);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 380px;
+  width: calc(100% - 28px);
+  animation: pwaSlideUp 0.4s ease;
+}
+
+@keyframes pwaSlideUp {
+  from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+  to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+.pwa-prompt-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--accent);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #050505;
+}
+
+[data-theme="dark"] .pwa-prompt-icon {
+  background: var(--neon);
+  box-shadow: 0 0 12px var(--neon-glow);
+}
+
+.pwa-prompt-content { flex: 1; min-width: 0; }
+
+.pwa-prompt-title {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.pwa-prompt-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.pwa-install-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  background: var(--text-primary);
+  color: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  box-shadow: var(--shadow);
+  transition: all 0.15s;
+}
+
+.pwa-install-btn:hover { transform: translate(-2px,-2px); box-shadow: var(--shadow-hover); }
+
+.pwa-dismiss-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: var(--surface-2);
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.pwa-dismiss-btn:hover { color: var(--text-primary); background: var(--border-light); }

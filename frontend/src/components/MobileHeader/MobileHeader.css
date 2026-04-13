@@ -1,0 +1,19 @@
+.mobile-header {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 52px;
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+  z-index: 90;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0 3px 0 var(--border);
+}
+.mobile-header-brand { font-family:var(--font-heading);font-size:1.4rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-primary); }
+.mobile-header-brand span { color: var(--accent); }
+[data-theme="dark"] .mobile-header-brand span { color: var(--neon); text-shadow: 0 0 10px var(--neon-glow); }
+.mobile-header-right { display:flex;align-items:center;gap:10px; }
+.mobile-streak { display:flex;align-items:center;gap:4px;background:var(--warning-subtle);border:2px solid var(--warning);color:var(--warning);font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px; }
+@media(max-width:768px) { .mobile-header { display: flex; } }

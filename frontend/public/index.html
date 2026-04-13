@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#111111" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#060d1f" media="(prefers-color-scheme: dark)" />
+    <meta name="description" content="devFit — Your minimalist fitness tracking platform. Workouts, diet, supplements, and analytics." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="devFit" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>devFit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      /* ── Inline loading screen shown before React mounts ── */
+      #devfit-splash {
+        position: fixed;
+        inset: 0;
+        background: #f8f8f8;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+        font-family: 'Bebas Neue', Impact, sans-serif;
+        transition: opacity 0.5s ease;
+      }
+      @media (prefers-color-scheme: dark) {
+        #devfit-splash { background: #060d1f; }
+      }
+      #devfit-splash.hidden { opacity: 0; pointer-events: none; }
+      .splash-logo {
+        font-size: 3.5rem;
+        letter-spacing: 0.08em;
+        color: #111;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      @media (prefers-color-scheme: dark) {
+        .splash-logo { color: #e0ffe8; }
+      }
+      .splash-logo em {
+        font-style: normal;
+        color: #a0ff6f;
+      }
+      @media (prefers-color-scheme: dark) {
+        .splash-logo em {
+          color: #39ff14;
+          text-shadow: 0 0 20px rgba(57,255,20,0.5);
+        }
+      }
+      .splash-bar-track {
+        width: 220px;
+        height: 4px;
+        background: #e0e0e0;
+        border-radius: 2px;
+        overflow: hidden;
+        border: 1.5px solid #111;
+      }
+      @media (prefers-color-scheme: dark) {
+        .splash-bar-track { background: #1e3050; border-color: #39ff14; }
+      }
+      .splash-bar {
+        height: 100%;
+        background: #a0ff6f;
+        border-radius: 2px;
+        width: 0%;
+        animation: splashLoad 1.2s ease-out forwards;
+      }
+      @media (prefers-color-scheme: dark) {
+        .splash-bar { background: #39ff14; box-shadow: 0 0 10px rgba(57,255,20,0.6); }
+      }
+      @keyframes splashLoad {
+        0%   { width: 0%; }
+        40%  { width: 55%; }
+        70%  { width: 78%; }
+        90%  { width: 92%; }
+        100% { width: 100%; }
+      }
+      .splash-sub {
+        margin-top: 12px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.15em;
+        color: #999;
+        text-transform: uppercase;
+      }
+      @media (prefers-color-scheme: dark) {
+        .splash-sub { color: #4a7060; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Splash shown before React loads -->
+    <div id="devfit-splash">
+      <div class="splash-logo">dev<em>Fit</em></div>
+      <div class="splash-bar-track">
+        <div class="splash-bar"></div>
+      </div>
+      <div class="splash-sub">Loading your fitness hub…</div>
+    </div>
+
+    <noscript>You need to enable JavaScript to run devFit.</noscript>
+    <div id="root"></div>
+
+    <script>
+      // Hide splash once React mounts
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          var splash = document.getElementById('devfit-splash');
+          if (splash) {
+            splash.classList.add('hidden');
+            setTimeout(function() { splash.remove(); }, 500);
+          }
+        }, 1200);
+      });
+
+      // Sync theme from localStorage before React loads to avoid flash
+      (function() {
+        var theme = localStorage.getItem('devfit_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark') {
+          document.getElementById('devfit-splash').style.background = '#060d1f';
+        }
+      })();
+    </script>
+  </body>
+</html>
