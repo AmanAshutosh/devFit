@@ -164,11 +164,11 @@ const Auth = () => {
               </div>
               <div className="form-group">
                 <label className="form-label">Mobile Number</label>
-                <div className="auth-input-wrap">
-                  <span className="auth-input-icon"><RiPhoneLine size={16} /></span>
+                <div className="auth-phone-wrap">
+                  <span className="auth-phone-icon"><RiPhoneLine size={16} /></span>
                   <span className="auth-phone-prefix">+91</span>
                   <input
-                    className="auth-input auth-input--phone"
+                    className="auth-phone-input"
                     type="tel"
                     inputMode="numeric"
                     value={form.mobile}

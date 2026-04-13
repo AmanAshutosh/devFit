@@ -197,20 +197,50 @@
   box-shadow: 2px 2px 0 var(--border);
 }
 
+/* Phone number input — flex row, no absolute positioning */
+.auth-phone-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px 0 12px;
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.auth-phone-wrap:focus-within {
+  border-color: var(--border);
+  box-shadow: 2px 2px 0 var(--border);
+}
+
+.auth-phone-icon {
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
 .auth-phone-prefix {
-  position: absolute;
-  left: 36px;
   color: var(--text-primary);
   font-size: 0.93rem;
   font-family: var(--font-body);
-  pointer-events: none;
-  user-select: none;
   border-right: 1.5px solid var(--border-light);
   padding-right: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.auth-input--phone {
-  padding-left: 72px;
+.auth-phone-input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 0;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.93rem;
+  font-family: var(--font-body);
+  outline: none;
 }
 
 .auth-submit {
