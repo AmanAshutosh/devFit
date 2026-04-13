@@ -75,7 +75,7 @@ const Sidebar = () => {
 
       {/* Mobile Bottom Nav */}
       <nav className="bottom-nav">
-        {NAV_ITEMS.slice(0, 6).map(({ path, icon: Icon, label, mobileLabel }) => (
+        {NAV_ITEMS.map(({ path, icon: Icon, label, mobileLabel }) => (
           <NavLink
             key={path}
             to={path}
