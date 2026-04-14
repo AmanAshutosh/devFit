@@ -166,13 +166,22 @@ img{max-width:100%;height:auto}
   .form-input,.form-select{font-size:0.88rem}
 }
 
-/* Prevent date/time inputs from overflowing the viewport */
+/* ── Date / time input overflow prevention ───────────────────────────────
+   iOS Safari renders a native time-picker control with an intrinsic minimum
+   width. Clamping to 100% + min-width:0 prevents it escaping its container.
+   font-size ≥ 16 px stops iOS auto-zoom on focus (which shifts the layout). */
 input[type="date"],
 input[type="time"] {
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
   box-sizing: border-box !important;
+}
+
+/* form-group is always a flex child somewhere; min-width:0 prevents it from
+   blowing past its container on iOS (default min-width is auto for flex). */
+.form-group {
+  min-width: 0;
 }
 
 /* Toolbars — contain children so date inputs never escape viewport */
@@ -216,5 +225,17 @@ input[type="time"] {
   .supp-toolbar > .btn {
     width: 100% !important;
     justify-content: center !important;
+  }
+}
+
+/* ── iOS auto-zoom fix ───────────────────────────────────────────────────
+   iOS zooms in when an input has font-size < 16 px. This shifts the viewport
+   and causes apparent overflow. Force 16 px on all interactive fields on
+   small screens; visual size is unchanged because we only bump a ~14 px value. */
+@media(max-width:768px){
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
   }
 }

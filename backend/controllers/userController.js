@@ -69,8 +69,9 @@ const resetProgress = async (req, res) => {
       Supplement.deleteMany({ user: uid }),
       GymPlan.deleteMany({ user: uid }),
     ]);
-    // Reset streak
-    await User.findByIdAndUpdate(uid, { streak: 0, lastActiveDate: null });
+    // Reset streak to 1 (fresh-user state — mirrors the "first login" branch
+    // in authController so the UI immediately shows 1, not 0).
+    await User.findByIdAndUpdate(uid, { streak: 1, lastActiveDate: null });
     res.status(200).json({ message: 'All progress reset successfully.' });
   } catch (error) {
     console.error('Reset progress error:', error);

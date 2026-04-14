@@ -352,6 +352,15 @@ const GymPlan = () => {
                     </div>
                   ))}
                 </div>
+
+                {/* Bottom save — visible right after the exercises list so users
+                    never need to scroll back up to persist their changes */}
+                <div className="gp-editor-save-row">
+                  <button className="btn btn-primary" onClick={savePlan} disabled={saving}>
+                    <RiSaveLine size={15} />
+                    {saving ? 'Saving…' : 'Save Plan'}
+                  </button>
+                </div>
               </>
             ) : (
               <div className="gp-rest-msg">

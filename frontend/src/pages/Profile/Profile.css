@@ -16,7 +16,7 @@
 .profile-uid-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
 .profile-uid-val { font-family: var(--font-mono); font-size: 0.88rem; font-weight: 600; color: var(--text-primary); }
 
-.profile-fields { display: flex; flex-direction: column; gap: 12px; }
+.profile-fields { display: flex; flex-direction: column; gap: 12px; min-width: 0; overflow: hidden; }
 
 .profile-height-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 

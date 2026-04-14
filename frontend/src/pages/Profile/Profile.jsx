@@ -125,10 +125,11 @@ const Profile = () => {
   };
 
   const handleResetProgress = async () => {
-    if (!window.confirm('This will permanently delete ALL your exercises, diet logs, supplements, and gym plans. Your streak will also reset to 0.\n\nThis cannot be undone. Continue?')) return;
+    if (!window.confirm('This will permanently delete ALL your exercises, diet logs, supplements, and gym plans. Your streak will also reset.\n\nThis cannot be undone. Continue?')) return;
     setResetting(true); setError(''); setSuccess('');
     try {
       await api.delete('/user/reset-progress');
+      await refreshUser(); // sync AuthContext + localStorage so streak shows 1 immediately
       setSuccess('All progress has been reset.');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to reset progress.');

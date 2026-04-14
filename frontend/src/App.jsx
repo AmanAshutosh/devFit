@@ -39,7 +39,7 @@ const RouteChangeLoader = () => {
 
   useEffect(() => {
     setRouteLoading(true);
-    const t = setTimeout(() => setRouteLoading(false), 600);
+    const t = setTimeout(() => setRouteLoading(false), 200);
     return () => {
       clearTimeout(t);
       setRouteLoading(false);

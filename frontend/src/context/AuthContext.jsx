@@ -12,9 +12,17 @@ export const AuthProvider = ({ children }) => {
       return null;
     }
   });
-  const [loading, setLoading] = useState(true);
+  // Start as false if we already have a valid token + cached user so the
+  // app renders immediately with cached data and refreshes in the background.
+  const [loading, setLoading] = useState(() => {
+    const token = localStorage.getItem('devfit_token');
+    if (!token) return false;
+    const stored = localStorage.getItem('devfit_user');
+    return !stored; // only show spinner if token exists but cache is empty
+  });
 
-  // Verify token on mount
+  // Silently verify / refresh the token on mount.
+  // When cached data already exists this runs in the background – no blocking.
   useEffect(() => {
     const token = localStorage.getItem('devfit_token');
     if (!token) {
