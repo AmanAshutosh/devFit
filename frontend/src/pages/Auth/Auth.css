@@ -16,7 +16,7 @@
 
 [data-theme="dark"] .auth-left {
   background: var(--surface);
-  border-right: 2px solid var(--border);
+  box-shadow: 6px 0 20px rgba(0,0,0,0.3);
 }
 
 .auth-left-inner {
@@ -102,9 +102,8 @@
 .auth-feature-dot {
   width: 28px;
   height: 28px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1.5px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -142,7 +141,7 @@
 }
 
 .auth-mobile-logo span {
-  color: var(--accent);
+  color: var(--accent-dark);
 }
 [data-theme="dark"] .auth-mobile-logo span {
   color: var(--neon);
@@ -152,7 +151,7 @@
   width: 100%;
   max-width: 400px;
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: none;
   border-radius: var(--radius-lg);
   padding: 28px;
   box-shadow: var(--shadow);
@@ -160,22 +159,23 @@
 
 .auth-tabs {
   display: flex;
-  background: var(--surface-2);
-  border: 2px solid var(--border-light);
+  background: var(--surface);
+  border: none;
   border-radius: var(--radius);
-  padding: 3px;
+  padding: 4px;
   margin-bottom: 22px;
-  gap: 3px;
+  gap: 4px;
+  box-shadow: var(--shadow-inset-sm);
 }
 
 .auth-tab {
   flex: 1;
   padding: 8px;
-  border-radius: calc(var(--radius) - 2px);
+  border-radius: calc(var(--radius) - 4px);
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--text-muted);
-  transition: all 0.15s;
+  transition: all 0.2s;
   background: none;
   border: none;
   cursor: pointer;
@@ -184,9 +184,11 @@
 
 .auth-tab--active {
   background: var(--surface);
-  color: var(--text-primary);
-  border: 2px solid var(--border);
-  box-shadow: var(--shadow);
+  color: var(--accent-dark);
+  box-shadow: var(--shadow-sm);
+}
+[data-theme="dark"] .auth-tab--active {
+  color: var(--neon);
 }
 
 .auth-alert {
@@ -217,39 +219,42 @@
 .auth-input {
   width: 100%;
   padding: 10px 14px 10px 38px;
-  border: 2px solid var(--border-light);
+  border: none;
   border-radius: var(--radius);
   background: var(--surface);
   color: var(--text-primary);
   font-size: 0.93rem;
   font-family: var(--font-body);
-  transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
+  box-shadow: var(--shadow-inset-sm);
+  transition: box-shadow 0.2s;
 }
 
 .auth-input:focus {
-  border-color: var(--border);
-  box-shadow: 2px 2px 0 var(--border);
+  box-shadow: var(--shadow-inset), 0 0 0 2px rgba(160,255,111,0.25);
+  outline: none;
+}
+[data-theme="dark"] .auth-input:focus {
+  box-shadow: var(--shadow-inset), 0 0 0 2px rgba(57,255,20,0.2);
 }
 
-/* Phone number input — flex row, no absolute positioning */
+/* Phone number input */
 .auth-phone-wrap {
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 0 14px 0 12px;
-  border: 2px solid var(--border-light);
+  border: none;
   border-radius: var(--radius);
   background: var(--surface);
-  transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
+  box-shadow: var(--shadow-inset-sm);
+  transition: box-shadow 0.2s;
 }
 
 .auth-phone-wrap:focus-within {
-  border-color: var(--border);
-  box-shadow: 2px 2px 0 var(--border);
+  box-shadow: var(--shadow-inset), 0 0 0 2px rgba(160,255,111,0.25);
+}
+[data-theme="dark"] .auth-phone-wrap:focus-within {
+  box-shadow: var(--shadow-inset), 0 0 0 2px rgba(57,255,20,0.2);
 }
 
 .auth-phone-icon {
@@ -263,10 +268,13 @@
   color: var(--text-primary);
   font-size: 0.93rem;
   font-family: var(--font-body);
-  border-right: 1.5px solid var(--border-light);
+  border-right: 1px solid rgba(0,0,0,0.1);
   padding-right: 8px;
   white-space: nowrap;
   flex-shrink: 0;
+}
+[data-theme="dark"] .auth-phone-prefix {
+  border-right-color: rgba(255,255,255,0.08);
 }
 
 .auth-phone-input {
@@ -298,7 +306,7 @@
   width: 56px;
   height: 56px;
   background: var(--accent-subtle);
-  border: 2px solid var(--accent-dark);
+  border: none;
   border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
@@ -309,10 +317,8 @@
 }
 
 [data-theme="dark"] .auth-otp-icon-wrap {
-  background: rgba(57, 255, 20, 0.1);
-  border-color: var(--neon);
+  background: rgba(57, 255, 20, 0.08);
   color: var(--neon);
-  box-shadow: 3px 3px 0 var(--neon);
 }
 
 .auth-otp-title {
@@ -331,7 +337,7 @@
 .auth-otp-input {
   width: 100%;
   padding: 16px 14px;
-  border: 2px solid var(--border-light);
+  border: none;
   border-radius: var(--radius);
   background: var(--surface);
   color: var(--text-primary);
@@ -339,14 +345,16 @@
   font-size: 2rem;
   letter-spacing: 0.4em;
   text-align: center;
-  transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
+  box-shadow: var(--shadow-inset);
+  transition: box-shadow 0.2s;
 }
 
 .auth-otp-input:focus {
-  border-color: var(--border);
-  box-shadow: 2px 2px 0 var(--border);
+  box-shadow: var(--shadow-inset), 0 0 0 2px rgba(160,255,111,0.25);
+  outline: none;
+}
+[data-theme="dark"] .auth-otp-input:focus {
+  box-shadow: var(--shadow-inset), 0 0 0 2px rgba(57,255,20,0.2);
 }
 
 .auth-back-btn {
@@ -357,7 +365,7 @@
   background: none;
   border: none;
   padding: 6px;
-  transition: color 0.15s;
+  transition: color 0.2s;
   font-family: var(--font-body);
   width: 100%;
 }
@@ -395,8 +403,8 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: none;
-  border: 1.5px solid var(--border-light);
+  background: var(--surface);
+  border: none;
   border-radius: var(--radius);
   padding: 6px 16px;
   font-size: 0.8rem;
@@ -404,13 +412,13 @@
   font-family: var(--font-body);
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
 }
 
 .auth-resend-btn:hover:not(:disabled) {
-  border-color: var(--border);
+  box-shadow: var(--shadow);
   color: var(--text-primary);
-  box-shadow: 2px 2px 0 var(--border);
 }
 
 .auth-resend-btn:disabled {

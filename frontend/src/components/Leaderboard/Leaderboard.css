@@ -18,10 +18,11 @@
 
   position: relative;
   background: var(--lb-surface);
-  border: 1px solid var(--lb-border-dim);
-  border-radius: 14px;
+  border: none;
+  border-radius: 20px;
   padding: 20px 18px 16px;
   overflow: hidden;
+  box-shadow: 8px 8px 18px rgba(0,0,0,0.5), -4px -4px 12px rgba(255,255,255,0.03);
 }
 
 .lb-root::before {

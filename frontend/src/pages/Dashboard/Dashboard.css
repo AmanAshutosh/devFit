@@ -15,13 +15,12 @@
   align-items: center;
   gap: 6px;
   background: var(--warning-subtle);
-  border: 2px solid var(--warning);
   color: var(--warning);
   font-size: 0.82rem;
   font-weight: 700;
   padding: 6px 14px;
   border-radius: 20px;
-  box-shadow: 2px 2px 0 var(--warning);
+  box-shadow: var(--shadow-sm);
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -30,13 +29,13 @@
 .bento-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 14px;
   margin-bottom: 16px;
 }
 
 .bento-card {
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: none;
   border-radius: var(--radius-lg);
   padding: 18px 16px 16px;
   box-shadow: var(--shadow);
@@ -45,6 +44,11 @@
   gap: 4px;
   will-change: transform;
   cursor: default;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.bento-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
 }
 
 .bento-card--wide {
@@ -54,13 +58,11 @@
 .bento-card--dark {
   background: var(--text-primary);
   color: var(--bg);
-  border-color: var(--border);
 }
 
 [data-theme="dark"] .bento-card--dark {
-  background: var(--neon);
-  color: #050505;
-  border-color: var(--neon);
+  background: var(--surface);
+  box-shadow: var(--shadow-inset);
 }
 
 .bento-icon {
@@ -92,7 +94,7 @@
   color: rgba(255, 255, 255, 0.55);
 }
 [data-theme="dark"] .bento-card--dark .bento-label {
-  color: rgba(5, 5, 5, 0.55);
+  color: var(--text-muted);
 }
 
 .bento-sub {
@@ -115,17 +117,17 @@
   align-items: center;
   gap: 6px;
   background: var(--surface);
-  border: 2px solid var(--border-light);
+  border: none;
   border-radius: 20px;
   padding: 5px 14px;
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--text-secondary);
-  transition: all 0.15s;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
 }
 
 .dash-body-chip:hover {
-  border-color: var(--border);
   box-shadow: var(--shadow);
 }
 
@@ -155,7 +157,7 @@
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-muted);
-  transition: color 0.15s;
+  transition: color 0.2s;
 }
 
 .dash-see-all:hover {
@@ -174,26 +176,27 @@
   gap: 10px;
   padding: 14px 14px;
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: none;
   border-radius: var(--radius-lg);
   font-size: 0.86rem;
   font-weight: 600;
   color: var(--text-primary);
-  transition: all 0.15s;
+  transition: all 0.2s;
   box-shadow: var(--shadow);
 }
 
 .dash-quick-btn:hover {
-  background: var(--text-primary);
-  color: var(--bg);
-  transform: translate(-2px, -2px);
   box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+  color: var(--accent-dark);
+}
+.dash-quick-btn:active {
+  box-shadow: var(--shadow-inset);
+  transform: scale(0.98);
 }
 
 [data-theme="dark"] .dash-quick-btn:hover {
-  background: var(--neon);
-  color: #050505;
-  border-color: var(--neon);
+  color: var(--neon);
 }
 
 .dash-quick-label {
@@ -201,7 +204,7 @@
 }
 .dash-quick-arrow {
   opacity: 0;
-  transition: opacity 0.15s;
+  transition: opacity 0.2s;
   flex-shrink: 0;
 }
 .dash-quick-btn:hover .dash-quick-arrow {
@@ -220,14 +223,14 @@
   justify-content: space-between;
   padding: 12px 16px;
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: none;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
-  transition: all 0.15s;
+  transition: all 0.2s;
 }
 
 .dash-ex-item:hover {
-  transform: translate(-2px, -2px);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-hover);
 }
 
@@ -262,9 +265,9 @@
   text-align: center;
   padding: 32px 20px;
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: none;
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-inset-sm);
   color: var(--text-muted);
   font-size: 0.9rem;
 }
@@ -272,7 +275,8 @@
 .dash-empty-icon {
   display: block;
   margin: 0 auto 10px;
-  color: var(--border-light);
+  color: var(--text-muted);
+  opacity: 0.4;
 }
 
 /* Visibility helpers */
@@ -289,13 +293,13 @@
   padding: 24px 20px 20px;
   position: relative;
   overflow: hidden;
-  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow);
 }
 .dash-quote-mark {
   font-family: Georgia, serif;
   font-size: 5rem;
   line-height: 1;
-  opacity: 0.25;
+  opacity: 0.15;
   position: absolute;
   top: -8px;
   left: 12px;
@@ -329,7 +333,7 @@
 }
 
 @media (max-width: 480px) {
-  .bento-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .bento-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .bento-card { padding: 14px 12px; }
   .bento-value { font-size: 1.5rem; }
   .dash-ex-item  { flex-wrap: wrap; gap: 8px; }

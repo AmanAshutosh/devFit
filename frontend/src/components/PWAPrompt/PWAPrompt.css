@@ -5,7 +5,7 @@
   transform: translateX(-50%);
   z-index: 500;
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: none;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-hover);
   padding: 14px 16px;
@@ -32,13 +32,14 @@
   width: 40px;
   height: 40px;
   background: var(--accent);
-  border: 2px solid var(--border);
+  border: none;
   border-radius: var(--radius);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   color: #050505;
+  box-shadow: var(--shadow-sm);
 }
 
 [data-theme="dark"] .pwa-prompt-icon {
@@ -71,7 +72,7 @@
   padding: 7px 14px;
   background: var(--text-primary);
   color: var(--bg);
-  border: 2px solid var(--border);
+  border: none;
   border-radius: var(--radius);
   font-size: 0.8rem;
   font-weight: 700;
@@ -79,12 +80,16 @@
   white-space: nowrap;
   font-family: var(--font-body);
   box-shadow: var(--shadow);
-  transition: all 0.15s;
+  transition: all 0.2s;
 }
 
 .pwa-install-btn:hover {
-  transform: translate(-2px, -2px);
+  transform: translateY(-1px);
   box-shadow: var(--shadow-hover);
+}
+.pwa-install-btn:active {
+  box-shadow: var(--shadow-inset);
+  transform: scale(0.98);
 }
 
 .pwa-dismiss-btn {
@@ -94,15 +99,16 @@
   align-items: center;
   justify-content: center;
   border: none;
-  background: var(--surface-2);
+  background: var(--surface);
   border-radius: 50%;
   cursor: pointer;
   color: var(--text-muted);
   flex-shrink: 0;
-  transition: all 0.15s;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
 }
 
 .pwa-dismiss-btn:hover {
   color: var(--text-primary);
-  background: var(--border-light);
+  box-shadow: var(--shadow);
 }

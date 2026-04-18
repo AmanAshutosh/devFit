@@ -19,7 +19,10 @@
   text-transform: uppercase;
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 2px solid var(--border-light);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+[data-theme="dark"] .ex-form-title {
+  border-bottom-color: rgba(255,255,255,0.06);
 }
 .ex-form-grid {
   display: grid;
@@ -49,14 +52,14 @@
   flex: 1;
   min-width: 90px;
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: none;
   border-radius: var(--radius-lg);
   padding: 14px 16px;
   box-shadow: var(--shadow);
-  transition: all 0.15s;
+  transition: all 0.2s;
 }
 .ex-stat:hover {
-  transform: translate(-2px, -2px);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-hover);
 }
 .ex-stat-val {
@@ -78,7 +81,7 @@
 .ex-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 .ex-item {
   display: flex;
@@ -86,13 +89,13 @@
   gap: 12px;
   padding: 14px 16px;
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: none;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
-  transition: all 0.15s;
+  transition: all 0.2s;
 }
 .ex-item:hover {
-  transform: translate(-2px, -2px);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-hover);
 }
 .ex-item-icon {

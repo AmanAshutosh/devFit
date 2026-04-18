@@ -3,9 +3,15 @@
   border-radius: var(--radius-lg);
   overflow: hidden;
   cursor: pointer;
-  border: 1px solid var(--border-light);
+  border: none;
   background: var(--surface);
   will-change: transform;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.vc-root:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
 }
 
 /* ── Thumbnail ── */

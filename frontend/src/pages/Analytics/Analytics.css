@@ -4,31 +4,30 @@
 }
 .analytics-range-btn {
   padding: 6px 14px;
-  border: 2px solid var(--border-light);
-  border-radius: 16px;
+  border: none;
+  border-radius: 20px;
   font-size: 0.78rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s;
   background: var(--surface);
   color: var(--text-muted);
   font-family: var(--font-body);
   letter-spacing: 0.04em;
+  box-shadow: var(--shadow-sm);
 }
 .analytics-range-btn:hover {
-  border-color: var(--border);
   color: var(--text-primary);
-}
-.analytics-range-btn--active {
-  background: var(--text-primary);
-  border-color: var(--border);
-  color: var(--bg);
   box-shadow: var(--shadow);
 }
+.analytics-range-btn--active {
+  background: var(--surface);
+  color: var(--accent-dark);
+  box-shadow: var(--shadow-inset);
+}
 [data-theme="dark"] .analytics-range-btn--active {
-  background: var(--neon);
-  color: #050505;
-  border-color: var(--neon);
+  color: var(--neon);
+  box-shadow: var(--shadow-inset);
 }
 
 .analytics-stats {
@@ -39,14 +38,14 @@
 }
 .analytics-stat-box {
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: none;
   border-radius: var(--radius-lg);
   padding: 18px;
   box-shadow: var(--shadow);
-  transition: all 0.15s;
+  transition: all 0.2s;
 }
 .analytics-stat-box:hover {
-  transform: translate(-2px, -2px);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-hover);
 }
 .analytics-stat-icon {
@@ -101,14 +100,15 @@
 }
 .analytics-chart-badge {
   padding: 4px 12px;
-  background: var(--surface-2);
-  border: 2px solid var(--border-light);
+  background: var(--surface);
+  border: none;
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--text-muted);
   white-space: nowrap;
   font-family: var(--font-mono);
+  box-shadow: var(--shadow-inset-sm);
 }
 
 .analytics-empty {
@@ -123,7 +123,7 @@
 
 .chart-tooltip {
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: none;
   border-radius: var(--radius);
   padding: 10px 14px;
   box-shadow: var(--shadow-hover);
@@ -176,17 +176,16 @@
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
-  border: 1.5px solid var(--border-light);
-  background: var(--surface-2);
+  background: var(--surface);
   color: var(--text-muted);
-  transition: all 0.15s;
+  transition: all 0.2s;
   font-family: var(--font-body);
+  box-shadow: var(--shadow-sm);
 }
 
 .analytics-legend-item--active {
-  border-color: var(--border);
   color: var(--text-primary);
-  background: var(--surface);
+  box-shadow: var(--shadow-inset-sm);
 }
 
 .analytics-legend-item--static {
@@ -198,7 +197,7 @@
   height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
-  transition: background 0.15s;
+  transition: background 0.2s;
 }
 
 /* ── Custom tooltip dot ── */

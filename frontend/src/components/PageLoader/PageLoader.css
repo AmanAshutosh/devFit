@@ -31,7 +31,7 @@
 }
 
 .page-loader-logo span {
-  color: var(--accent);
+  color: var(--accent-dark);
 }
 
 [data-theme="dark"] .page-loader-logo span {
@@ -41,17 +41,17 @@
 
 .page-loader-bar-wrap {
   width: 100%;
-  height: 4px;
-  background: var(--border-light);
-  border-radius: 2px;
+  height: 6px;
+  background: var(--surface);
+  border-radius: 3px;
   overflow: hidden;
-  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-inset-sm);
 }
 
 .page-loader-bar {
   height: 100%;
-  background: var(--accent);
-  border-radius: 2px;
+  background: var(--accent-dark);
+  border-radius: 3px;
   transition: width 0.1s ease;
   position: relative;
 }
@@ -80,7 +80,7 @@
   font-family: var(--font-mono);
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--accent-dark);
 }
 
 [data-theme="dark"] .page-loader-num {

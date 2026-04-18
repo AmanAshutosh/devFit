@@ -9,16 +9,17 @@
   font-weight: 600;
   font-family: var(--font-body);
   color: var(--text-muted);
-  background: none;
-  border: 2px solid var(--border-light);
+  background: var(--surface);
+  border: none;
   border-radius: var(--radius);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
 }
 .pp-back-btn:hover {
   color: var(--text-primary);
-  border-color: var(--border);
-  background: var(--surface-2);
+  box-shadow: var(--shadow);
+  transform: translateX(-2px);
 }
 
 /* ── Not Found ───────────────────────────────────────────────────── */
@@ -49,7 +50,7 @@
   gap: 24px;
   align-items: flex-start;
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: none;
   border-radius: var(--radius-lg);
   padding: 24px;
   box-shadow: var(--shadow);
@@ -64,13 +65,13 @@
   display: inline-flex;
   align-items: center;
   padding: 3px 10px;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border: 1.5px solid;
   margin-bottom: 10px;
+  box-shadow: var(--shadow-inset-sm);
 }
 .pp-hero-title {
   font-family: var(--font-heading);
@@ -102,7 +103,10 @@
   flex-wrap: wrap;
   align-items: center;
   padding-left: 24px;
-  border-left: 2px solid var(--border-light);
+  border-left: 1px solid rgba(0,0,0,0.08);
+}
+[data-theme="dark"] .pp-hero-stats {
+  border-left-color: rgba(255,255,255,0.06);
 }
 .pp-hstat {
   display: flex;
@@ -134,11 +138,12 @@
   gap: 8px;
   font-size: 0.78rem;
   color: var(--text-muted);
-  background: var(--surface-2);
-  border: 1.5px solid var(--border-light);
+  background: var(--surface);
+  border: none;
   border-radius: var(--radius);
   padding: 8px 14px;
   margin-bottom: 20px;
+  box-shadow: var(--shadow-inset-sm);
 }
 
 /* ── Day Tabs ────────────────────────────────────────────────────── */
@@ -146,7 +151,6 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   margin-bottom: 20px;
-  /* hide scrollbar but keep function */
   scrollbar-width: none;
 }
 .pp-day-tabs-wrap::-webkit-scrollbar {
@@ -166,28 +170,25 @@
   gap: 2px;
   padding: 10px 18px;
   background: var(--surface);
-  border: 2px solid var(--border-light);
+  border: none;
   border-radius: var(--radius);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s;
   font-family: var(--font-body);
   white-space: nowrap;
+  box-shadow: var(--shadow-sm);
 }
 .pp-day-tab:hover {
-  border-color: var(--border);
-  background: var(--surface-2);
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
 }
 .pp-day-tab--active {
-  background: var(--text-primary);
-  border-color: var(--border);
-  color: var(--bg);
-  box-shadow: var(--shadow);
+  color: var(--accent-dark);
+  box-shadow: var(--shadow-inset);
 }
 [data-theme="dark"] .pp-day-tab--active {
-  background: var(--neon);
-  color: #050505;
-  border-color: var(--neon);
-  box-shadow: 3px 3px 0 var(--neon);
+  color: var(--neon);
+  box-shadow: var(--shadow-inset);
 }
 .pp-tab-day {
   font-size: 0.65rem;
@@ -239,10 +240,11 @@
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--text-muted);
-  background: var(--surface-2);
-  border: 1.5px solid var(--border-light);
+  background: var(--surface);
+  border: none;
   border-radius: var(--radius);
   padding: 5px 10px;
+  box-shadow: var(--shadow-inset-sm);
 }
 
 /* ── Exercise Grid ───────────────────────────────────────────────── */
@@ -256,18 +258,16 @@
 /* ── Exercise Card ───────────────────────────────────────────────── */
 .pp-ex-card {
   background: var(--surface);
-  border: 2px solid var(--border);
+  border: none;
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow);
-  transition:
-    transform 0.15s,
-    box-shadow 0.15s;
+  transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
   flex-direction: column;
 }
 .pp-ex-card:hover {
-  transform: translate(-2px, -2px);
+  transform: translateY(-3px);
   box-shadow: var(--shadow-hover);
 }
 
@@ -312,7 +312,7 @@
   font-size: 0.72rem;
   font-weight: 700;
   padding: 2px 8px;
-  border-radius: 4px;
+  border-radius: 6px;
   letter-spacing: 0.04em;
 }
 [data-theme="dark"] .pp-ex-num {
@@ -345,11 +345,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--surface-2);
-  border: 1.5px solid var(--border-light);
+  background: var(--surface);
+  border: none;
   border-radius: var(--radius);
   padding: 6px 10px;
   flex: 1;
+  box-shadow: var(--shadow-inset-sm);
 }
 .pp-ex-stat-label {
   font-size: 0.6rem;
@@ -375,11 +376,11 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   padding: 2px 7px;
-  border-radius: 4px;
-  border: 1.5px solid var(--border-light);
-  background: var(--surface-2);
+  border-radius: 6px;
+  background: var(--surface);
   color: var(--text-muted);
   text-transform: uppercase;
+  box-shadow: var(--shadow-inset-sm);
 }
 
 .pp-ex-desc {
@@ -399,10 +400,13 @@
   .pp-hero-stats {
     padding-left: 0;
     border-left: none;
-    border-top: 2px solid var(--border-light);
+    border-top: 1px solid rgba(0,0,0,0.08);
     padding-top: 16px;
     width: 100%;
     justify-content: space-around;
+  }
+  [data-theme="dark"] .pp-hero-stats {
+    border-top-color: rgba(255,255,255,0.06);
   }
   .pp-hero-title {
     font-size: 1.5rem;
