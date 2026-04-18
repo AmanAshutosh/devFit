@@ -308,6 +308,19 @@ const SupplementTracker = () => {
             ))
           )}
         </div>
+        {/* Sticky FAB — mobile only, hidden when form is open */}
+        <div className={`sticky-log-fab${showForm ? " sticky-log-fab--hidden" : ""}`}>
+          <button
+            className="btn btn-accent"
+            onClick={() => {
+              setShowForm(true);
+              setForm(BLANK);
+            }}
+          >
+            <RiAddLine size={18} /> Log Supplement
+          </button>
+        </div>
+
         <Footer />
       </main>
     </div>

@@ -159,6 +159,65 @@
   color: var(--text-primary);
 }
 
+/* ── Checkbox toggle legend ── */
+.analytics-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.analytics-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--border-light);
+  background: var(--surface-2);
+  color: var(--text-muted);
+  transition: all 0.15s;
+  font-family: var(--font-body);
+}
+
+.analytics-legend-item--active {
+  border-color: var(--border);
+  color: var(--text-primary);
+  background: var(--surface);
+}
+
+.analytics-legend-item--static {
+  cursor: default;
+}
+
+.analytics-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+/* ── Custom tooltip dot ── */
+.chart-tooltip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.chart-tooltip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 3px;
+}
+
 @media (max-width: 768px) {
   .analytics-stats {
     grid-template-columns: repeat(2, 1fr);

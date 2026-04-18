@@ -560,10 +560,6 @@
   .diet-toolbar .form-group {
     width: 100%;
   }
-  .diet-toolbar .btn {
-    width: 100%;
-    justify-content: center;
-  }
   .diet-summary {
     gap: 12px;
   }

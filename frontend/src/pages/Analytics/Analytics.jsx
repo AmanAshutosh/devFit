@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import MobileHeader from "../../components/MobileHeader/MobileHeader";
 import {
   RiLineChartLine,
@@ -20,7 +20,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
   Area,
   AreaChart,
 } from "recharts";
@@ -35,19 +34,35 @@ const RANGES = [
   { label: "90D", value: 90 },
 ];
 
+const MUSCLE_COLORS = {
+  Chest: "#FF6B6B",
+  Back: "#4D96FF",
+  Shoulders: "#FFE66D",
+  Biceps: "#06D6A0",
+  Triceps: "#FB8500",
+  Legs: "#8338EC",
+  Glutes: "#FF006E",
+  Core: "#A8DADC",
+  Cardio: "#457B9D",
+  "Full Body": "#F4A261",
+};
+const FALLBACK_COLORS = [
+  "#FF6B6B", "#4D96FF", "#FFE66D", "#06D6A0",
+  "#FB8500", "#8338EC", "#FF006E", "#A8DADC",
+];
+const getMuscleColor = (m, i) =>
+  MUSCLE_COLORS[m] || FALLBACK_COLORS[i % FALLBACK_COLORS.length];
+
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
     <div className="chart-tooltip">
       <div className="chart-tooltip-label">{label}</div>
       {payload.map((p) => (
-        <div
-          key={p.dataKey}
-          className="chart-tooltip-row"
-          style={{ color: p.color }}
-        >
+        <div key={p.dataKey} className="chart-tooltip-row">
+          <span className="chart-tooltip-dot" style={{ background: p.color }} />
           <span>{p.name}</span>
-          <strong>{p.value}</strong>
+          <strong style={{ color: p.color }}>{p.value}</strong>
         </div>
       ))}
     </div>
@@ -69,16 +84,35 @@ const Analytics = () => {
   const [data, setData] = useState(null);
   const [range, setRange] = useState(30);
   const [loading, setLoading] = useState(true);
+  const [visibleLines, setVisibleLines] = useState({});
+  const intervalRef = useRef(null);
 
-  useEffect(() => {
-    setLoading(true);
+  const fetchData = useCallback(() => {
     api
       .get(`/analytics/overview?days=${range}`)
-      .then(({ data }) => setData(data))
+      .then(({ data: d }) => setData(d))
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [range]);
 
+  useEffect(() => {
+    setLoading(true);
+    fetchData();
+
+    /* Auto-refresh every 30 s so charts stay live */
+    intervalRef.current = setInterval(fetchData, 30000);
+
+    /* Also refresh when tab gains focus (user comes back from logging) */
+    const onFocus = () => fetchData();
+    window.addEventListener("focus", onFocus);
+
+    return () => {
+      clearInterval(intervalRef.current);
+      window.removeEventListener("focus", onFocus);
+    };
+  }, [fetchData]);
+
+  /* ── Derived chart data ── */
   const workoutData =
     data?.workoutDays?.map((d) => ({
       date: d._id.slice(5),
@@ -97,6 +131,38 @@ const Analytics = () => {
       carbs: d.totalCarbs,
       fats: d.totalFats,
     })) || [];
+
+  /* Muscle group multi-line data */
+  const allMuscles = [
+    ...new Set(
+      (data?.workoutDays || [])
+        .flatMap((d) => d.muscleGroups || [])
+        .filter(Boolean),
+    ),
+  ];
+
+  const muscleChartData = (data?.workoutDays || []).map((d) => {
+    const row = { date: d._id.slice(5) };
+    (d.muscleGroups || []).filter(Boolean).forEach((mg) => {
+      row[mg] = (row[mg] || 0) + 1;
+    });
+    return row;
+  });
+
+  /* Init toggles for newly seen muscles */
+  useEffect(() => {
+    if (!allMuscles.length) return;
+    setVisibleLines((prev) => {
+      const next = { ...prev };
+      allMuscles.forEach((m) => {
+        if (next[m] === undefined) next[m] = true;
+      });
+      return next;
+    });
+  }, [allMuscles.join(",")]); // eslint-disable-line
+
+  const toggleLine = (muscle) =>
+    setVisibleLines((prev) => ({ ...prev, [muscle]: !prev[muscle] }));
 
   const totalSets = workoutData.reduce((s, d) => s + d.sets, 0);
   const avgCalories =
@@ -174,13 +240,103 @@ const Analytics = () => {
               <StatBox
                 icon={RiTimeLine}
                 label="Avg Calories"
-                value={avgCalories ? `${avgCalories}` : "—"}
+                value={avgCalories || "—"}
                 color="#14b8a6"
                 sub="kcal/day"
               />
             </div>
 
-            {/* Workout Consistency */}
+            {/* ── Weekly Progress: muscle group multi-line chart ── */}
+            <div className="card analytics-chart-card">
+              <div className="analytics-chart-head">
+                <div>
+                  <h2 className="analytics-chart-title">
+                    <RiLineChartLine size={16} /> Weekly Progress
+                  </h2>
+                  <p className="analytics-chart-sub">
+                    Sets per muscle group · stepped line chart
+                  </p>
+                </div>
+                <div className="analytics-chart-badge">
+                  {allMuscles.length} muscle groups
+                </div>
+              </div>
+
+              {/* Checkbox legend */}
+              {allMuscles.length > 0 && (
+                <div className="analytics-legend">
+                  {allMuscles.map((m, i) => (
+                    <button
+                      key={m}
+                      className={`analytics-legend-item ${visibleLines[m] ? "analytics-legend-item--active" : ""}`}
+                      onClick={() => toggleLine(m)}
+                    >
+                      <span
+                        className="analytics-legend-dot"
+                        style={{
+                          background: visibleLines[m]
+                            ? getMuscleColor(m, i)
+                            : "var(--border-light)",
+                        }}
+                      />
+                      {m}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {muscleChartData.length === 0 ? (
+                <div className="analytics-empty">
+                  <RiWeightLine size={28} />
+                  <p>No workout data yet.</p>
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height={220}>
+                  <LineChart
+                    data={muscleChartData}
+                    margin={{ top: 8, right: 8, left: -24, bottom: 0 }}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="var(--border-light)"
+                      vertical={false}
+                    />
+                    <XAxis
+                      dataKey="date"
+                      tick={{ fontSize: 10, fill: "var(--text-muted)" }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 10, fill: "var(--text-muted)" }}
+                      axisLine={false}
+                      tickLine={false}
+                      allowDecimals={false}
+                    />
+                    <Tooltip content={<CustomTooltip />} />
+                    {allMuscles.map((m, i) =>
+                      visibleLines[m] ? (
+                        <Line
+                          key={m}
+                          type="stepAfter"
+                          dataKey={m}
+                          name={m}
+                          stroke={getMuscleColor(m, i)}
+                          strokeWidth={2}
+                          dot={{ r: 3, fill: getMuscleColor(m, i), strokeWidth: 0 }}
+                          activeDot={{ r: 5 }}
+                          animationDuration={800}
+                          animationEasing="ease-out"
+                          connectNulls
+                        />
+                      ) : null,
+                    )}
+                  </LineChart>
+                </ResponsiveContainer>
+              )}
+            </div>
+
+            {/* Workout Consistency bar chart */}
             <div className="card analytics-chart-card">
               <div className="analytics-chart-head">
                 <div>
@@ -228,13 +384,15 @@ const Analytics = () => {
                       name="Sets"
                       fill="var(--text-primary)"
                       radius={[4, 4, 0, 0]}
+                      animationDuration={800}
+                      animationEasing="ease-out"
                     />
                   </BarChart>
                 </ResponsiveContainer>
               )}
             </div>
 
-            {/* Calorie History */}
+            {/* Calorie & Macro multi-line chart */}
             <div className="card analytics-chart-card">
               <div className="analytics-chart-head">
                 <div>
@@ -249,29 +407,37 @@ const Analytics = () => {
                   {calorieData.length} days logged
                 </div>
               </div>
+
+              {/* Static macro legend */}
+              <div className="analytics-legend">
+                {[
+                  { key: "calories", label: "Calories", color: "var(--text-primary)" },
+                  { key: "protein", label: "Protein", color: "#3b82f6" },
+                  { key: "carbs", label: "Carbs", color: "#f59e0b" },
+                  { key: "fats", label: "Fats", color: "#ef4444" },
+                ].map((l) => (
+                  <span key={l.key} className="analytics-legend-item analytics-legend-item--active analytics-legend-item--static">
+                    <span className="analytics-legend-dot" style={{ background: l.color }} />
+                    {l.label}
+                  </span>
+                ))}
+              </div>
+
               {calorieData.length === 0 ? (
                 <div className="analytics-empty">
                   <RiLineChartLine size={28} />
                   <p>No diet data yet.</p>
                 </div>
               ) : (
-                <ResponsiveContainer width="100%" height={200}>
+                <ResponsiveContainer width="100%" height={220}>
                   <AreaChart
                     data={calorieData}
                     margin={{ top: 8, right: 4, left: -24, bottom: 0 }}
                   >
                     <defs>
                       <linearGradient id="calGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop
-                          offset="5%"
-                          stopColor="var(--text-primary)"
-                          stopOpacity={0.15}
-                        />
-                        <stop
-                          offset="95%"
-                          stopColor="var(--text-primary)"
-                          stopOpacity={0}
-                        />
+                        <stop offset="5%" stopColor="var(--text-primary)" stopOpacity={0.12} />
+                        <stop offset="95%" stopColor="var(--text-primary)" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid
@@ -291,9 +457,6 @@ const Analytics = () => {
                       tickLine={false}
                     />
                     <Tooltip content={<CustomTooltip />} />
-                    <Legend
-                      wrapperStyle={{ fontSize: "11px", paddingTop: 10 }}
-                    />
                     <Area
                       type="monotone"
                       dataKey="calories"
@@ -302,30 +465,42 @@ const Analytics = () => {
                       fill="url(#calGrad)"
                       strokeWidth={2}
                       dot={false}
+                      activeDot={{ r: 5 }}
+                      animationDuration={800}
+                      animationEasing="ease-out"
                     />
                     <Line
                       type="monotone"
                       dataKey="protein"
                       name="Protein(g)"
                       stroke="#3b82f6"
-                      strokeWidth={1.5}
-                      dot={false}
+                      strokeWidth={2}
+                      dot={{ r: 3, fill: "#3b82f6", strokeWidth: 0 }}
+                      activeDot={{ r: 5 }}
+                      animationDuration={800}
+                      animationEasing="ease-out"
                     />
                     <Line
                       type="monotone"
                       dataKey="carbs"
                       name="Carbs(g)"
                       stroke="#f59e0b"
-                      strokeWidth={1.5}
-                      dot={false}
+                      strokeWidth={2}
+                      dot={{ r: 3, fill: "#f59e0b", strokeWidth: 0 }}
+                      activeDot={{ r: 5 }}
+                      animationDuration={800}
+                      animationEasing="ease-out"
                     />
                     <Line
                       type="monotone"
                       dataKey="fats"
                       name="Fats(g)"
                       stroke="#ef4444"
-                      strokeWidth={1.5}
-                      dot={false}
+                      strokeWidth={2}
+                      dot={{ r: 3, fill: "#ef4444", strokeWidth: 0 }}
+                      activeDot={{ r: 5 }}
+                      animationDuration={800}
+                      animationEasing="ease-out"
                     />
                   </AreaChart>
                 </ResponsiveContainer>

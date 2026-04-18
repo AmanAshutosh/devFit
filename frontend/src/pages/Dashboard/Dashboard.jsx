@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import MobileHeader from "../../components/MobileHeader/MobileHeader";
 import { Link } from "react-router-dom";
 import {
@@ -24,15 +25,28 @@ import { formatDate, getBMICategory, calculateBMI } from "../../utils/helpers";
 import Leaderboard from "../../components/Leaderboard/Leaderboard";
 import "./Dashboard.css";
 
-const StatCard = ({ icon: Icon, label, value, sub, dark }) => (
-  <div className={`dash-stat ${dark ? "dash-stat--dark" : ""}`}>
-    <div className="dash-stat-icon">
-      <Icon size={20} />
+const bentoContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.09 } },
+};
+const bentoItem = {
+  hidden: { opacity: 0, y: 18 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.38, ease: "easeOut" } },
+};
+
+const BentoCard = ({ icon: Icon, label, value, sub, dark, wide }) => (
+  <motion.div
+    variants={bentoItem}
+    whileHover={{ y: -2, transition: { duration: 0.15 } }}
+    className={`bento-card ${dark ? "bento-card--dark" : ""} ${wide ? "bento-card--wide" : ""}`}
+  >
+    <div className="bento-icon">
+      <Icon size={22} />
     </div>
-    <div className="dash-stat-value">{value}</div>
-    <div className="dash-stat-label">{label}</div>
-    {sub && <div className="dash-stat-sub">{sub}</div>}
-  </div>
+    <div className="bento-value">{value}</div>
+    <div className="bento-label">{label}</div>
+    {sub && <div className="bento-sub">{sub}</div>}
+  </motion.div>
 );
 
 const QuickBtn = ({ to, icon: Icon, label }) => (
@@ -303,34 +317,39 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* Stats */}
-        <div className="dash-stats">
-          <StatCard
+        {/* Bento Stats Grid */}
+        <motion.div
+          className="bento-grid"
+          variants={bentoContainer}
+          initial="hidden"
+          animate="visible"
+        >
+          <BentoCard
             icon={RiWeightLine}
             label="Total Exercises"
             value={analytics?.totalExercises ?? "—"}
             sub="all time"
           />
-          <StatCard
+          <BentoCard
             icon={RiCalendarCheckLine}
             label="Active Days"
             value={analytics?.workoutDays?.length ?? "—"}
             sub="this month"
           />
-          <StatCard
+          <BentoCard
             icon={RiScales3Line}
             label="BMI"
             value={bmi ?? "—"}
-            sub={bmiInfo?.label || "add measurements"}
+            sub={bmiInfo?.label || "add stats"}
           />
-          <StatCard
+          <BentoCard
             icon={RiFireLine}
             label="Streak"
             value={`${user?.streak ?? 0}d`}
             sub="keep it up!"
             dark
           />
-        </div>
+        </motion.div>
 
         {/* Body chips */}
         {(user?.weight || user?.heightFeet) && (

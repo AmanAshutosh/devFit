@@ -1,0 +1,159 @@
+/* ── Global mobile-first fixes ── */
+
+/* Prevent any horizontal overflow at the root level */
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+.page-layout,
+.page-content {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Safe-area padding for iPhone notch / home indicator */
+.page-content {
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Universal touch target floor */
+button,
+input[type="date"],
+input[type="time"],
+select,
+.btn {
+  min-height: 44px;
+}
+
+/* ── Toolbar pattern: date-picker + action button ── */
+/* All tracker toolbars stack vertically on mobile */
+@media (max-width: 640px) {
+  .ex-toolbar,
+  .diet-toolbar,
+  .supp-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .ex-toolbar .form-group,
+  .diet-toolbar .form-group,
+  .supp-toolbar .form-group {
+    width: 100%;
+  }
+
+  /* Hide primary log button in toolbar on mobile — FAB takes over */
+  .ex-toolbar .btn-accent,
+  .diet-toolbar .btn-accent,
+  .supp-toolbar .btn-accent {
+    display: none;
+  }
+
+  /* Form action buttons full-width */
+  .ex-form-actions,
+  .diet-form-actions,
+  .supp-form-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ex-form-actions .btn,
+  .diet-form-actions .btn,
+  .supp-form-actions .btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 48px;
+  }
+
+  /* Date inputs full-width */
+  .ex-toolbar input[type="date"],
+  .diet-toolbar input[type="date"],
+  .supp-toolbar input[type="date"] {
+    width: 100%;
+  }
+}
+
+/* ── Sticky FAB (Floating Action Button) ── */
+.sticky-log-fab {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .sticky-log-fab {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 12px 16px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(
+      to top,
+      var(--bg) 60%,
+      transparent 100%
+    );
+  }
+
+  .sticky-log-fab--hidden {
+    display: none;
+  }
+
+  .sticky-log-fab .btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 52px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-hover);
+  }
+
+  /* Add bottom padding to main content so FAB doesn't cover last item */
+  .page-content {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* ── Form grids single-column on mobile ── */
+@media (max-width: 480px) {
+  .ex-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .ex-span2,
+  .ex-span3 {
+    grid-column: 1;
+  }
+
+  .supp-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .supp-form-name,
+  .supp-form-notes {
+    grid-column: 1;
+  }
+
+  .diet-top-fields {
+    flex-direction: column;
+  }
+
+  .diet-macros-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ── Prevent date/time inputs overflow ── */
+input[type="date"],
+input[type="time"] {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── Safe padding when sidebar is open ── */
+@media (min-width: 641px) {
+  .sticky-log-fab {
+    display: none !important;
+  }
+}

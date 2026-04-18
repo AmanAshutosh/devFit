@@ -21,6 +21,7 @@ const getOverview = async (req, res) => {
           _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
           totalSets: { $sum: "$sets" },
           exercises: { $push: "$name" },
+          muscleGroups: { $push: "$muscleGroup" },
         },
       },
       { $sort: { _id: 1 } },

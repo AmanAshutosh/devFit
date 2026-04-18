@@ -352,6 +352,20 @@ const ExerciseTracker = () => {
             ))
           )}
         </div>
+        {/* Sticky FAB — mobile only, hidden when form is open */}
+        <div className={`sticky-log-fab${showForm ? " sticky-log-fab--hidden" : ""}`}>
+          <button
+            className="btn btn-accent"
+            onClick={() => {
+              setShowForm(true);
+              setEditId(null);
+              setForm({ ...BLANK, date: filterDate });
+            }}
+          >
+            <RiAddLine size={18} /> Log Exercise
+          </button>
+        </div>
+
         <Footer />
       </main>
     </div>

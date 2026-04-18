@@ -1274,6 +1274,21 @@ const DietTracker = () => {
           )}
         </div>
 
+        {/* Sticky FAB — mobile only, hidden when form is open */}
+        <div className={`sticky-log-fab${showForm ? " sticky-log-fab--hidden" : ""}`}>
+          <button
+            className="btn btn-accent"
+            onClick={() => {
+              setShowForm(true);
+              setForm(BLANK);
+              setAutoFilled(false);
+              setSuggestions([]);
+            }}
+          >
+            <RiAddLine size={18} /> Add Food
+          </button>
+        </div>
+
         <Footer />
       </main>
     </div>
