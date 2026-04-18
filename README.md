@@ -1,4 +1,4 @@
-# devFit 💪
+# devFit 
 
 A modern, minimalist full-stack fitness tracking platform.
 
