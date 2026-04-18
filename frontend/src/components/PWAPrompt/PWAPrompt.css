@@ -18,8 +18,14 @@
 }
 
 @keyframes pwaSlideUp {
-  from { transform: translateX(-50%) translateY(20px); opacity: 0; }
-  to { transform: translateX(-50%) translateY(0); opacity: 1; }
+  from {
+    transform: translateX(-50%) translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
 }
 
 .pwa-prompt-icon {
@@ -40,7 +46,10 @@
   box-shadow: 0 0 12px var(--neon-glow);
 }
 
-.pwa-prompt-content { flex: 1; min-width: 0; }
+.pwa-prompt-content {
+  flex: 1;
+  min-width: 0;
+}
 
 .pwa-prompt-title {
   font-weight: 700;
@@ -73,7 +82,10 @@
   transition: all 0.15s;
 }
 
-.pwa-install-btn:hover { transform: translate(-2px,-2px); box-shadow: var(--shadow-hover); }
+.pwa-install-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hover);
+}
 
 .pwa-dismiss-btn {
   width: 28px;
@@ -90,4 +102,7 @@
   transition: all 0.15s;
 }
 
-.pwa-dismiss-btn:hover { color: var(--text-primary); background: var(--border-light); }
+.pwa-dismiss-btn:hover {
+  color: var(--text-primary);
+  background: var(--border-light);
+}

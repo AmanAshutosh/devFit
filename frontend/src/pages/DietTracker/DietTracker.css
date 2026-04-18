@@ -1,167 +1,602 @@
-.diet-toolbar{display:flex;align-items:flex-end;gap:12px;margin-bottom:18px;flex-wrap:wrap}
-
-.diet-summary{display:flex;align-items:center;gap:24px;margin-bottom:18px;flex-wrap:wrap}
-
-.diet-cal-block{display:flex;flex-direction:column;align-items:center;min-width:110px;gap:4px}
-.diet-cal-num{font-family:var(--font-mono);font-size:2.2rem;font-weight:600;letter-spacing:-0.03em;line-height:1}
-.diet-cal-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)}
-.diet-cal-bar-wrap{width:100%;height:5px;background:var(--border-light);border-radius:3px;overflow:hidden;border:1.5px solid var(--border-light);margin-top:4px}
-.diet-cal-bar{height:100%;background:var(--accent-dark);border-radius:3px;transition:width 0.5s ease}
-[data-theme="dark"] .diet-cal-bar{background:var(--neon);box-shadow:0 0 8px var(--neon-glow)}
-.diet-cal-goal{font-size:0.7rem;color:var(--text-muted);font-family:var(--font-mono)}
-
-.diet-rings{display:flex;gap:12px;flex:1;justify-content:center;flex-wrap:wrap}
-.diet-ring-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
-.diet-ring-label{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)}
-
-.diet-form-card{margin-bottom:18px}
-.diet-form-title{display:flex;align-items:center;gap:8px;font-family:var(--font-heading);font-size:1rem;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:10px;padding-bottom:10px;border-bottom:2px solid var(--border-light)}
-
-.diet-auto-note{display:flex;align-items:center;gap:7px;font-size:0.78rem;color:var(--text-muted);background:var(--surface-2);border:1.5px solid var(--border-light);border-radius:var(--radius);padding:8px 12px;margin-bottom:14px}
-
-.diet-top-fields{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;margin-bottom:14px;position:relative}
-
-.diet-food-wrap{position:relative;display:flex;align-items:center}
-.diet-food-icon{position:absolute;left:11px;color:var(--text-muted);z-index:1}
-.diet-food-input{width:100%;padding:10px 80px 10px 34px;border:2px solid var(--border-light);border-radius:var(--radius);background:var(--surface);color:var(--text-primary);font-size:0.92rem;font-family:var(--font-body);transition:border-color 0.15s,box-shadow 0.15s}
-.diet-food-input:focus{border-color:var(--border);box-shadow:2px 2px 0 var(--border);outline:none}
-.diet-auto-badge{position:absolute;right:8px;display:flex;align-items:center;gap:3px;background:var(--accent-subtle);border:1.5px solid var(--accent-dark);color:var(--accent-dark);font-size:0.65rem;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap}
-[data-theme="dark"] .diet-auto-badge{background:rgba(57,255,20,0.15);border-color:var(--neon);color:var(--neon)}
-
-.diet-suggestions{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-hover);z-index:50;overflow:hidden}
-.diet-suggestion-item{display:block;width:100%;padding:9px 14px;font-size:0.85rem;font-weight:500;color:var(--text-primary);background:none;border:none;border-bottom:1px solid var(--border-light);cursor:pointer;text-align:left;font-family:var(--font-body);transition:background 0.1s}
-.diet-suggestion-item:last-child{border-bottom:none}
-.diet-suggestion-item:hover{background:var(--surface-2)}
-
-.diet-macros-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
-.diet-macro-field{position:relative}
-.diet-macro-field--auto .form-input{border-color:var(--accent-dark);background:var(--accent-subtle)}
-[data-theme="dark"] .diet-macro-field--auto .form-input{border-color:var(--neon);background:rgba(57,255,20,0.08)}
-.diet-macro-wrap{position:relative}
-.diet-macro-unit{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:0.72rem;color:var(--text-muted);font-family:var(--font-mono);pointer-events:none}
-.diet-macro-field .form-input{padding-right:36px}
-
-.diet-autofill-info{display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--accent-dark);background:var(--accent-subtle);border:1.5px solid var(--accent-dark);border-radius:var(--radius);padding:7px 12px;margin-bottom:12px}
-[data-theme="dark"] .diet-autofill-info{color:var(--neon);background:rgba(57,255,20,0.1);border-color:var(--neon)}
-
-.diet-form-actions{display:flex;gap:10px;justify-content:flex-end}
-
-.diet-meals{display:flex;flex-direction:column;gap:12px}
-.diet-meal-group{background:var(--surface);border:2px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);transition:all 0.15s}
-.diet-meal-group:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow-hover)}
-
-.diet-meal-header{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--surface-2);border-bottom:2px solid var(--border-light)}
-.diet-meal-emoji{font-size:1.1rem}
-.diet-meal-name{flex:1;font-family:var(--font-heading);font-size:0.9rem;letter-spacing:0.05em;text-transform:uppercase}
-.diet-meal-cals{display:flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:0.82rem;font-weight:600;color:var(--text-muted)}
-
-.diet-entry{
-  display:grid;
-  grid-template-columns:1fr auto;
-  grid-template-areas:"info btn" "macros btn";
-  align-items:center;
-  gap:4px 12px;
-  padding:11px 16px;
-  border-bottom:1px solid var(--border-light);
+.diet-toolbar {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
 }
-.diet-entry:last-child{border-bottom:none}
-.diet-entry-left{grid-area:info;min-width:0}
-.diet-entry-name{font-weight:700;font-size:0.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.diet-entry-qty{font-size:0.74rem;color:var(--text-muted);margin-top:2px}
 
-.diet-entry-macros{grid-area:macros;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
-.diet-mpill{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:4px;font-size:0.68rem;font-weight:700;font-family:var(--font-mono);border:1.5px solid;white-space:nowrap}
-.diet-mpill-cal{background:#fff8ee;color:#b45309;border-color:#f59e0b}
-.diet-mpill-p{background:#eff6ff;color:#2563eb;border-color:#3b82f6}
-.diet-mpill-c{background:#fffbeb;color:#d97706;border-color:#f59e0b}
-.diet-mpill-f{background:#fff5f5;color:#e53e3e;border-color:#ef4444}
-[data-theme="dark"] .diet-mpill-cal{background:rgba(245,158,11,0.1);color:#fbbf24;border-color:#f59e0b}
-[data-theme="dark"] .diet-mpill-p{background:rgba(59,130,246,0.1);color:#60a5fa;border-color:#3b82f6}
-[data-theme="dark"] .diet-mpill-c{background:rgba(245,158,11,0.1);color:#fbbf24;border-color:#f59e0b}
-[data-theme="dark"] .diet-mpill-f{background:rgba(239,68,68,0.1);color:#f87171;border-color:#ef4444}
+.diet-summary {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
 
-.diet-del-btn{grid-area:btn;align-self:center;padding:5px 9px;font-size:0.78rem}
+.diet-cal-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 110px;
+  gap: 4px;
+}
+.diet-cal-num {
+  font-family: var(--font-mono);
+  font-size: 2.2rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.diet-cal-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+.diet-cal-bar-wrap {
+  width: 100%;
+  height: 5px;
+  background: var(--border-light);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1.5px solid var(--border-light);
+  margin-top: 4px;
+}
+.diet-cal-bar {
+  height: 100%;
+  background: var(--accent-dark);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+[data-theme="dark"] .diet-cal-bar {
+  background: var(--neon);
+  box-shadow: 0 0 8px var(--neon-glow);
+}
+.diet-cal-goal {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
 
-.spin{animation:spin 0.8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+.diet-rings {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.diet-ring-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.diet-ring-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.diet-form-card {
+  margin-bottom: 18px;
+}
+.diet-form-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--border-light);
+}
+
+.diet-auto-note {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  margin-bottom: 14px;
+}
+
+.diet-top-fields {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.diet-food-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.diet-food-icon {
+  position: absolute;
+  left: 11px;
+  color: var(--text-muted);
+  z-index: 1;
+}
+.diet-food-input {
+  width: 100%;
+  padding: 10px 80px 10px 34px;
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  font-family: var(--font-body);
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.diet-food-input:focus {
+  border-color: var(--border);
+  box-shadow: 2px 2px 0 var(--border);
+  outline: none;
+}
+.diet-auto-badge {
+  position: absolute;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--accent-subtle);
+  border: 1.5px solid var(--accent-dark);
+  color: var(--accent-dark);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+[data-theme="dark"] .diet-auto-badge {
+  background: rgba(57, 255, 20, 0.15);
+  border-color: var(--neon);
+  color: var(--neon);
+}
+
+.diet-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-hover);
+  z-index: 50;
+  overflow: hidden;
+}
+.diet-suggestion-item {
+  display: block;
+  width: 100%;
+  padding: 9px 14px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-body);
+  transition: background 0.1s;
+}
+.diet-suggestion-item:last-child {
+  border-bottom: none;
+}
+.diet-suggestion-item:hover {
+  background: var(--surface-2);
+}
+
+.diet-macros-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.diet-macro-field {
+  position: relative;
+}
+.diet-macro-field--auto .form-input {
+  border-color: var(--accent-dark);
+  background: var(--accent-subtle);
+}
+[data-theme="dark"] .diet-macro-field--auto .form-input {
+  border-color: var(--neon);
+  background: rgba(57, 255, 20, 0.08);
+}
+.diet-macro-wrap {
+  position: relative;
+}
+.diet-macro-unit {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  pointer-events: none;
+}
+.diet-macro-field .form-input {
+  padding-right: 36px;
+}
+
+.diet-autofill-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--accent-dark);
+  background: var(--accent-subtle);
+  border: 1.5px solid var(--accent-dark);
+  border-radius: var(--radius);
+  padding: 7px 12px;
+  margin-bottom: 12px;
+}
+[data-theme="dark"] .diet-autofill-info {
+  color: var(--neon);
+  background: rgba(57, 255, 20, 0.1);
+  border-color: var(--neon);
+}
+
+.diet-form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.diet-meals {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.diet-meal-group {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: all 0.15s;
+}
+.diet-meal-group:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.diet-meal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--surface-2);
+  border-bottom: 2px solid var(--border-light);
+}
+.diet-meal-emoji {
+  font-size: 1.1rem;
+}
+.diet-meal-name {
+  flex: 1;
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.diet-meal-cals {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.diet-entry {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "info btn" "macros btn";
+  align-items: center;
+  gap: 4px 12px;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+.diet-entry:last-child {
+  border-bottom: none;
+}
+.diet-entry-left {
+  grid-area: info;
+  min-width: 0;
+}
+.diet-entry-name {
+  font-weight: 700;
+  font-size: 0.88rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.diet-entry-qty {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.diet-entry-macros {
+  grid-area: macros;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.diet-mpill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  border: 1.5px solid;
+  white-space: nowrap;
+}
+.diet-mpill-cal {
+  background: #fff8ee;
+  color: #b45309;
+  border-color: #f59e0b;
+}
+.diet-mpill-p {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #3b82f6;
+}
+.diet-mpill-c {
+  background: #fffbeb;
+  color: #d97706;
+  border-color: #f59e0b;
+}
+.diet-mpill-f {
+  background: #fff5f5;
+  color: #e53e3e;
+  border-color: #ef4444;
+}
+[data-theme="dark"] .diet-mpill-cal {
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+  border-color: #f59e0b;
+}
+[data-theme="dark"] .diet-mpill-p {
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+  border-color: #3b82f6;
+}
+[data-theme="dark"] .diet-mpill-c {
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+  border-color: #f59e0b;
+}
+[data-theme="dark"] .diet-mpill-f {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border-color: #ef4444;
+}
+
+.diet-del-btn {
+  grid-area: btn;
+  align-self: center;
+  padding: 5px 9px;
+  font-size: 0.78rem;
+}
+
+.spin {
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 /* ─── Micronutrients ─────────────────────────────────────── */
-.diet-micros-card{margin-top:16px;padding:0;overflow:hidden}
-
-.diet-micros-toggle{
-  display:flex;align-items:center;justify-content:space-between;
-  width:100%;padding:14px 18px;
-  background:none;border:none;cursor:pointer;
-  font-family:var(--font-body);font-size:0.88rem;font-weight:600;
-  color:var(--text-primary);
-  border-radius:var(--radius-lg);
-  transition:background 0.15s;
-}
-.diet-micros-toggle:hover{background:var(--surface-2)}
-
-.diet-micros-toggle-left{display:flex;align-items:center;gap:8px}
-
-.diet-micros-note{
-  font-size:0.68rem;font-weight:400;
-  color:var(--text-muted);
-  background:var(--surface-2);
-  border:1.5px solid var(--border-light);
-  border-radius:10px;padding:2px 8px;
+.diet-micros-card {
+  margin-top: 16px;
+  padding: 0;
+  overflow: hidden;
 }
 
-.diet-micros-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:12px;padding:4px 18px 16px;
+.diet-micros-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-radius: var(--radius-lg);
+  transition: background 0.15s;
+}
+.diet-micros-toggle:hover {
+  background: var(--surface-2);
 }
 
-.diet-micro-item{display:flex;flex-direction:column;gap:5px}
-
-.diet-micro-header{display:flex;justify-content:space-between;align-items:baseline}
-.diet-micro-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)}
-.diet-micro-val{font-family:var(--font-mono);font-size:1rem;font-weight:700}
-.diet-micro-unit{font-size:0.65rem;font-weight:500;color:var(--text-muted);margin-left:2px}
-
-.diet-micro-bar-wrap{height:4px;background:var(--border-light);border-radius:2px;overflow:hidden}
-.diet-micro-bar{height:100%;border-radius:2px;transition:width 0.6s ease}
-
-.diet-micro-dv{font-size:0.65rem;color:var(--text-muted);font-family:var(--font-mono)}
-
-.diet-micros-disclaimer{
-  margin:0 18px 16px;
-  display:flex;align-items:flex-start;flex-wrap:wrap;gap:5px;
-  font-size:0.76rem;color:var(--text-muted);
-  background:var(--surface-2);
-  border:1.5px solid var(--border-light);
-  border-radius:var(--radius);padding:10px 12px;line-height:1.5;
+.diet-micros-toggle-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.diet-micros-edit{
-  display:inline-flex;align-items:center;gap:3px;
-  color:var(--accent-dark);font-weight:600;
-  margin-left:4px;
-}
-[data-theme="dark"] .diet-micros-edit{color:var(--neon)}
-
-@media(max-width:768px){
-  .diet-top-fields{grid-template-columns:1fr 1fr}
-  .diet-top-fields>:first-child{grid-column:span 2}
-  .diet-macros-grid{grid-template-columns:repeat(2,1fr)}
-  .diet-entry-macros{gap:3px}
-  .diet-micros-grid{grid-template-columns:repeat(2,1fr)}
-  .diet-toolbar{flex-direction:column;align-items:stretch;gap:8px}
-  .diet-toolbar .form-group{width:100%}
-  .diet-toolbar .btn{width:100%;justify-content:center}
-  .diet-summary{gap:12px}
-  .diet-rings{gap:8px}
-  .diet-form-actions{flex-direction:column}
-  .diet-form-actions .btn{width:100%;justify-content:center}
+.diet-micros-note {
+  font-size: 0.68rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  border: 1.5px solid var(--border-light);
+  border-radius: 10px;
+  padding: 2px 8px;
 }
 
-@media(max-width:480px){
-  .diet-top-fields{grid-template-columns:1fr}
-  .diet-top-fields>:first-child{grid-column:span 1}
-  .diet-macros-grid{grid-template-columns:1fr 1fr}
-  .diet-micros-grid{grid-template-columns:1fr 1fr}
-  .diet-entry{grid-template-columns:1fr auto;gap:4px 8px}
-  .diet-cal-num{font-size:1.8rem}
+.diet-micros-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 4px 18px 16px;
+}
+
+.diet-micro-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.diet-micro-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.diet-micro-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+.diet-micro-val {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+}
+.diet-micro-unit {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+
+.diet-micro-bar-wrap {
+  height: 4px;
+  background: var(--border-light);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.diet-micro-bar {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+
+.diet-micro-dv {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.diet-micros-disclaimer {
+  margin: 0 18px 16px;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 5px;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  line-height: 1.5;
+}
+
+.diet-micros-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--accent-dark);
+  font-weight: 600;
+  margin-left: 4px;
+}
+[data-theme="dark"] .diet-micros-edit {
+  color: var(--neon);
+}
+
+@media (max-width: 768px) {
+  .diet-top-fields {
+    grid-template-columns: 1fr 1fr;
+  }
+  .diet-top-fields > :first-child {
+    grid-column: span 2;
+  }
+  .diet-macros-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .diet-entry-macros {
+    gap: 3px;
+  }
+  .diet-micros-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .diet-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .diet-toolbar .form-group {
+    width: 100%;
+  }
+  .diet-toolbar .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .diet-summary {
+    gap: 12px;
+  }
+  .diet-rings {
+    gap: 8px;
+  }
+  .diet-form-actions {
+    flex-direction: column;
+  }
+  .diet-form-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .diet-top-fields {
+    grid-template-columns: 1fr;
+  }
+  .diet-top-fields > :first-child {
+    grid-column: span 1;
+  }
+  .diet-macros-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .diet-micros-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .diet-entry {
+    grid-template-columns: 1fr auto;
+    gap: 4px 8px;
+  }
+  .diet-cal-num {
+    font-size: 1.8rem;
+  }
 }

@@ -1,14 +1,16 @@
-const User = require('../models/User');
-const Exercise = require('../models/Exercise');
-const Diet = require('../models/Diet');
-const Supplement = require('../models/Supplement');
-const GymPlan = require('../models/GymPlan');
+const User = require("../models/User");
+const Exercise = require("../models/Exercise");
+const Diet = require("../models/Diet");
+const Supplement = require("../models/Supplement");
+const GymPlan = require("../models/GymPlan");
 
 // GET /api/user/profile
 const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select('-password -otp -otpExpires');
-    if (!user) return res.status(404).json({ message: 'User not found.' });
+    const user = await User.findById(req.user._id).select(
+      "-password -otp -otpExpires",
+    );
+    if (!user) return res.status(404).json({ message: "User not found." });
 
     // Compute BMI
     let bmi = null;
@@ -20,29 +22,47 @@ const getProfile = async (req, res) => {
 
     res.status(200).json({ ...user.toObject(), bmi });
   } catch (error) {
-    console.error('Get profile error:', error);
-    res.status(500).json({ message: 'Server error.' });
+    console.error("Get profile error:", error);
+    res.status(500).json({ message: "Server error." });
   }
 };
 
 // PUT /api/user/profile
 const updateProfile = async (req, res) => {
   try {
-    const { name, age, username, weight, heightFeet, heightInches, gymTime, notificationsEnabled } = req.body;
+    const {
+      name,
+      age,
+      username,
+      weight,
+      heightFeet,
+      heightInches,
+      gymTime,
+      notificationsEnabled,
+    } = req.body;
 
     // Check username uniqueness
     if (username && username !== req.user.username) {
       const existing = await User.findOne({ username });
       if (existing) {
-        return res.status(400).json({ message: 'Username already taken.' });
+        return res.status(400).json({ message: "Username already taken." });
       }
     }
 
     const updated = await User.findByIdAndUpdate(
       req.user._id,
-      { name, age, username, weight, heightFeet, heightInches, gymTime, notificationsEnabled },
-      { new: true, runValidators: true }
-    ).select('-password -otp -otpExpires');
+      {
+        name,
+        age,
+        username,
+        weight,
+        heightFeet,
+        heightInches,
+        gymTime,
+        notificationsEnabled,
+      },
+      { new: true, runValidators: true },
+    ).select("-password -otp -otpExpires");
 
     // Compute BMI
     let bmi = null;
@@ -52,10 +72,16 @@ const updateProfile = async (req, res) => {
       bmi = (updated.weight / (meters * meters)).toFixed(1);
     }
 
-    res.status(200).json({ ...updated.toObject(), bmi, message: 'Profile updated successfully.' });
+    res
+      .status(200)
+      .json({
+        ...updated.toObject(),
+        bmi,
+        message: "Profile updated successfully.",
+      });
   } catch (error) {
-    console.error('Update profile error:', error);
-    res.status(500).json({ message: 'Server error.' });
+    console.error("Update profile error:", error);
+    res.status(500).json({ message: "Server error." });
   }
 };
 
@@ -72,11 +98,46 @@ const resetProgress = async (req, res) => {
     // Reset streak to 1 (fresh-user state — mirrors the "first login" branch
     // in authController so the UI immediately shows 1, not 0).
     await User.findByIdAndUpdate(uid, { streak: 1, lastActiveDate: null });
-    res.status(200).json({ message: 'All progress reset successfully.' });
+    res.status(200).json({ message: "All progress reset successfully." });
   } catch (error) {
-    console.error('Reset progress error:', error);
-    res.status(500).json({ message: 'Server error during reset.' });
+    console.error("Reset progress error:", error);
+    res.status(500).json({ message: "Server error during reset." });
   }
 };
 
-module.exports = { getProfile, updateProfile, resetProgress };
+// GET /api/user/leaderboard
+const getLeaderboard = async (req, res) => {
+  try {
+    const topUsers = await User.find({ isVerified: true })
+      .select("name username totalFitXP level streak")
+      .sort({ totalFitXP: -1 })
+      .limit(10);
+
+    const currentUserXP = req.user.totalFitXP || 0;
+    const rank =
+      (await User.countDocuments({
+        isVerified: true,
+        totalFitXP: { $gt: currentUserXP },
+      })) + 1;
+
+    const userAbove = topUsers.find((u) =>
+      u._id.toString() !== req.user._id.toString() && u.totalFitXP > currentUserXP,
+    );
+    const xpToOvertake = userAbove ? userAbove.totalFitXP - currentUserXP + 1 : null;
+
+    res.status(200).json({
+      leaderboard: topUsers,
+      currentUser: {
+        rank,
+        totalFitXP: currentUserXP,
+        xpToOvertake,
+        userAboveName: userAbove?.name || null,
+      },
+    });
+  } catch (error) {
+    console.error("Leaderboard error:", error);
+    res.status(500).json({ message: "Server error." });
+  }
+};
+
+module.exports = { getProfile, updateProfile, resetProgress, getLeaderboard };

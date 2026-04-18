@@ -50,8 +50,8 @@ const sendOTPEmail = async (email, name, otp) => {
 
   const { error } = await resend.emails.send(mailOptions);
   if (error) {
-    console.error('Resend API error:', error);
-    throw new Error(error.message || 'Failed to send email');
+    console.error("Resend API error:", error);
+    throw new Error(error.message || "Failed to send email");
   }
 };
 

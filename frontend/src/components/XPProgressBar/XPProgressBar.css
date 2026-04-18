@@ -1,0 +1,108 @@
+.xpbar-root {
+  --xp-gold: #ffd700;
+  --xp-gold-glow: rgba(255, 215, 0, 0.5);
+  --xp-gold-subtle: rgba(255, 215, 0, 0.08);
+  --xp-track-bg: rgba(255, 255, 255, 0.06);
+  --xp-text: var(--text-primary);
+  --xp-text-muted: var(--text-muted);
+
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── Top row ── */
+.xpbar-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.xpbar-level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--xp-gold-subtle);
+  color: var(--xp-gold);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 20px;
+  padding: 3px 8px;
+  flex-shrink: 0;
+}
+
+.xpbar-title {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  color: var(--xp-gold);
+  flex: 1;
+}
+
+.xpbar-total {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--xp-text-muted);
+}
+
+/* ── Track ── */
+.xpbar-track {
+  width: 100%;
+  height: 10px;
+  background: var(--xp-track-bg);
+  border-radius: 99px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 215, 0, 0.12);
+}
+
+.xpbar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--xp-gold) 0%, #ffec6e 60%, #fff8b0 100%);
+  border-radius: 99px;
+  position: relative;
+  box-shadow: 0 0 10px var(--xp-gold-glow);
+  will-change: width;
+}
+
+.xpbar-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: xp-shimmer 2s infinite linear;
+}
+
+@keyframes xp-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ── Bottom row ── */
+.xpbar-bottom {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--xp-text-muted);
+  gap: 8px;
+}
+
+.xpbar-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--xp-gold);
+  font-weight: 600;
+}

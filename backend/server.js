@@ -71,7 +71,9 @@ app.use((err, req, res, next) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
   }
   console.error("Unhandled error:", err.message);
-  res.status(err.status || 500).json({ message: err.message || "Internal server error" });
+  res
+    .status(err.status || 500)
+    .json({ message: err.message || "Internal server error" });
 });
 
 // MongoDB connection

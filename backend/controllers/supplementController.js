@@ -1,4 +1,4 @@
-const Supplement = require('../models/Supplement');
+const Supplement = require("../models/Supplement");
 
 // GET /api/supplements?date=2024-01-01
 const getSupplements = async (req, res) => {
@@ -16,7 +16,7 @@ const getSupplements = async (req, res) => {
 
     res.status(200).json({ supplements });
   } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
+    res.status(500).json({ message: "Server error." });
   }
 };
 
@@ -26,7 +26,9 @@ const addSupplement = async (req, res) => {
     const { name, quantity, time, date, notes } = req.body;
 
     if (!name || !quantity || !time) {
-      return res.status(400).json({ message: 'Name, quantity, and time are required.' });
+      return res
+        .status(400)
+        .json({ message: "Name, quantity, and time are required." });
     }
 
     const supplement = await Supplement.create({
@@ -38,20 +40,24 @@ const addSupplement = async (req, res) => {
       notes,
     });
 
-    res.status(201).json({ supplement, message: 'Supplement logged.' });
+    res.status(201).json({ supplement, message: "Supplement logged." });
   } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
+    res.status(500).json({ message: "Server error." });
   }
 };
 
 // DELETE /api/supplements/:id
 const deleteSupplement = async (req, res) => {
   try {
-    const supplement = await Supplement.findOneAndDelete({ _id: req.params.id, user: req.user._id });
-    if (!supplement) return res.status(404).json({ message: 'Supplement not found.' });
-    res.status(200).json({ message: 'Supplement deleted.' });
+    const supplement = await Supplement.findOneAndDelete({
+      _id: req.params.id,
+      user: req.user._id,
+    });
+    if (!supplement)
+      return res.status(404).json({ message: "Supplement not found." });
+    res.status(200).json({ message: "Supplement deleted." });
   } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
+    res.status(500).json({ message: "Server error." });
   }
 };
 

@@ -1,19 +1,35 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
-  RiArrowLeftLine, RiTimeLine, RiFireLine, RiBodyScanLine,
-  RiCalendarCheckLine, RiImageLine,
-} from 'react-icons/ri';
-import Sidebar from '../../components/Sidebar/Sidebar';
-import MobileHeader from '../../components/MobileHeader/MobileHeader';
-import Footer from '../../components/Footer/Footer';
-import WORKOUT_PLANS, { FALLBACK_IMG } from '../../data/workoutPlans';
-import './PlanPage.css';
+  RiArrowLeftLine,
+  RiTimeLine,
+  RiFireLine,
+  RiBodyScanLine,
+  RiCalendarCheckLine,
+  RiImageLine,
+} from "react-icons/ri";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import MobileHeader from "../../components/MobileHeader/MobileHeader";
+import Footer from "../../components/Footer/Footer";
+import WORKOUT_PLANS, { FALLBACK_IMG } from "../../data/workoutPlans";
+import "./PlanPage.css";
 
 const BADGE_COLORS = {
-  info:   { bg: 'var(--info-subtle)',    color: 'var(--info)',    border: 'var(--info)' },
-  accent: { bg: 'var(--accent-subtle)',  color: 'var(--accent-dark)', border: 'var(--accent-dark)' },
-  danger: { bg: 'var(--danger-subtle)', color: 'var(--danger)', border: 'var(--danger)' },
+  info: {
+    bg: "var(--info-subtle)",
+    color: "var(--info)",
+    border: "var(--info)",
+  },
+  accent: {
+    bg: "var(--accent-subtle)",
+    color: "var(--accent-dark)",
+    border: "var(--accent-dark)",
+  },
+  danger: {
+    bg: "var(--danger-subtle)",
+    color: "var(--danger)",
+    border: "var(--danger)",
+  },
 };
 
 const ExerciseCard = ({ exercise, index }) => {
@@ -55,8 +71,10 @@ const ExerciseCard = ({ exercise, index }) => {
         </div>
         {exercise.muscles && exercise.muscles.length > 0 && (
           <div className="pp-ex-muscles">
-            {exercise.muscles.map(m => (
-              <span key={m} className="pp-muscle-chip">{m}</span>
+            {exercise.muscles.map((m) => (
+              <span key={m} className="pp-muscle-chip">
+                {m}
+              </span>
             ))}
           </div>
         )}
@@ -68,7 +86,7 @@ const ExerciseCard = ({ exercise, index }) => {
 
 const PlanPage = () => {
   const { level } = useParams();
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
   const [activeDay, setActiveDay] = useState(0);
 
   const plan = WORKOUT_PLANS[level];
@@ -82,9 +100,14 @@ const PlanPage = () => {
           <div className="pp-not-found">
             <div className="pp-not-found-icon">🏋️</div>
             <h2>Plan not found</h2>
-            <p>The plan <strong>"{level}"</strong> does not exist.</p>
-            <button className="btn btn-primary" onClick={() => navigate('/gym-plan')}>
-              <RiArrowLeftLine size={15}/> Back to Gym Plans
+            <p>
+              The plan <strong>"{level}"</strong> does not exist.
+            </p>
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate("/gym-plan")}
+            >
+              <RiArrowLeftLine size={15} /> Back to Gym Plans
             </button>
           </div>
         </main>
@@ -101,10 +124,9 @@ const PlanPage = () => {
       <Sidebar />
       <MobileHeader />
       <main className="page-content">
-
         {/* Back button */}
-        <button className="pp-back-btn" onClick={() => navigate('/gym-plan')}>
-          <RiArrowLeftLine size={15}/> All Plans
+        <button className="pp-back-btn" onClick={() => navigate("/gym-plan")}>
+          <RiArrowLeftLine size={15} /> All Plans
         </button>
 
         {/* Hero header */}
@@ -112,7 +134,11 @@ const PlanPage = () => {
           <div className="pp-hero-left">
             <span
               className="pp-hero-badge"
-              style={{ background: badgeStyle.bg, color: badgeStyle.color, borderColor: badgeStyle.border }}
+              style={{
+                background: badgeStyle.bg,
+                color: badgeStyle.color,
+                borderColor: badgeStyle.border,
+              }}
             >
               {plan.badge}
             </span>
@@ -131,7 +157,11 @@ const PlanPage = () => {
             </div>
             <div className="pp-hstat">
               <span className="pp-hstat-num">
-                {Math.round(plan.days.reduce((s, d) => s + (d.duration || 60), 0) / plan.days.length)}m
+                {Math.round(
+                  plan.days.reduce((s, d) => s + (d.duration || 60), 0) /
+                    plan.days.length,
+                )}
+                m
               </span>
               <span className="pp-hstat-label">Avg Session</span>
             </div>
@@ -141,7 +171,7 @@ const PlanPage = () => {
         {/* Rest note */}
         {plan.restDays && (
           <div className="pp-rest-note">
-            <RiCalendarCheckLine size={14}/> {plan.restDays}
+            <RiCalendarCheckLine size={14} /> {plan.restDays}
           </div>
         )}
 
@@ -151,7 +181,7 @@ const PlanPage = () => {
             {plan.days.map((day, i) => (
               <button
                 key={day.day}
-                className={`pp-day-tab${activeDay === i ? ' pp-day-tab--active' : ''}`}
+                className={`pp-day-tab${activeDay === i ? " pp-day-tab--active" : ""}`}
                 onClick={() => setActiveDay(i)}
               >
                 <span className="pp-tab-day">Day {day.day}</span>
@@ -166,18 +196,22 @@ const PlanPage = () => {
           <>
             <div className="pp-day-header">
               <div>
-                <h2 className="pp-day-title">Day {currentDay.day} — {currentDay.label}</h2>
+                <h2 className="pp-day-title">
+                  Day {currentDay.day} — {currentDay.label}
+                </h2>
                 <p className="pp-day-focus">{currentDay.focus}</p>
               </div>
               <div className="pp-day-meta">
                 <span className="pp-day-metaitem">
-                  <RiTimeLine size={13}/> {currentDay.duration} min
+                  <RiTimeLine size={13} /> {currentDay.duration} min
                 </span>
                 <span className="pp-day-metaitem">
-                  <RiFireLine size={13}/> {currentDay.exercises.length} exercises
+                  <RiFireLine size={13} /> {currentDay.exercises.length}{" "}
+                  exercises
                 </span>
                 <span className="pp-day-metaitem">
-                  <RiBodyScanLine size={13}/> {currentDay.muscleGroups.join(', ')}
+                  <RiBodyScanLine size={13} />{" "}
+                  {currentDay.muscleGroups.join(", ")}
                 </span>
               </div>
             </div>
@@ -185,7 +219,11 @@ const PlanPage = () => {
             {/* Exercise grid */}
             <div className="pp-ex-grid">
               {currentDay.exercises.map((ex, idx) => (
-                <ExerciseCard key={`${currentDay.day}-${idx}`} exercise={ex} index={idx} />
+                <ExerciseCard
+                  key={`${currentDay.day}-${idx}`}
+                  exercise={ex}
+                  index={idx}
+                />
               ))}
             </div>
           </>

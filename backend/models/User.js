@@ -1,10 +1,16 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
-    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
     password: { type: String, required: true, minlength: 6 },
     mobile: { type: String, required: true },
     username: { type: String, unique: true, sparse: true, trim: true },
@@ -21,13 +27,15 @@ const userSchema = new mongoose.Schema(
     streak: { type: Number, default: 0 },
     lastActiveDate: { type: Date },
     notificationsEnabled: { type: Boolean, default: false },
+    totalFitXP: { type: Number, default: 0 },
+    level: { type: Number, default: 1 },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Hash password before saving
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
   const salt = await bcrypt.genSalt(12);
   this.password = await bcrypt.hash(this.password, salt);
   next();
@@ -40,18 +48,18 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 
 // Generate unique username from name
 userSchema.methods.generateUsername = function () {
-  const base = this.name.toLowerCase().replace(/\s+/g, '');
+  const base = this.name.toLowerCase().replace(/\s+/g, "");
   const random = Math.floor(1000 + Math.random() * 9000);
   return `${base}${random}`;
 };
 
 // Virtual: BMI
-userSchema.virtual('bmi').get(function () {
+userSchema.virtual("bmi").get(function () {
   if (!this.weight || !this.heightFeet) return null;
-  const totalInches = (this.heightFeet * 12) + Number(this.heightInches || 0);
+  const totalInches = this.heightFeet * 12 + Number(this.heightInches || 0);
   const meters = totalInches * 0.0254;
   const bmiVal = this.weight / (meters * meters);
   return (this.weight / (meters * meters)).toFixed(1);
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);

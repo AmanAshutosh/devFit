@@ -24,8 +24,12 @@
 }
 
 @keyframes barbellSpin {
-  0%   { transform: rotate(-15deg) scale(1);   }
-  100% { transform: rotate(15deg)  scale(1.15); }
+  0% {
+    transform: rotate(-15deg) scale(1);
+  }
+  100% {
+    transform: rotate(15deg) scale(1.15);
+  }
 }
 
 .private-route-brand {

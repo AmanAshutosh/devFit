@@ -1,0 +1,303 @@
+/* ── Premium Dark Gold variables scoped to leaderboard ── */
+.lb-root {
+  --lb-gold: #ffd700;
+  --lb-gold-light: #ffec6e;
+  --lb-gold-dark: #b8860b;
+  --lb-gold-glow: rgba(255, 215, 0, 0.35);
+  --lb-gold-subtle: rgba(255, 215, 0, 0.08);
+  --lb-silver: #c0cfe0;
+  --lb-silver-glow: rgba(192, 207, 224, 0.3);
+  --lb-bronze: #cd8b4a;
+  --lb-bronze-glow: rgba(205, 139, 74, 0.3);
+  --lb-surface: rgba(15, 14, 25, 0.92);
+  --lb-card-bg: rgba(22, 20, 38, 0.88);
+  --lb-border-dim: rgba(255, 215, 0, 0.12);
+  --lb-text: #f0e8d0;
+  --lb-text-muted: rgba(240, 232, 208, 0.52);
+  --lb-radius: 10px;
+
+  position: relative;
+  background: var(--lb-surface);
+  border: 1px solid var(--lb-border-dim);
+  border-radius: 14px;
+  padding: 20px 18px 16px;
+  overflow: hidden;
+}
+
+.lb-root::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255, 215, 0, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ── Header ── */
+.lb-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.lb-header-icon {
+  color: var(--lb-gold);
+  flex-shrink: 0;
+}
+
+.lb-header-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  color: var(--lb-gold);
+  letter-spacing: 0.04em;
+  flex: 1;
+}
+
+.lb-header-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--lb-gold-subtle);
+  color: var(--lb-gold);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 20px;
+  padding: 2px 8px;
+}
+
+/* ── List ── */
+.lb-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+}
+
+/* ── Card ── */
+.lb-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: var(--lb-radius);
+  background: var(--lb-card-bg);
+  border: 1px solid var(--lb-border-dim);
+  cursor: default;
+  overflow: hidden;
+  transition: filter 0.15s ease;
+}
+
+.lb-card:hover {
+  filter: brightness(1.08);
+}
+
+/* Gold rank */
+.lb-rank-gold {
+  border-color: rgba(255, 215, 0, 0.45);
+  background: linear-gradient(
+    135deg,
+    rgba(30, 25, 5, 0.92) 0%,
+    rgba(22, 20, 38, 0.88) 100%
+  );
+}
+
+/* Silver rank */
+.lb-rank-silver {
+  border-color: rgba(192, 207, 224, 0.35);
+}
+
+/* Bronze rank */
+.lb-rank-bronze {
+  border-color: rgba(205, 139, 74, 0.3);
+}
+
+.lb-rank-other {
+  border-color: var(--lb-border-dim);
+}
+
+/* Current user highlight */
+.lb-card--me {
+  border-color: rgba(57, 255, 20, 0.45);
+  background: linear-gradient(
+    135deg,
+    rgba(10, 35, 10, 0.9) 0%,
+    rgba(22, 20, 38, 0.88) 100%
+  );
+}
+
+/* ── Rank column ── */
+.lb-card-rank {
+  width: 34px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.lb-medal {
+  font-size: 1.45rem;
+  line-height: 1;
+  display: block;
+}
+
+.lb-rank-num {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--lb-text-muted);
+}
+
+/* ── Info column ── */
+.lb-card-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lb-card-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--lb-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lb-you-pill {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  background: rgba(57, 255, 20, 0.15);
+  color: #39ff14;
+  border: 1px solid rgba(57, 255, 20, 0.4);
+  border-radius: 20px;
+  padding: 1px 5px;
+}
+
+.lb-card-sub {
+  font-size: 0.73rem;
+  color: var(--lb-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lb-streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: #fbbf24;
+}
+
+/* ── XP column ── */
+.lb-card-xp {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.lb-xp-val {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--lb-gold-light);
+}
+
+.lb-rank-gold .lb-xp-val {
+  color: var(--lb-gold);
+  text-shadow: 0 0 8px var(--lb-gold-glow);
+}
+
+.lb-rank-silver .lb-xp-val {
+  color: var(--lb-silver);
+}
+
+.lb-rank-bronze .lb-xp-val {
+  color: var(--lb-bronze);
+}
+
+.lb-xp-label {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--lb-text-muted);
+}
+
+/* ── Glow ring for rank 1 ── */
+.lb-glow-ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: calc(var(--lb-radius) + 2px);
+  border: 2px solid var(--lb-gold);
+  box-shadow: 0 0 18px var(--lb-gold-glow), inset 0 0 12px rgba(255, 215, 0, 0.06);
+  pointer-events: none;
+}
+
+/* ── Motivation banner ── */
+.lb-motivation {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  background: var(--lb-gold-subtle);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: var(--lb-text);
+  line-height: 1.5;
+}
+
+.lb-motivation-icon {
+  color: var(--lb-gold);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.lb-motivation strong {
+  color: var(--lb-gold-light);
+}
+
+/* ── Skeleton ── */
+.lb-skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lb-skeleton-row {
+  height: 52px;
+  border-radius: var(--lb-radius);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: lb-shimmer 1.4s infinite;
+}
+
+@keyframes lb-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Empty state ── */
+.lb-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 28px 0;
+  color: var(--lb-text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+}

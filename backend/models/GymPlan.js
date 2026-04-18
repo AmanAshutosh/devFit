@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const exercisePlanSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -18,12 +18,21 @@ const dayPlanSchema = new mongoose.Schema({
 
 const gymPlanSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
-    planName: { type: String, default: 'My Custom Plan' },
-    level: { type: String, enum: ['beginner', 'intermediate', 'advanced'], default: 'beginner' },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      unique: true,
+    },
+    planName: { type: String, default: "My Custom Plan" },
+    level: {
+      type: String,
+      enum: ["beginner", "intermediate", "advanced"],
+      default: "beginner",
+    },
     days: [dayPlanSchema],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-module.exports = mongoose.model('GymPlan', gymPlanSchema);
+module.exports = mongoose.model("GymPlan", gymPlanSchema);

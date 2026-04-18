@@ -1,13 +1,13 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const { generateOTP, sendOTPEmail } = require('../config/email');
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+const { generateOTP, sendOTPEmail } = require("../config/email");
 
-const OTP_RESEND_COOLDOWN_MS = 60 * 1000;   // 60 seconds
-const OTP_RESEND_MAX = 3;                    // max resends per registration
+const OTP_RESEND_COOLDOWN_MS = 60 * 1000; // 60 seconds
+const OTP_RESEND_MAX = 3; // max resends per registration
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN || '7d',
+    expiresIn: process.env.JWT_EXPIRES_IN || "7d",
   });
 };
 
@@ -17,12 +17,12 @@ const register = async (req, res) => {
     const { name, email, password, mobile } = req.body;
 
     if (!name || !email || !password || !mobile) {
-      return res.status(400).json({ message: 'All fields are required.' });
+      return res.status(400).json({ message: "All fields are required." });
     }
 
     const existingUser = await User.findOne({ email });
     if (existingUser && existingUser.isVerified) {
-      return res.status(400).json({ message: 'Email already registered.' });
+      return res.status(400).json({ message: "Email already registered." });
     }
 
     const otp = generateOTP();
@@ -39,19 +39,34 @@ const register = async (req, res) => {
       existingUser.otpResendLastAt = undefined;
       await existingUser.save();
       await sendOTPEmail(email, name, otp);
-      return res.status(200).json({ message: 'OTP resent. Please verify your email.' });
+      return res
+        .status(200)
+        .json({ message: "OTP resent. Please verify your email." });
     }
 
-    const user = new User({ name, email, password, mobile, otp, otpExpires, otpResendCount: 0 });
+    const user = new User({
+      name,
+      email,
+      password,
+      mobile,
+      otp,
+      otpExpires,
+      otpResendCount: 0,
+    });
     user.username = user.generateUsername();
     await user.save();
 
     await sendOTPEmail(email, name, otp);
 
-    res.status(201).json({ message: 'Registration successful. Please verify your email with the OTP sent.' });
+    res
+      .status(201)
+      .json({
+        message:
+          "Registration successful. Please verify your email with the OTP sent.",
+      });
   } catch (error) {
-    console.error('Register error:', error);
-    res.status(500).json({ message: 'Server error during registration.' });
+    console.error("Register error:", error);
+    res.status(500).json({ message: "Server error during registration." });
   }
 };
 
@@ -62,16 +77,18 @@ const verifyOTP = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(404).json({ message: "User not found." });
     }
     if (user.isVerified) {
-      return res.status(400).json({ message: 'Email already verified.' });
+      return res.status(400).json({ message: "Email already verified." });
     }
     if (!user.otp || user.otp !== otp) {
-      return res.status(400).json({ message: 'Invalid OTP.' });
+      return res.status(400).json({ message: "Invalid OTP." });
     }
     if (user.otpExpires < Date.now()) {
-      return res.status(400).json({ message: 'OTP has expired. Please register again.' });
+      return res
+        .status(400)
+        .json({ message: "OTP has expired. Please register again." });
     }
 
     user.isVerified = true;
@@ -82,7 +99,7 @@ const verifyOTP = async (req, res) => {
     const token = generateToken(user._id);
 
     res.status(200).json({
-      message: 'Email verified successfully!',
+      message: "Email verified successfully!",
       token,
       user: {
         id: user._id,
@@ -92,8 +109,8 @@ const verifyOTP = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Verify OTP error:', error);
-    res.status(500).json({ message: 'Server error during OTP verification.' });
+    console.error("Verify OTP error:", error);
+    res.status(500).json({ message: "Server error during OTP verification." });
   }
 };
 
@@ -103,25 +120,31 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required.' });
+      return res
+        .status(400)
+        .json({ message: "Email and password are required." });
     }
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials.' });
+      return res.status(401).json({ message: "Invalid credentials." });
     }
     if (!user.isVerified) {
-      return res.status(403).json({ message: 'Please verify your email before logging in.' });
+      return res
+        .status(403)
+        .json({ message: "Please verify your email before logging in." });
     }
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials.' });
+      return res.status(401).json({ message: "Invalid credentials." });
     }
 
     // Update streak
     const today = new Date().toDateString();
-    const lastActive = user.lastActiveDate ? new Date(user.lastActiveDate).toDateString() : null;
+    const lastActive = user.lastActiveDate
+      ? new Date(user.lastActiveDate).toDateString()
+      : null;
     const yesterday = new Date(Date.now() - 86400000).toDateString();
 
     if (lastActive === today) {
@@ -137,7 +160,7 @@ const login = async (req, res) => {
     const token = generateToken(user._id);
 
     res.status(200).json({
-      message: 'Login successful!',
+      message: "Login successful!",
       token,
       user: {
         id: user._id,
@@ -148,8 +171,8 @@ const login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ message: 'Server error during login.' });
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server error during login." });
   }
 };
 
@@ -157,23 +180,36 @@ const login = async (req, res) => {
 const resendOTP = async (req, res) => {
   try {
     const { email } = req.body;
-    if (!email) return res.status(400).json({ message: 'Email is required.' });
+    if (!email) return res.status(400).json({ message: "Email is required." });
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: 'User not found.' });
-    if (user.isVerified) return res.status(400).json({ message: 'Email already verified. Please login.' });
+    if (!user) return res.status(404).json({ message: "User not found." });
+    if (user.isVerified)
+      return res
+        .status(400)
+        .json({ message: "Email already verified. Please login." });
 
     // Max resend attempts
     if ((user.otpResendCount || 0) >= OTP_RESEND_MAX) {
-      return res.status(429).json({ message: 'Maximum OTP attempts reached. Please register again.' });
+      return res
+        .status(429)
+        .json({
+          message: "Maximum OTP attempts reached. Please register again.",
+        });
     }
 
     // 60-second cooldown
     if (user.otpResendLastAt) {
       const elapsed = Date.now() - new Date(user.otpResendLastAt).getTime();
       if (elapsed < OTP_RESEND_COOLDOWN_MS) {
-        const secondsLeft = Math.ceil((OTP_RESEND_COOLDOWN_MS - elapsed) / 1000);
-        return res.status(429).json({ message: `Please wait ${secondsLeft}s before requesting a new OTP.` });
+        const secondsLeft = Math.ceil(
+          (OTP_RESEND_COOLDOWN_MS - elapsed) / 1000,
+        );
+        return res
+          .status(429)
+          .json({
+            message: `Please wait ${secondsLeft}s before requesting a new OTP.`,
+          });
       }
     }
 
@@ -187,12 +223,12 @@ const resendOTP = async (req, res) => {
     await sendOTPEmail(email, user.name, otp);
 
     res.status(200).json({
-      message: 'New OTP sent to your email.',
+      message: "New OTP sent to your email.",
       attemptsLeft: OTP_RESEND_MAX - user.otpResendCount,
     });
   } catch (error) {
-    console.error('Resend OTP error:', error);
-    res.status(500).json({ message: 'Server error. Could not resend OTP.' });
+    console.error("Resend OTP error:", error);
+    res.status(500).json({ message: "Server error. Could not resend OTP." });
   }
 };
 
