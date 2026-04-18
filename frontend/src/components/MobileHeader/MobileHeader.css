@@ -18,6 +18,25 @@
 [data-theme="dark"] .mobile-header {
   box-shadow: 0 6px 20px rgba(0,0,0,0.4);
 }
+.mobile-back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: var(--radius);
+  min-height: 36px;
+  min-width: 36px;
+  margin-right: 4px;
+  transition: background 0.15s;
+}
+.mobile-back-btn:hover {
+  background: var(--border-light);
+}
+
 .mobile-header-brand {
   font-family: var(--font-heading);
   font-size: 1.4rem;

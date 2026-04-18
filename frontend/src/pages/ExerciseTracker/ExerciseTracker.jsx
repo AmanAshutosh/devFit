@@ -129,6 +129,7 @@ const ExerciseTracker = () => {
   return (
     <div className="page-layout">
       <Sidebar />
+      <MobileHeader />
       <main className="page-content">
         <div className="page-header">
           <div>
