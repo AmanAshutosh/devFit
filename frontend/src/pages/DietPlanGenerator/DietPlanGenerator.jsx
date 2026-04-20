@@ -39,32 +39,135 @@ function generateDietPlan(data) {
   const fatG = Math.round((calories * 0.25) / 9);
   const carbG = Math.round((calories - proteinG * 4 - fatG * 9) / 4);
 
-  const isVeg = ["vegetarian", "vegan", "eggetarian"].includes(data.dietPreference);
-  const isVegan = data.dietPreference === "vegan";
+  const diet = data.dietPreference; // "vegetarian" | "non_vegetarian" | "vegan" | "eggetarian"
 
-  const breakfasts = isVegan
-    ? ["Oats with almond milk, banana & chia seeds", "Poha with vegetables & peanuts", "Moong dal chilla with mint chutney"]
-    : isVeg
-    ? ["Paneer bhurji with 2 multigrain rotis", "Oats with milk, banana & almonds", "Vegetable poha with curd (100g)"]
-    : ["3-egg omelette with 2 multigrain rotis", "Oats with milk, boiled egg & banana", "Chicken sandwich with multigrain bread"];
+  const MEALS = {
+    vegan: {
+      breakfasts: [
+        "Oats with almond milk, banana & chia seeds",
+        "Poha with vegetables & peanuts",
+        "Moong dal chilla with mint chutney",
+        "Upma with mixed vegetables & peanuts",
+        "Whole wheat toast + peanut butter + banana",
+      ],
+      lunches: [
+        "Brown rice + rajma curry + cucumber salad",
+        "Roti + chana masala + roasted vegetables",
+        "Vegetable biryani + mixed dal + salad",
+        "Quinoa pulao + black bean curry + salad",
+        "Lentil soup + brown rice + stir-fried vegetables",
+      ],
+      dinners: [
+        "Lentil soup + brown rice + salad",
+        "Tofu stir-fry + roti + dal",
+        "Dal makhni (vegan) + millet roti + sabzi",
+        "Chickpea curry + brown rice + cucumber raita (soy)",
+        "Mixed vegetable curry + roti + dal",
+      ],
+      snacks: [
+        "Handful of mixed nuts + green tea",
+        "Roasted chana + cucumber slices",
+        "Fruit bowl (banana, apple, papaya)",
+        "Peanut butter on rice cakes",
+        "Hummus + carrot sticks",
+      ],
+    },
 
-  const lunches = isVegan
-    ? ["Brown rice + rajma curry + salad", "Roti + chana masala + cucumber raita (soy)", "Vegetable biryani + mixed dal"]
-    : isVeg
-    ? ["2 rotis + paneer curry + salad + dal", "Brown rice + rajma + curd (100g)", "Veg khichdi + curd + papad"]
-    : ["Brown rice + chicken curry + dal + salad", "2 rotis + egg curry + dal tadka", "Chicken biryani (small portion) + raita"];
+    vegetarian: {
+      breakfasts: [
+        "Paneer bhurji (100g) with 2 multigrain rotis",
+        "Oats with milk, banana & almonds",
+        "Vegetable poha with curd (150g)",
+        "Moong dal chilla with mint chutney + curd",
+        "Upma + sprouts salad + a glass of milk",
+      ],
+      lunches: [
+        "2 rotis + paneer curry (100g) + dal + salad",
+        "Brown rice + rajma + curd (150g)",
+        "Veg khichdi + curd + papad + sabzi",
+        "2 rotis + mixed veg sabzi + dal tadka + curd",
+        "Brown rice + palak paneer + dal + salad",
+      ],
+      dinners: [
+        "Dal makhni + 2 rotis + sabzi",
+        "Paneer tikka (100g) + roti + salad",
+        "Mixed veg soup + 2 rotis + dahi",
+        "Paneer bhurji + 2 rotis + dal + salad",
+        "Vegetable curry + brown rice + dal",
+      ],
+      snacks: [
+        "Greek yogurt (150g) + walnuts",
+        "Sprouts chaat + lemon water",
+        "Paneer cubes (50g) + seasonal fruit",
+        "Roasted makhana + green tea",
+        "Buttermilk + mixed nuts",
+      ],
+    },
 
-  const dinners = isVegan
-    ? ["Lentil soup + brown rice + salad", "Tofu stir-fry with roti", "Dal makhni (vegan) + millet roti"]
-    : isVeg
-    ? ["Dal makhni + 2 rotis + sabzi", "Paneer tikka + roti + salad", "Mixed veg soup + 2 rotis + dahi"]
-    : ["Grilled chicken (150g) + sautéed vegetables + roti", "Fish curry + brown rice + salad", "Egg bhurji + 2 rotis + dal"];
+    eggetarian: {
+      breakfasts: [
+        "3-egg omelette with vegetables + 2 multigrain rotis",
+        "2 boiled eggs + oats with milk & banana",
+        "Egg bhurji (2 eggs) + 2 whole wheat rotis + curd",
+        "Egg sandwich (2 eggs) on multigrain bread + orange juice",
+        "Vegetable poha + 2 hard-boiled eggs on the side",
+      ],
+      lunches: [
+        "2 rotis + egg curry (2 eggs) + dal + salad",
+        "Brown rice + egg masala (2 eggs) + curd (100g)",
+        "Egg fried rice (2 eggs) + mixed vegetable sabzi + dal",
+        "2 rotis + scrambled eggs (2) + dal tadka + cucumber salad",
+        "Brown rice + egg korma (2 eggs) + rajma + salad",
+      ],
+      dinners: [
+        "Egg bhurji (2 eggs) + 2 rotis + dal + salad",
+        "2 boiled eggs + dal makhni + roti + sabzi",
+        "Egg curry (1–2 eggs) + brown rice + mixed vegetable salad",
+        "Omelette (2 eggs) + 2 rotis + lentil soup",
+        "Egg stir-fry with vegetables + roti + curd",
+      ],
+      snacks: [
+        "2 boiled eggs + cucumber & tomato slices",
+        "Egg sandwich (1 egg) on multigrain bread",
+        "Boiled egg (1) + mixed nuts + green tea",
+        "Greek yogurt (100g) + 1 boiled egg",
+        "Sprouts chaat + 1 boiled egg",
+      ],
+    },
 
-  const snacks = isVegan
-    ? ["Handful of mixed nuts + green tea", "Roasted chana + cucumber slices", "Fruit bowl (banana, apple, papaya)"]
-    : isVeg
-    ? ["Greek yogurt (150g) + walnuts", "Sprouts chaat + lemon water", "Paneer cubes (50g) + fruit"]
-    : ["Boiled eggs (2) + cucumber", "Chicken tikka (100g) + buttermilk", "Greek yogurt + mixed nuts"];
+    non_vegetarian: {
+      breakfasts: [
+        "3-egg omelette with 2 multigrain rotis",
+        "Oats with milk, boiled egg (2) & banana",
+        "Chicken sandwich on multigrain bread + orange juice",
+        "2 boiled eggs + upma with vegetables",
+        "Egg bhurji (2 eggs) + whole wheat roti + a glass of milk",
+      ],
+      lunches: [
+        "Brown rice + chicken curry (150g) + dal + salad",
+        "2 rotis + egg curry (2 eggs) + dal tadka",
+        "Chicken biryani (small portion) + raita + salad",
+        "Brown rice + fish curry (150g) + dal + salad",
+        "2 rotis + chicken tikka masala (150g) + dal + curd",
+      ],
+      dinners: [
+        "Grilled chicken (150g) + sautéed vegetables + roti",
+        "Fish curry (150g) + brown rice + salad",
+        "Egg bhurji (2 eggs) + 2 rotis + dal",
+        "Chicken soup + 2 rotis + mixed vegetable sabzi",
+        "Baked fish (150g) + brown rice + cucumber salad",
+      ],
+      snacks: [
+        "2 boiled eggs + cucumber slices",
+        "Chicken tikka (100g) + buttermilk",
+        "Greek yogurt (150g) + mixed nuts",
+        "Boiled eggs (2) + roasted chana",
+        "Tuna salad wrap (small) or egg salad",
+      ],
+    },
+  };
+
+  const planMeals = MEALS[diet] || MEALS.vegetarian;
 
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
@@ -76,11 +179,11 @@ function generateDietPlan(data) {
     carbG,
     fatG,
     meals: {
-      breakfast: pick(breakfasts),
-      lunch: pick(lunches),
-      dinner: pick(dinners),
-      morningSnack: pick(snacks),
-      eveningSnack: pick(snacks),
+      breakfast: pick(planMeals.breakfasts),
+      lunch: pick(planMeals.lunches),
+      dinner: pick(planMeals.dinners),
+      morningSnack: pick(planMeals.snacks),
+      eveningSnack: pick(planMeals.snacks),
     },
     heightCm,
     bmi: (Number(data.weight) / (heightCm / 100) ** 2).toFixed(1),
