@@ -13,6 +13,8 @@ import {
   RiUserLine,
   RiLogoutBoxRLine,
   RiFireLine,
+  RiRestaurantLine,
+  RiRunLine,
 } from "react-icons/ri";
 import "./Sidebar.css";
 
@@ -48,6 +50,8 @@ const NAV_ITEMS = [
     label: "Analytics",
     mobileLabel: "Stats",
   },
+  { path: "/diet-plan", icon: RiRestaurantLine, label: "Diet Plan" },
+  { path: "/workout-plan", icon: RiRunLine, label: "Workout Plan" },
   { path: "/videos", icon: RiYoutubeLine, label: "Videos" },
   { path: "/profile", icon: RiUserLine, label: "Profile" },
 ];

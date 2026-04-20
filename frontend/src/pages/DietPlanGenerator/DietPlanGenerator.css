@@ -1,0 +1,187 @@
+.diet-gen-content {
+  max-width: 720px;
+}
+
+/* ── Height toggle ───────────────────────────────────────────────────────── */
+.dg-toggle-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.dg-unit-btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-family: var(--font-body);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dg-unit-btn--active {
+  background: var(--text-primary);
+  color: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.dg-feet-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* ── Result: Summary + Macros ────────────────────────────────────────────── */
+.dg-result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.dg-summary-card {
+  text-align: center;
+}
+
+.dg-calorie-big {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  letter-spacing: 0.04em;
+  color: var(--accent-dark);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+[data-theme="dark"] .dg-calorie-big {
+  color: var(--neon);
+}
+
+.dg-calorie-big span {
+  font-size: 1rem;
+  font-family: var(--font-body);
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.dg-meta-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.dg-meta-row strong {
+  color: var(--text-primary);
+}
+
+.dg-macros-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.dg-macro {
+  text-align: center;
+  padding: 14px 8px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-inset-sm);
+  background: var(--surface-2);
+}
+
+.dg-macro-value {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.dg-macro--protein .dg-macro-value { color: #3b82f6; }
+.dg-macro--carbs .dg-macro-value   { color: var(--warning); }
+.dg-macro--fat .dg-macro-value     { color: var(--danger); }
+
+.dg-macro-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.dg-macro-kcal {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── Meal plan ────────────────────────────────────────────────────────────── */
+.dg-meals-card {
+  margin-bottom: 16px;
+}
+
+.dg-meal-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .dg-meal-item {
+  border-bottom-color: rgba(255, 255, 255, 0.04);
+}
+
+.dg-meal-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.dg-meal-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  width: 36px;
+  text-align: center;
+}
+
+.dg-meal-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-dark);
+  margin-bottom: 2px;
+}
+
+[data-theme="dark"] .dg-meal-label {
+  color: var(--neon);
+}
+
+.dg-meal-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .dg-result-grid {
+    grid-template-columns: 1fr;
+  }
+  .dg-form-card {
+    padding: 18px 16px;
+  }
+  .option-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .dg-macros-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
