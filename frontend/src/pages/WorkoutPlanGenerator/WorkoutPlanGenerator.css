@@ -1,13 +1,31 @@
 .wg-content {
-  max-width: 800px;
+  max-width: 860px;
 }
 
-/* Reuse dg- progress/form classes from DietPlanGenerator */
+/* ── Option button icon layout ───────────────────────────────────────────── */
+.option-btn-icon {
+  flex-shrink: 0;
+  margin-bottom: 2px;
+}
 
+.option-btn-label {
+  font-weight: 600;
+}
+
+/* ── Days grid: 7 equal columns ──────────────────────────────────────────── */
 .wg-days-grid {
   grid-template-columns: repeat(7, 1fr);
 }
 
+.wg-days-grid .option-btn {
+  align-items: center;
+  justify-content: center;
+  padding: 12px 4px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* ── Result grid ─────────────────────────────────────────────────────────── */
 .wg-week-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -30,16 +48,36 @@
 
 .wg-day-name {
   font-family: var(--font-heading);
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-primary);
 }
 
+/* Custom badge with icon (replaces generic .badge) */
+.wg-day-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--accent-subtle);
+  color: var(--accent-dark);
+  box-shadow: var(--shadow-inset-sm);
+}
+
+[data-theme="dark"] .wg-day-badge {
+  color: var(--neon);
+}
+
+/* ── Exercise rows ───────────────────────────────────────────────────────── */
 .wg-exercise-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 
 .wg-exercise-row {
@@ -47,8 +85,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 9px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   gap: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 [data-theme="dark"] .wg-exercise-row {
@@ -67,31 +105,46 @@
 }
 
 .wg-ex-detail {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   font-family: var(--font-mono);
   color: var(--accent-dark);
   white-space: nowrap;
   background: var(--accent-subtle);
-  padding: 2px 8px;
+  padding: 3px 9px;
   border-radius: 20px;
+  flex-shrink: 0;
 }
 
 [data-theme="dark"] .wg-ex-detail {
   color: var(--neon);
 }
 
-.wg-tips {
-  margin-top: 4px;
+/* ── Tips section ────────────────────────────────────────────────────────── */
+.wg-tips .dg-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-/* dg-tips-list is defined in DietPlanGenerator.css and reused */
+.wg-tips-icon {
+  color: var(--accent-dark);
+  flex-shrink: 0;
+}
 
+[data-theme="dark"] .wg-tips-icon {
+  color: var(--neon);
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
+  .wg-week-grid {
+    grid-template-columns: 1fr;
+  }
   .wg-days-grid {
     grid-template-columns: repeat(4, 1fr);
   }
-  .wg-week-grid {
-    grid-template-columns: 1fr;
+  .option-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
