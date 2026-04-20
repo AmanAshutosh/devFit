@@ -16,6 +16,8 @@ import Landing from "./pages/Landing/Landing.jsx";
 import Auth from "./pages/Auth/Auth.jsx";
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
+import GymPlan from "./pages/GymPlan/GymPlan.jsx";
+import PlanPage from "./pages/GymPlan/PlanPage.jsx";
 import ExerciseTracker from "./pages/ExerciseTracker/ExerciseTracker.jsx";
 import DietTracker from "./pages/DietTracker/DietTracker.jsx";
 import SupplementTracker from "./pages/SupplementTracker/SupplementTracker.jsx";
@@ -74,6 +76,22 @@ const App = () => (
             element={
               <PrivateRoute>
                 <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/gym-plan"
+            element={
+              <PrivateRoute>
+                <GymPlan />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/gym-plan/:level"
+            element={
+              <PrivateRoute>
+                <PlanPage />
               </PrivateRoute>
             }
           />

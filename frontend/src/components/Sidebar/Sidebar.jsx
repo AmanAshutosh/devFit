@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import {
   RiDashboardLine,
+  RiCalendarCheckLine,
   RiWeightLine,
   RiLeafLine,
   RiCapsuleLine,
@@ -25,19 +26,18 @@ const NAV_ITEMS = [
     mobileLabel: "Home",
   },
   {
-    path: "/workout-plan",
-    icon: RiRunLine,
-    label: "Workout Plan",
-    mobileLabel: "Workout",
+    path: "/gym-plan",
+    icon: RiCalendarCheckLine,
+    label: "Gym Plan",
+    mobileLabel: "Gym",
   },
   {
     path: "/exercises",
     icon: RiWeightLine,
     label: "Exercises",
-    mobileLabel: "Exercises",
+    mobileLabel: "Workout",
   },
   { path: "/diet", icon: RiLeafLine, label: "Diet", mobileLabel: "Diet" },
-  { path: "/diet-plan", icon: RiRestaurantLine, label: "Diet Plan", mobileLabel: "Diet Plan" },
   {
     path: "/supplements",
     icon: RiCapsuleLine,
@@ -50,6 +50,8 @@ const NAV_ITEMS = [
     label: "Analytics",
     mobileLabel: "Stats",
   },
+  { path: "/diet-plan", icon: RiRestaurantLine, label: "Diet Plan" },
+  { path: "/workout-plan", icon: RiRunLine, label: "Workout Plan" },
   { path: "/videos", icon: RiYoutubeLine, label: "Videos" },
   { path: "/profile", icon: RiUserLine, label: "Profile" },
 ];
