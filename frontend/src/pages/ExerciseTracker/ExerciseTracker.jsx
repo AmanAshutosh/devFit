@@ -10,6 +10,7 @@ import {
   RiCloseLine,
   RiDownload2Line,
 } from "react-icons/ri";
+import { useAuth } from "../../context/AuthContext";
 import api from "../../utils/api";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Footer from "../../components/Footer/Footer";
@@ -39,6 +40,7 @@ const BLANK = {
 };
 
 const ExerciseTracker = () => {
+  const { refreshUser } = useAuth();
   const [exercises, setExercises] = useState([]);
   const [form, setForm] = useState(BLANK);
   const [editId, setEditId] = useState(null);
@@ -88,6 +90,7 @@ const ExerciseTracker = () => {
       setSuccess(editId ? "Exercise updated!" : "Exercise logged!");
       resetForm();
       fetchExercises();
+      refreshUser();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to save.");
     } finally {
