@@ -2,6 +2,38 @@
   max-width: 720px;
 }
 
+/* ── Save bar ────────────────────────────────────────────────────────────── */
+.dg-save-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.dg-save-btn {
+  font-size: 0.9rem;
+  padding: 10px 22px;
+}
+
+.dg-save-success {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--success, #38a169);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.dg-view-plans-btn {
+  font-size: 0.82rem;
+}
+
+.dg-save-error {
+  font-size: 0.82rem;
+  color: var(--danger, #e53e3e);
+}
+
 /* ── Height toggle ───────────────────────────────────────────────────────── */
 .dg-toggle-row {
   display: flex;

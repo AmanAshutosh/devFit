@@ -14,6 +14,10 @@ const analyticsRoutes = require("./routes/analytics");
 const nutritionRoutes = require("./routes/nutrition");
 const waterRoutes = require("./routes/water");
 const sleepRoutes = require("./routes/sleep");
+const workoutPlansRoutes = require("./routes/workoutPlans");
+const dietPlansRoutes = require("./routes/dietPlans");
+const stepsRoutes = require("./routes/steps");
+const healthScoreRoutes = require("./routes/healthScore");
 
 const app = express();
 
@@ -63,6 +67,10 @@ app.use("/api/analytics", analyticsRoutes);
 app.use("/api/nutrition", nutritionRoutes);
 app.use("/api/water", waterRoutes);
 app.use("/api/sleep", sleepRoutes);
+app.use("/api/workout-plans", workoutPlansRoutes);
+app.use("/api/diet-plans", dietPlansRoutes);
+app.use("/api/steps", stepsRoutes);
+app.use("/api/health-score", healthScoreRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

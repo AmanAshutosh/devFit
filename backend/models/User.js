@@ -29,6 +29,16 @@ const userSchema = new mongoose.Schema(
     notificationsEnabled: { type: Boolean, default: false },
     totalFitXP: { type: Number, default: 0 },
     level: { type: Number, default: 1 },
+    activeWorkoutPlanId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SavedWorkoutPlan",
+      default: null,
+    },
+    activeDietPlanId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SavedDietPlan",
+      default: null,
+    },
   },
   { timestamps: true },
 );

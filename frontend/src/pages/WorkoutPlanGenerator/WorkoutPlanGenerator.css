@@ -25,6 +25,44 @@
   font-weight: 700;
 }
 
+/* ── Save bar ────────────────────────────────────────────────────────────── */
+.wg-save-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.wg-save-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.9rem;
+  padding: 10px 22px;
+}
+
+.wg-save-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--success, #38a169);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.wg-view-plans-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.82rem;
+}
+
+.wg-save-error {
+  font-size: 0.82rem;
+  color: var(--danger, #e53e3e);
+}
+
 /* ── Result grid ─────────────────────────────────────────────────────────── */
 .wg-week-grid {
   display: grid;

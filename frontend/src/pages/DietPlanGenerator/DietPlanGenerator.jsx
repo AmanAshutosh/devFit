@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar/Sidebar.jsx";
 import MobileHeader from "../../components/MobileHeader/MobileHeader.jsx";
 import DisclaimerModal from "../../components/DisclaimerModal/DisclaimerModal.jsx";
+import api from "../../utils/api.js";
 import "./DietPlanGenerator.css";
 
 // ── BMR / TDEE helpers ────────────────────────────────────────────────────────
@@ -225,11 +227,15 @@ const OptionBtn = ({ selected, onClick, children }) => (
 
 // ── Main component ────────────────────────────────────────────────────────────
 const DietPlanGenerator = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState(INITIAL);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
   const [plan, setPlan] = useState(null);
   const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
+  const [savedPlanId, setSavedPlanId] = useState(null);
+  const [saveError, setSaveError] = useState("");
 
   const set = (field, value) => setForm((p) => ({ ...p, [field]: value }));
 
@@ -285,6 +291,33 @@ const DietPlanGenerator = () => {
     setPlan(null);
     setStep(0);
     setErrors({});
+    setSavedPlanId(null);
+    setSaveError("");
+  };
+
+  const handleSavePlan = async () => {
+    setSaving(true);
+    setSaveError("");
+    try {
+      const { data } = await api.post("/diet-plans", {
+        planName: `${form.goal.replace("_", " ")} ${form.dietPreference} plan`,
+        calories: plan.calories,
+        proteinG: plan.proteinG,
+        carbG: plan.carbG,
+        fatG: plan.fatG,
+        bmr: plan.bmr,
+        tdee: plan.tdee,
+        bmi: plan.bmi,
+        meals: plan.meals,
+        dietPreference: form.dietPreference,
+        goal: form.goal,
+      });
+      setSavedPlanId(data.plan._id);
+    } catch (err) {
+      setSaveError(err.response?.data?.message || "Failed to save plan");
+    } finally {
+      setSaving(false);
+    }
   };
 
   // ── Result view ───────────────────────────────────────────────────────────
@@ -302,6 +335,32 @@ const DietPlanGenerator = () => {
             <button className="btn btn-ghost" onClick={handleReset}>
               ← Regenerate
             </button>
+          </div>
+
+          {/* Save Plan CTA */}
+          <div className="dg-save-bar">
+            {savedPlanId ? (
+              <div className="dg-save-success">
+                ✓ Plan saved!
+                <button
+                  className="btn btn-ghost dg-view-plans-btn"
+                  onClick={() => navigate("/my-diet-plans")}
+                >
+                  View My Diet Plans →
+                </button>
+              </div>
+            ) : (
+              <>
+                <button
+                  className="btn btn-primary dg-save-btn"
+                  onClick={handleSavePlan}
+                  disabled={saving}
+                >
+                  {saving ? "Saving…" : "💾 Save Plan"}
+                </button>
+                {saveError && <span className="dg-save-error">{saveError}</span>}
+              </>
+            )}
           </div>
 
           <div className="dg-result-grid">

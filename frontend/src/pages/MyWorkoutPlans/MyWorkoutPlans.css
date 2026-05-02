@@ -1,0 +1,159 @@
+.mwp-content {
+  max-width: 760px;
+}
+
+.mwp-error {
+  color: var(--danger, #e53e3e);
+  font-size: 0.85rem;
+  margin-bottom: 14px;
+}
+
+.mwp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mwp-card {
+  padding: 18px 20px;
+  transition: box-shadow 0.2s;
+}
+
+.mwp-card--active {
+  border: 2px solid var(--accent, #7c3aed);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.mwp-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.mwp-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.mwp-plan-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.mwp-active-badge {
+  flex-shrink: 0;
+}
+
+.mwp-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.mwp-days-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.mwp-rename-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.mwp-rename-input {
+  flex: 1;
+  font-size: 0.9rem;
+  padding: 6px 10px;
+}
+
+.mwp-icon-btn {
+  padding: 6px 8px;
+  min-width: 0;
+}
+
+/* ── Schedule preview ──────────────────────────────────────────────────── */
+.mwp-schedule-preview {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.mwp-day-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  min-width: 68px;
+}
+
+.mwp-day-pill--more {
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.mwp-day-name {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent, #7c3aed);
+}
+
+.mwp-day-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 2px;
+}
+
+/* ── Actions ───────────────────────────────────────────────────────────── */
+.mwp-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.mwp-activate-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.mwp-deactivate-btn {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.mwp-delete-btn {
+  margin-left: auto;
+  color: var(--danger, #e53e3e);
+  padding: 6px 10px;
+}
+
+.mwp-delete-btn:hover {
+  background: rgba(229, 62, 62, 0.08);
+}
+
+@media (max-width: 500px) {
+  .mwp-schedule-preview {
+    gap: 6px;
+  }
+  .mwp-day-pill {
+    min-width: 56px;
+    padding: 5px 7px;
+  }
+}

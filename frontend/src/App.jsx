@@ -25,6 +25,8 @@ import Analytics from "./pages/Analytics/Analytics.jsx";
 import VideoSuggestions from "./pages/VideoSuggestions/VideoSuggestions.jsx";
 import DietPlanGenerator from "./pages/DietPlanGenerator/DietPlanGenerator.jsx";
 import WorkoutPlanGenerator from "./pages/WorkoutPlanGenerator/WorkoutPlanGenerator.jsx";
+import MyWorkoutPlans from "./pages/MyWorkoutPlans/MyWorkoutPlans.jsx";
+import MyDietPlans from "./pages/MyDietPlans/MyDietPlans.jsx";
 
 // Root: show Landing if not logged in, redirect to /dashboard if logged in
 const HomeRoute = () => {
@@ -148,6 +150,22 @@ const App = () => (
             element={
               <PrivateRoute>
                 <WorkoutPlanGenerator />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/my-workout-plans"
+            element={
+              <PrivateRoute>
+                <MyWorkoutPlans />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/my-diet-plans"
+            element={
+              <PrivateRoute>
+                <MyDietPlans />
               </PrivateRoute>
             }
           />

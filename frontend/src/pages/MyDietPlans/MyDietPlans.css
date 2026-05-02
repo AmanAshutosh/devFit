@@ -1,0 +1,170 @@
+.mdp-content {
+  max-width: 760px;
+}
+
+.mdp-error {
+  color: var(--danger, #e53e3e);
+  font-size: 0.85rem;
+  margin-bottom: 14px;
+}
+
+.mdp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mdp-card {
+  padding: 18px 20px;
+}
+
+.mdp-card--active {
+  border: 2px solid var(--accent, #7c3aed);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.mdp-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mdp-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.mdp-plan-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.mdp-active-badge {
+  flex-shrink: 0;
+}
+
+.mdp-macros {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.mdp-macro {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.mdp-macro--cal {
+  color: var(--text-primary);
+  font-size: 0.88rem;
+}
+
+.mdp-rename-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.mdp-rename-input {
+  flex: 1;
+  font-size: 0.9rem;
+  padding: 6px 10px;
+}
+
+.mdp-icon-btn {
+  padding: 6px 8px;
+  min-width: 0;
+}
+
+/* ── Expand button ─────────────────────────────────────────────────────── */
+.mdp-expand-btn {
+  background: none;
+  border: none;
+  color: var(--accent, #7c3aed);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+/* ── Meals list ────────────────────────────────────────────────────────── */
+.mdp-meals {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.mdp-meal-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.mdp-meal-emoji {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.mdp-meal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mdp-meal-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.mdp-meal-desc {
+  font-size: 0.83rem;
+  color: var(--text-primary);
+}
+
+/* ── Actions ───────────────────────────────────────────────────────────── */
+.mdp-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.mdp-activate-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.mdp-deactivate-btn {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.mdp-delete-btn {
+  margin-left: auto;
+  color: var(--danger, #e53e3e);
+  padding: 6px 10px;
+}
+
+.mdp-delete-btn:hover {
+  background: rgba(229, 62, 62, 0.08);
+}

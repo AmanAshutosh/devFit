@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   RiUserLine,
   RiLeafLine,
@@ -18,10 +19,14 @@ import {
   RiTeamLine,
   RiTimerLine,
   RiHeartPulseLine,
+  RiSaveLine,
+  RiCheckLine,
+  RiListCheck2,
 } from "react-icons/ri";
 import Sidebar from "../../components/Sidebar/Sidebar.jsx";
 import MobileHeader from "../../components/MobileHeader/MobileHeader.jsx";
 import DisclaimerModal from "../../components/DisclaimerModal/DisclaimerModal.jsx";
+import api from "../../utils/api.js";
 import "./WorkoutPlanGenerator.css";
 
 // ── Exercise database ─────────────────────────────────────────────────────────
@@ -323,11 +328,15 @@ const CATEGORY_ICONS = {
 
 // ── Main component ────────────────────────────────────────────────────────────
 const WorkoutPlanGenerator = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState(INITIAL);
   const [showDisclaimer, setShow] = useState(false);
   const [plan, setPlan] = useState(null);
   const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
+  const [savedPlanId, setSavedPlanId] = useState(null);
+  const [saveError, setSaveError] = useState("");
 
   const set = (field, value) => setForm((p) => ({ ...p, [field]: value }));
 
@@ -373,6 +382,31 @@ const WorkoutPlanGenerator = () => {
     setPlan(null);
     setStep(0);
     setErrors({});
+    setSavedPlanId(null);
+    setSaveError("");
+  };
+
+  const handleSavePlan = async () => {
+    setSaving(true);
+    setSaveError("");
+    try {
+      const { data } = await api.post("/workout-plans", {
+        planName: `${form.fitnessLevel} ${form.goal.replace("_", " ")} plan`,
+        metadata: {
+          fitnessLevel: form.fitnessLevel,
+          goal: form.goal,
+          location: form.location,
+          days: form.days,
+          workoutTypes: form.workoutTypes,
+        },
+        schedule: plan,
+      });
+      setSavedPlanId(data.plan._id);
+    } catch (err) {
+      setSaveError(err.response?.data?.message || "Failed to save plan");
+    } finally {
+      setSaving(false);
+    }
   };
 
   // ── Result view ───────────────────────────────────────────────────────────
@@ -393,6 +427,34 @@ const WorkoutPlanGenerator = () => {
             <button className="btn btn-ghost" onClick={handleReset}>
               <RiRefreshLine size={15} /> Regenerate
             </button>
+          </div>
+
+          {/* Save Plan CTA */}
+          <div className="wg-save-bar">
+            {savedPlanId ? (
+              <div className="wg-save-success">
+                <RiCheckLine size={16} />
+                Plan saved!
+                <button
+                  className="btn btn-ghost wg-view-plans-btn"
+                  onClick={() => navigate("/my-workout-plans")}
+                >
+                  <RiListCheck2 size={14} /> View My Plans
+                </button>
+              </div>
+            ) : (
+              <>
+                <button
+                  className="btn btn-primary wg-save-btn"
+                  onClick={handleSavePlan}
+                  disabled={saving}
+                >
+                  <RiSaveLine size={15} />
+                  {saving ? "Saving…" : "Save Plan"}
+                </button>
+                {saveError && <span className="wg-save-error">{saveError}</span>}
+              </>
+            )}
           </div>
 
           <div className="wg-week-grid">
