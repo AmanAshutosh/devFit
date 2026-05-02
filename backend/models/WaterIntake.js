@@ -17,7 +17,7 @@ const waterSchema = new mongoose.Schema(
     goalMl: { type: Number, default: 2500 },
     glassSize: { type: Number, default: 250 },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 waterSchema.index({ user: 1, date: -1 });

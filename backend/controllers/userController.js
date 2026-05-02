@@ -72,13 +72,11 @@ const updateProfile = async (req, res) => {
       bmi = (updated.weight / (meters * meters)).toFixed(1);
     }
 
-    res
-      .status(200)
-      .json({
-        ...updated.toObject(),
-        bmi,
-        message: "Profile updated successfully.",
-      });
+    res.status(200).json({
+      ...updated.toObject(),
+      bmi,
+      message: "Profile updated successfully.",
+    });
   } catch (error) {
     console.error("Update profile error:", error);
     res.status(500).json({ message: "Server error." });
@@ -120,10 +118,14 @@ const getLeaderboard = async (req, res) => {
         totalFitXP: { $gt: currentUserXP },
       })) + 1;
 
-    const userAbove = topUsers.find((u) =>
-      u._id.toString() !== req.user._id.toString() && u.totalFitXP > currentUserXP,
+    const userAbove = topUsers.find(
+      (u) =>
+        u._id.toString() !== req.user._id.toString() &&
+        u.totalFitXP > currentUserXP,
     );
-    const xpToOvertake = userAbove ? userAbove.totalFitXP - currentUserXP + 1 : null;
+    const xpToOvertake = userAbove
+      ? userAbove.totalFitXP - currentUserXP + 1
+      : null;
 
     res.status(200).json({
       leaderboard: topUsers,

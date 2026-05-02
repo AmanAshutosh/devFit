@@ -10,7 +10,11 @@ const MobileHeader = () => {
   const navigate = useNavigate();
   return (
     <header className="mobile-header">
-      <button className="mobile-back-btn" onClick={() => navigate(-1)} aria-label="Go back">
+      <button
+        className="mobile-back-btn"
+        onClick={() => navigate(-1)}
+        aria-label="Go back"
+      >
         <RiArrowLeftLine size={20} />
       </button>
       <div className="mobile-header-brand">

@@ -339,7 +339,9 @@ const VideoSuggestions = () => {
                 duration: v.duration,
                 category: v.category,
                 embedUrl: v.url,
-                thumbUrl: ytId ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg` : null,
+                thumbUrl: ytId
+                  ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`
+                  : null,
               };
               return (
                 <div key={v.id} className="vid-card-wrap">

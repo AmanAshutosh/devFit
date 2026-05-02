@@ -28,7 +28,12 @@ function generateDietPlan(data) {
       ? Number(data.heightCm)
       : feetToCm(Number(data.heightFt), Number(data.heightIn));
 
-  const bmr = calcBMR(data.gender, Number(data.weight), heightCm, Number(data.age));
+  const bmr = calcBMR(
+    data.gender,
+    Number(data.weight),
+    heightCm,
+    Number(data.age),
+  );
   const tdee = Math.round(bmr * ACTIVITY_MULTIPLIERS[data.activityLevel]);
 
   let calories = tdee;
@@ -232,16 +237,19 @@ const DietPlanGenerator = () => {
   const validate = () => {
     const e = {};
     if (step === 0) {
-      if (!form.age || form.age < 10 || form.age > 100) e.age = "Enter a valid age (10–100)";
+      if (!form.age || form.age < 10 || form.age > 100)
+        e.age = "Enter a valid age (10–100)";
       if (!form.gender) e.gender = "Select a gender";
     }
     if (step === 1) {
-      if (!form.weight || form.weight < 20 || form.weight > 300) e.weight = "Enter valid weight (20–300 kg)";
+      if (!form.weight || form.weight < 20 || form.weight > 300)
+        e.weight = "Enter valid weight (20–300 kg)";
       if (form.heightUnit === "cm") {
         if (!form.heightCm || form.heightCm < 100 || form.heightCm > 250)
           e.height = "Enter valid height (100–250 cm)";
       } else {
-        if (!form.heightFt || form.heightFt < 3 || form.heightFt > 8) e.height = "Enter valid feet (3–8)";
+        if (!form.heightFt || form.heightFt < 3 || form.heightFt > 8)
+          e.height = "Enter valid feet (3–8)";
       }
     }
     if (step === 2) {
@@ -300,11 +308,19 @@ const DietPlanGenerator = () => {
             {/* Calorie summary */}
             <div className="card dg-summary-card">
               <h3 className="dg-section-title">Daily Calorie Target</h3>
-              <div className="dg-calorie-big">{plan.calories} <span>kcal</span></div>
+              <div className="dg-calorie-big">
+                {plan.calories} <span>kcal</span>
+              </div>
               <div className="dg-meta-row">
-                <span>BMR <strong>{plan.bmr}</strong></span>
-                <span>TDEE <strong>{plan.tdee}</strong></span>
-                <span>BMI <strong>{plan.bmi}</strong></span>
+                <span>
+                  BMR <strong>{plan.bmr}</strong>
+                </span>
+                <span>
+                  TDEE <strong>{plan.tdee}</strong>
+                </span>
+                <span>
+                  BMI <strong>{plan.bmi}</strong>
+                </span>
               </div>
             </div>
 
@@ -358,7 +374,9 @@ const DietPlanGenerator = () => {
             <ul className="dg-tips-list">
               <li>Drink 2.5–3L of water daily</li>
               <li>Eat every 3–4 hours to keep metabolism active</li>
-              <li>Include fibre-rich foods (vegetables, fruits, whole grains)</li>
+              <li>
+                Include fibre-rich foods (vegetables, fruits, whole grains)
+              </li>
               <li>Avoid processed foods and sugary drinks</li>
               <li>Get 7–8 hours of quality sleep for recovery</li>
             </ul>
@@ -384,7 +402,9 @@ const DietPlanGenerator = () => {
         <div className="page-header">
           <div>
             <h1 className="page-title">Diet Plan Generator</h1>
-            <p className="page-subtitle">Answer a few questions to get your personalised plan</p>
+            <p className="page-subtitle">
+              Answer a few questions to get your personalised plan
+            </p>
           </div>
         </div>
 
@@ -392,7 +412,10 @@ const DietPlanGenerator = () => {
         <div className="dg-progress-wrap">
           <div className="dg-step-labels">
             {STEPS.map((label, i) => (
-              <span key={i} className={`dg-step-label ${i === step ? "dg-step-label--active" : ""} ${i < step ? "dg-step-label--done" : ""}`}>
+              <span
+                key={i}
+                className={`dg-step-label ${i === step ? "dg-step-label--active" : ""} ${i < step ? "dg-step-label--done" : ""}`}
+              >
                 {i < step ? "✓" : i + 1}. {label}
               </span>
             ))}
@@ -428,13 +451,23 @@ const DietPlanGenerator = () => {
               <div className="form-group">
                 <label className="form-label">Gender</label>
                 <div className="option-grid">
-                  {[["male", "♂ Male"], ["female", "♀ Female"], ["other", "⚧ Other"]].map(([val, lbl]) => (
-                    <OptionBtn key={val} selected={form.gender === val} onClick={() => set("gender", val)}>
+                  {[
+                    ["male", "♂ Male"],
+                    ["female", "♀ Female"],
+                    ["other", "⚧ Other"],
+                  ].map(([val, lbl]) => (
+                    <OptionBtn
+                      key={val}
+                      selected={form.gender === val}
+                      onClick={() => set("gender", val)}
+                    >
                       {lbl}
                     </OptionBtn>
                   ))}
                 </div>
-                {errors.gender && <span className="dg-error">{errors.gender}</span>}
+                {errors.gender && (
+                  <span className="dg-error">{errors.gender}</span>
+                )}
               </div>
             </div>
           )}
@@ -453,7 +486,9 @@ const DietPlanGenerator = () => {
                   value={form.weight}
                   onChange={(e) => set("weight", e.target.value)}
                 />
-                {errors.weight && <span className="dg-error">{errors.weight}</span>}
+                {errors.weight && (
+                  <span className="dg-error">{errors.weight}</span>
+                )}
               </div>
 
               <div className="form-group">
@@ -504,7 +539,9 @@ const DietPlanGenerator = () => {
                     />
                   </div>
                 )}
-                {errors.height && <span className="dg-error">{errors.height}</span>}
+                {errors.height && (
+                  <span className="dg-error">{errors.height}</span>
+                )}
               </div>
             </div>
           )}
@@ -522,15 +559,25 @@ const DietPlanGenerator = () => {
                     ["light", "🚶 Light", "1–3 days/week"],
                     ["moderate", "🏃 Moderate", "3–5 days/week"],
                     ["very_active", "💪 Very Active", "6–7 days/week"],
-                    ["super_active", "🔥 Super Active", "Intense daily training"],
+                    [
+                      "super_active",
+                      "🔥 Super Active",
+                      "Intense daily training",
+                    ],
                   ].map(([val, lbl, sub]) => (
-                    <OptionBtn key={val} selected={form.activityLevel === val} onClick={() => set("activityLevel", val)}>
+                    <OptionBtn
+                      key={val}
+                      selected={form.activityLevel === val}
+                      onClick={() => set("activityLevel", val)}
+                    >
                       <span>{lbl}</span>
                       <span className="option-sub">{sub}</span>
                     </OptionBtn>
                   ))}
                 </div>
-                {errors.activityLevel && <span className="dg-error">{errors.activityLevel}</span>}
+                {errors.activityLevel && (
+                  <span className="dg-error">{errors.activityLevel}</span>
+                )}
               </div>
 
               <div className="form-group">
@@ -544,7 +591,9 @@ const DietPlanGenerator = () => {
                   min={0}
                   max={7}
                 />
-                {errors.workoutDays && <span className="dg-error">{errors.workoutDays}</span>}
+                {errors.workoutDays && (
+                  <span className="dg-error">{errors.workoutDays}</span>
+                )}
               </div>
             </div>
           )}
@@ -562,7 +611,11 @@ const DietPlanGenerator = () => {
                     ["muscle_gain", "💪 Muscle Gain"],
                     ["maintenance", "⚖️ Maintenance"],
                   ].map(([val, lbl]) => (
-                    <OptionBtn key={val} selected={form.goal === val} onClick={() => set("goal", val)}>
+                    <OptionBtn
+                      key={val}
+                      selected={form.goal === val}
+                      onClick={() => set("goal", val)}
+                    >
                       {lbl}
                     </OptionBtn>
                   ))}
@@ -579,12 +632,18 @@ const DietPlanGenerator = () => {
                     ["vegan", "🌱 Vegan"],
                     ["eggetarian", "🥚 Eggetarian"],
                   ].map(([val, lbl]) => (
-                    <OptionBtn key={val} selected={form.dietPreference === val} onClick={() => set("dietPreference", val)}>
+                    <OptionBtn
+                      key={val}
+                      selected={form.dietPreference === val}
+                      onClick={() => set("dietPreference", val)}
+                    >
                       {lbl}
                     </OptionBtn>
                   ))}
                 </div>
-                {errors.dietPreference && <span className="dg-error">{errors.dietPreference}</span>}
+                {errors.dietPreference && (
+                  <span className="dg-error">{errors.dietPreference}</span>
+                )}
               </div>
             </div>
           )}
@@ -592,11 +651,19 @@ const DietPlanGenerator = () => {
           {/* Navigation */}
           <div className="dg-nav-row">
             {step > 0 && (
-              <button className="btn btn-ghost" type="button" onClick={() => setStep((s) => s - 1)}>
+              <button
+                className="btn btn-ghost"
+                type="button"
+                onClick={() => setStep((s) => s - 1)}
+              >
                 ← Back
               </button>
             )}
-            <button className="btn btn-accent dg-next-btn" type="button" onClick={handleNext}>
+            <button
+              className="btn btn-accent dg-next-btn"
+              type="button"
+              onClick={handleNext}
+            >
               {step === STEPS.length - 1 ? "Generate My Plan →" : "Next →"}
             </button>
           </div>

@@ -58,12 +58,10 @@ const register = async (req, res) => {
 
     await sendOTPEmail(email, name, otp);
 
-    res
-      .status(201)
-      .json({
-        message:
-          "Registration successful. Please verify your email with the OTP sent.",
-      });
+    res.status(201).json({
+      message:
+        "Registration successful. Please verify your email with the OTP sent.",
+    });
   } catch (error) {
     console.error("Register error:", error);
     res.status(500).json({ message: "Server error during registration." });
@@ -191,11 +189,9 @@ const resendOTP = async (req, res) => {
 
     // Max resend attempts
     if ((user.otpResendCount || 0) >= OTP_RESEND_MAX) {
-      return res
-        .status(429)
-        .json({
-          message: "Maximum OTP attempts reached. Please register again.",
-        });
+      return res.status(429).json({
+        message: "Maximum OTP attempts reached. Please register again.",
+      });
     }
 
     // 60-second cooldown
@@ -205,11 +201,9 @@ const resendOTP = async (req, res) => {
         const secondsLeft = Math.ceil(
           (OTP_RESEND_COOLDOWN_MS - elapsed) / 1000,
         );
-        return res
-          .status(429)
-          .json({
-            message: `Please wait ${secondsLeft}s before requesting a new OTP.`,
-          });
+        return res.status(429).json({
+          message: `Please wait ${secondsLeft}s before requesting a new OTP.`,
+        });
       }
     }
 

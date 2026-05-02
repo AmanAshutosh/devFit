@@ -42,7 +42,7 @@ const logSleep = async (req, res) => {
         quality: quality || "good",
         notes: notes || "",
       },
-      { new: true, upsert: true, setDefaultsOnInsert: true }
+      { new: true, upsert: true, setDefaultsOnInsert: true },
     );
 
     res.json({ log, message: "Sleep logged." });

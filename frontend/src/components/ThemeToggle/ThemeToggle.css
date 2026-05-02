@@ -23,7 +23,7 @@
 .theme-toggle-track {
   width: 28px;
   height: 16px;
-  background: rgba(0,0,0,0.1);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   position: relative;
   transition: background 0.2s;
@@ -44,7 +44,7 @@
   background: var(--text-primary);
   border-radius: 50%;
   transition: transform 0.2s ease;
-  box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .theme-toggle--dark .theme-toggle-thumb {

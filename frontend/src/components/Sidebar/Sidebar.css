@@ -11,12 +11,11 @@
   padding: 20px 14px;
   z-index: 100;
   overflow-y: auto;
-  box-shadow: 6px 0 20px rgba(0,0,0,0.1);
-  transition:
-    background 0.3s;
+  box-shadow: 6px 0 20px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s;
 }
 [data-theme="dark"] .sidebar {
-  box-shadow: 6px 0 20px rgba(0,0,0,0.4);
+  box-shadow: 6px 0 20px rgba(0, 0, 0, 0.4);
 }
 
 .sidebar-top {
@@ -190,11 +189,11 @@
   padding-left: 4px;
   padding-right: 4px;
   padding-top: 0;
-  box-shadow: 0 -6px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.1);
   gap: 2px;
 }
 [data-theme="dark"] .bottom-nav {
-  box-shadow: 0 -6px 20px rgba(0,0,0,0.4);
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.4);
 }
 
 .bottom-nav::-webkit-scrollbar {

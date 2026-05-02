@@ -1,7 +1,9 @@
 const Exercise = require("../models/Exercise");
 const User = require("../models/User");
 
-const LEVEL_THRESHOLDS = [0, 500, 1500, 3000, 5500, 9000, 14000, 21000, 30000, 42000];
+const LEVEL_THRESHOLDS = [
+  0, 500, 1500, 3000, 5500, 9000, 14000, 21000, 30000, 42000,
+];
 
 function calculateFitXP(sets, reps, weight) {
   const base = sets * reps * 2;
@@ -41,14 +43,12 @@ const getExercises = async (req, res) => {
 
     const total = await Exercise.countDocuments(query);
 
-    res
-      .status(200)
-      .json({
-        exercises,
-        total,
-        page: parseInt(page),
-        pages: Math.ceil(total / limit),
-      });
+    res.status(200).json({
+      exercises,
+      total,
+      page: parseInt(page),
+      pages: Math.ceil(total / limit),
+    });
   } catch (error) {
     console.error("Get exercises error:", error);
     res.status(500).json({ message: "Server error." });

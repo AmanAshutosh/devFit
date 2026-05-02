@@ -16,7 +16,7 @@ const sleepSchema = new mongoose.Schema(
     },
     notes: { type: String, trim: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 sleepSchema.index({ user: 1, date: -1 });

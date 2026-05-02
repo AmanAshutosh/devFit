@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { RiTrophyLine, RiStarLine, RiFireLine, RiArrowUpLine } from "react-icons/ri";
+import {
+  RiTrophyLine,
+  RiStarLine,
+  RiFireLine,
+  RiArrowUpLine,
+} from "react-icons/ri";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../utils/api";
 import "./Leaderboard.css";
@@ -108,7 +113,9 @@ const Leaderboard = () => {
                   </div>
 
                   <div className="lb-card-xp">
-                    <span className="lb-xp-val">{(entry.totalFitXP || 0).toLocaleString()}</span>
+                    <span className="lb-xp-val">
+                      {(entry.totalFitXP || 0).toLocaleString()}
+                    </span>
                     <span className="lb-xp-label">FitXP</span>
                   </div>
 
@@ -116,7 +123,11 @@ const Leaderboard = () => {
                     <motion.div
                       className="lb-glow-ring"
                       animate={{ opacity: [0.4, 0.9, 0.4] }}
-                      transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+                      transition={{
+                        duration: 2.4,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
                     />
                   )}
                 </motion.li>

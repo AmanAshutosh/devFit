@@ -47,7 +47,9 @@
   gap: 4px;
   will-change: transform;
   cursor: default;
-  transition: box-shadow 0.2s, transform 0.2s;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 .bento-card:hover {
   box-shadow: var(--shadow-hover);
@@ -157,7 +159,9 @@
   padding: 16px;
   box-shadow: var(--shadow);
   cursor: pointer;
-  transition: box-shadow 0.2s, transform 0.18s;
+  transition:
+    box-shadow 0.2s,
+    transform 0.18s;
   border-top: 3px solid transparent;
   display: flex;
   flex-direction: column;
@@ -201,7 +205,7 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: var(--accent-subtle, rgba(0,200,100,0.12));
+  background: var(--accent-subtle, rgba(0, 200, 100, 0.12));
   color: var(--accent-dark);
   border: none;
   cursor: pointer;
@@ -407,23 +411,52 @@
 }
 
 /* ── Visibility helpers ── */
-.dash-desktop-only { display: block; }
-.dash-mobile-only  { display: none; }
+.dash-desktop-only {
+  display: block;
+}
+.dash-mobile-only {
+  display: none;
+}
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  .dash-desktop-only  { display: none; }
-  .dash-mobile-only   { display: block; }
-  .bento-grid--2      { grid-template-columns: repeat(2, 1fr); }
-  .dash-scroll-card   { flex: 0 0 170px; min-height: 120px; }
-  .dash-break         { display: block; }
-  .dash-header        { flex-wrap: wrap; }
+  .dash-desktop-only {
+    display: none;
+  }
+  .dash-mobile-only {
+    display: block;
+  }
+  .bento-grid--2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dash-scroll-card {
+    flex: 0 0 170px;
+    min-height: 120px;
+  }
+  .dash-break {
+    display: block;
+  }
+  .dash-header {
+    flex-wrap: wrap;
+  }
 }
 
 @media (max-width: 480px) {
-  .bento-card   { padding: 14px 12px; }
-  .bento-value  { font-size: 1.5rem; }
-  .dash-ex-item { flex-wrap: wrap; gap: 8px; }
-  .dash-ex-left { min-width: 0; flex: 1; }
-  .dash-scroll-card { flex: 0 0 155px; }
+  .bento-card {
+    padding: 14px 12px;
+  }
+  .bento-value {
+    font-size: 1.5rem;
+  }
+  .dash-ex-item {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .dash-ex-left {
+    min-width: 0;
+    flex: 1;
+  }
+  .dash-scroll-card {
+    flex: 0 0 155px;
+  }
 }

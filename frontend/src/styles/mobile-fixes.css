@@ -90,11 +90,7 @@ select,
     right: 0;
     z-index: 99;
     padding: 10px 16px;
-    background: linear-gradient(
-      to top,
-      var(--bg) 60%,
-      transparent 100%
-    );
+    background: linear-gradient(to top, var(--bg) 60%, transparent 100%);
   }
 
   .sticky-log-fab--hidden {

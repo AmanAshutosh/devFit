@@ -7,7 +7,9 @@
   background: var(--surface);
   will-change: transform;
   box-shadow: var(--shadow);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 .vc-root:hover {
   transform: translateY(-3px);

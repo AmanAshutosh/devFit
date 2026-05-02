@@ -78,7 +78,7 @@ const removeGlass = async (req, res) => {
     if (!record) return res.status(404).json({ message: "No record found." });
 
     record.glasses = record.glasses.filter(
-      (g) => g._id.toString() !== req.params.glassId
+      (g) => g._id.toString() !== req.params.glassId,
     );
     await record.save();
 
@@ -97,7 +97,7 @@ const updateSettings = async (req, res) => {
     const record = await WaterIntake.findOneAndUpdate(
       { user: req.user._id, date: { $gte: d, $lt: next } },
       { $set: { goalMl, glassSize } },
-      { new: true, upsert: true, setDefaultsOnInsert: true }
+      { new: true, upsert: true, setDefaultsOnInsert: true },
     );
 
     res.json({ record });
@@ -133,4 +133,10 @@ const getWaterHistory = async (req, res) => {
   }
 };
 
-module.exports = { getWater, addGlass, removeGlass, updateSettings, getWaterHistory };
+module.exports = {
+  getWater,
+  addGlass,
+  removeGlass,
+  updateSettings,
+  getWaterHistory,
+};

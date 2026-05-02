@@ -4,23 +4,31 @@ const USDA_BASE = "https://api.nal.usda.gov/fdc/v1";
 
 // Nutrient IDs from USDA FoodData Central
 const NUTRIENT_MAP = {
-  1008: "calories",   // Energy (kcal)
-  2048: "calories",   // Energy (kcal) – alternate
-  1003: "protein",    // Protein
-  1005: "carbs",      // Carbohydrate, by difference
-  1004: "fats",       // Total lipid (fat)
-  1079: "fiber",      // Fiber, total dietary
-  1093: "sodium",     // Sodium (mg)
-  1092: "potassium",  // Potassium (mg)
-  1087: "calcium",    // Calcium (mg)
-  1089: "iron",       // Iron (mg)
-  1162: "vitC",       // Vitamin C (mg)
+  1008: "calories", // Energy (kcal)
+  2048: "calories", // Energy (kcal) – alternate
+  1003: "protein", // Protein
+  1005: "carbs", // Carbohydrate, by difference
+  1004: "fats", // Total lipid (fat)
+  1079: "fiber", // Fiber, total dietary
+  1093: "sodium", // Sodium (mg)
+  1092: "potassium", // Potassium (mg)
+  1087: "calcium", // Calcium (mg)
+  1089: "iron", // Iron (mg)
+  1162: "vitC", // Vitamin C (mg)
 };
 
 function normalizeUSDAFood(food) {
   const n = {
-    calories: 0, protein: 0, carbs: 0, fats: 0,
-    fiber: 0, sodium: 0, potassium: 0, calcium: 0, iron: 0, vitC: 0,
+    calories: 0,
+    protein: 0,
+    carbs: 0,
+    fats: 0,
+    fiber: 0,
+    sodium: 0,
+    potassium: 0,
+    calcium: 0,
+    iron: 0,
+    vitC: 0,
   };
 
   (food.foodNutrients || []).forEach((fn) => {
@@ -94,7 +102,7 @@ async function searchOFF(query) {
         fields: "product_name,nutriments,brands",
       },
       timeout: 7000,
-    }
+    },
   );
 
   return (data.products || [])
@@ -114,7 +122,7 @@ async function searchFoods(query) {
   // USDA takes priority; deduplicate by first 20 chars of lowercase name
   const seen = new Set(usda.map((f) => f.name.toLowerCase().slice(0, 20)));
   const uniqueOFF = off.filter(
-    (f) => !seen.has(f.name.toLowerCase().slice(0, 20))
+    (f) => !seen.has(f.name.toLowerCase().slice(0, 20)),
   );
 
   return [...usda, ...uniqueOFF].slice(0, 15);
@@ -123,7 +131,7 @@ async function searchFoods(query) {
 function scaleNutrition(per100g, quantity) {
   const scale = quantity / 100;
   return Object.fromEntries(
-    Object.entries(per100g).map(([k, v]) => [k, +(v * scale).toFixed(2)])
+    Object.entries(per100g).map(([k, v]) => [k, +(v * scale).toFixed(2)]),
   );
 }
 

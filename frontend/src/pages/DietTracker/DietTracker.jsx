@@ -769,30 +769,27 @@ const DietTracker = () => {
     fetchDiet();
   }, [fetchDiet]);
 
-  const triggerAPISearch = useCallback(
-    (foodName, quantity) => {
-      if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
-      if (!foodName || foodName.trim().length < 2) {
+  const triggerAPISearch = useCallback((foodName, quantity) => {
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    if (!foodName || foodName.trim().length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    searchTimerRef.current = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const qty = Number(quantity) || 100;
+        const { data } = await api.get(
+          `/nutrition/search?q=${encodeURIComponent(foodName.trim())}&qty=${qty}`,
+        );
+        setSearchResults(data.results || []);
+      } catch {
         setSearchResults([]);
-        return;
+      } finally {
+        setSearching(false);
       }
-      searchTimerRef.current = setTimeout(async () => {
-        setSearching(true);
-        try {
-          const qty = Number(quantity) || 100;
-          const { data } = await api.get(
-            `/nutrition/search?q=${encodeURIComponent(foodName.trim())}&qty=${qty}`,
-          );
-          setSearchResults(data.results || []);
-        } catch {
-          setSearchResults([]);
-        } finally {
-          setSearching(false);
-        }
-      }, 600);
-    },
-    [],
-  );
+    }, 600);
+  }, []);
 
   const update = (field) => (e) => {
     const val = e.target.value;
@@ -1056,7 +1053,8 @@ const DietTracker = () => {
                     <div className="diet-suggestions diet-suggestions--api">
                       {searching && (
                         <div className="diet-suggestion-searching">
-                          <RiRefreshLine size={12} className="spin" /> Searching USDA &amp; Open Food Facts…
+                          <RiRefreshLine size={12} className="spin" /> Searching
+                          USDA &amp; Open Food Facts…
                         </div>
                       )}
                       {searchResults.map((food, i) => (
@@ -1069,10 +1067,15 @@ const DietTracker = () => {
                           <span className="diet-sugg-name">
                             {food.name}
                             {food.brand && (
-                              <span className="diet-sugg-brand"> · {food.brand}</span>
+                              <span className="diet-sugg-brand">
+                                {" "}
+                                · {food.brand}
+                              </span>
                             )}
                           </span>
-                          <span className={`diet-sugg-source diet-sugg-source--${food.source}`}>
+                          <span
+                            className={`diet-sugg-source diet-sugg-source--${food.source}`}
+                          >
                             {food.source === "usda" ? "USDA" : "OFF"}
                           </span>
                         </button>
@@ -1152,8 +1155,8 @@ const DietTracker = () => {
                   <RiCheckLine size={12} /> Macros auto-filled
                   {apiSource === "usda" && " from USDA FoodData Central"}
                   {apiSource === "openfoodfacts" && " from Open Food Facts"}
-                  {!apiSource && " from local database"}
-                  . Edit any value if needed.
+                  {!apiSource && " from local database"}. Edit any value if
+                  needed.
                 </div>
               )}
               <div className="diet-form-actions">
@@ -1363,7 +1366,9 @@ const DietTracker = () => {
         </div>
 
         {/* Sticky FAB — mobile only, hidden when form is open */}
-        <div className={`sticky-log-fab${showForm ? " sticky-log-fab--hidden" : ""}`}>
+        <div
+          className={`sticky-log-fab${showForm ? " sticky-log-fab--hidden" : ""}`}
+        >
           <button
             className="btn btn-accent"
             onClick={() => {

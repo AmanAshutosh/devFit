@@ -3,10 +3,21 @@ import { motion, useAnimation } from "framer-motion";
 import { RiStarLine, RiArrowUpLine } from "react-icons/ri";
 import "./XPProgressBar.css";
 
-const LEVEL_THRESHOLDS = [0, 500, 1500, 3000, 5500, 9000, 14000, 21000, 30000, 42000];
+const LEVEL_THRESHOLDS = [
+  0, 500, 1500, 3000, 5500, 9000, 14000, 21000, 30000, 42000,
+];
 const LEVEL_TITLES = [
-  "", "Rookie", "Iron", "Bronze", "Silver", "Gold",
-  "Platinum", "Diamond", "Master", "Legend", "GOAT",
+  "",
+  "Rookie",
+  "Iron",
+  "Bronze",
+  "Silver",
+  "Gold",
+  "Platinum",
+  "Diamond",
+  "Master",
+  "Legend",
+  "GOAT",
 ];
 
 function getXPProgress(totalXP) {
@@ -17,16 +28,26 @@ function getXPProgress(totalXP) {
   }
   level = Math.min(level, 10);
   const currentFloor = LEVEL_THRESHOLDS[level - 1] || 0;
-  const nextCeiling = LEVEL_THRESHOLDS[level] ?? LEVEL_THRESHOLDS[LEVEL_THRESHOLDS.length - 1];
+  const nextCeiling =
+    LEVEL_THRESHOLDS[level] ?? LEVEL_THRESHOLDS[LEVEL_THRESHOLDS.length - 1];
   const xpIntoLevel = totalXP - currentFloor;
   const xpForLevel = nextCeiling - currentFloor;
-  const percent = level >= 10 ? 100 : Math.min(100, (xpIntoLevel / xpForLevel) * 100);
-  return { level, title: LEVEL_TITLES[level], xpIntoLevel, xpForLevel, percent, nextCeiling };
+  const percent =
+    level >= 10 ? 100 : Math.min(100, (xpIntoLevel / xpForLevel) * 100);
+  return {
+    level,
+    title: LEVEL_TITLES[level],
+    xpIntoLevel,
+    xpForLevel,
+    percent,
+    nextCeiling,
+  };
 }
 
 const XPProgressBar = ({ totalFitXP = 0 }) => {
   const controls = useAnimation();
-  const { level, title, xpIntoLevel, xpForLevel, percent } = getXPProgress(totalFitXP);
+  const { level, title, xpIntoLevel, xpForLevel, percent } =
+    getXPProgress(totalFitXP);
 
   useEffect(() => {
     controls.start({
@@ -61,7 +82,8 @@ const XPProgressBar = ({ totalFitXP = 0 }) => {
         {level < 10 ? (
           <span className="xpbar-next">
             <RiArrowUpLine size={11} />
-            {(xpForLevel - xpIntoLevel).toLocaleString()} XP to Level {level + 1}
+            {(xpForLevel - xpIntoLevel).toLocaleString()} XP to Level{" "}
+            {level + 1}
           </span>
         ) : (
           <span className="xpbar-next">Maximum level reached!</span>

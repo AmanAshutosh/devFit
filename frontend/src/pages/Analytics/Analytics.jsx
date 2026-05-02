@@ -47,8 +47,14 @@ const MUSCLE_COLORS = {
   "Full Body": "#F4A261",
 };
 const FALLBACK_COLORS = [
-  "#FF6B6B", "#4D96FF", "#FFE66D", "#06D6A0",
-  "#FB8500", "#8338EC", "#FF006E", "#A8DADC",
+  "#FF6B6B",
+  "#4D96FF",
+  "#FFE66D",
+  "#06D6A0",
+  "#FB8500",
+  "#8338EC",
+  "#FF006E",
+  "#A8DADC",
 ];
 const getMuscleColor = (m, i) =>
   MUSCLE_COLORS[m] || FALLBACK_COLORS[i % FALLBACK_COLORS.length];
@@ -323,7 +329,11 @@ const Analytics = () => {
                           name={m}
                           stroke={getMuscleColor(m, i)}
                           strokeWidth={2}
-                          dot={{ r: 3, fill: getMuscleColor(m, i), strokeWidth: 0 }}
+                          dot={{
+                            r: 3,
+                            fill: getMuscleColor(m, i),
+                            strokeWidth: 0,
+                          }}
                           activeDot={{ r: 5 }}
                           animationDuration={800}
                           animationEasing="ease-out"
@@ -411,13 +421,23 @@ const Analytics = () => {
               {/* Static macro legend */}
               <div className="analytics-legend">
                 {[
-                  { key: "calories", label: "Calories", color: "var(--text-primary)" },
+                  {
+                    key: "calories",
+                    label: "Calories",
+                    color: "var(--text-primary)",
+                  },
                   { key: "protein", label: "Protein", color: "#3b82f6" },
                   { key: "carbs", label: "Carbs", color: "#f59e0b" },
                   { key: "fats", label: "Fats", color: "#ef4444" },
                 ].map((l) => (
-                  <span key={l.key} className="analytics-legend-item analytics-legend-item--active analytics-legend-item--static">
-                    <span className="analytics-legend-dot" style={{ background: l.color }} />
+                  <span
+                    key={l.key}
+                    className="analytics-legend-item analytics-legend-item--active analytics-legend-item--static"
+                  >
+                    <span
+                      className="analytics-legend-dot"
+                      style={{ background: l.color }}
+                    />
                     {l.label}
                   </span>
                 ))}
@@ -436,8 +456,16 @@ const Analytics = () => {
                   >
                     <defs>
                       <linearGradient id="calGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="var(--text-primary)" stopOpacity={0.12} />
-                        <stop offset="95%" stopColor="var(--text-primary)" stopOpacity={0} />
+                        <stop
+                          offset="5%"
+                          stopColor="var(--text-primary)"
+                          stopOpacity={0.12}
+                        />
+                        <stop
+                          offset="95%"
+                          stopColor="var(--text-primary)"
+                          stopOpacity={0}
+                        />
                       </linearGradient>
                     </defs>
                     <CartesianGrid

@@ -22,14 +22,20 @@
   border-radius: 20px;
   padding: 20px 18px 16px;
   overflow: hidden;
-  box-shadow: 8px 8px 18px rgba(0,0,0,0.5), -4px -4px 12px rgba(255,255,255,0.03);
+  box-shadow:
+    8px 8px 18px rgba(0, 0, 0, 0.5),
+    -4px -4px 12px rgba(255, 255, 255, 0.03);
 }
 
 .lb-root::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 50% 0%, rgba(255, 215, 0, 0.06) 0%, transparent 70%);
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(255, 215, 0, 0.06) 0%,
+    transparent 70%
+  );
   pointer-events: none;
 }
 
@@ -237,7 +243,9 @@
   inset: -2px;
   border-radius: calc(var(--lb-radius) + 2px);
   border: 2px solid var(--lb-gold);
-  box-shadow: 0 0 18px var(--lb-gold-glow), inset 0 0 12px rgba(255, 215, 0, 0.06);
+  box-shadow:
+    0 0 18px var(--lb-gold-glow),
+    inset 0 0 12px rgba(255, 215, 0, 0.06);
   pointer-events: none;
 }
 
@@ -287,8 +295,12 @@
 }
 
 @keyframes lb-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* ── Empty state ── */

@@ -13,10 +13,10 @@
   justify-content: space-between;
   padding-left: 16px;
   padding-right: 16px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 [data-theme="dark"] .mobile-header {
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 .mobile-back-btn {
   display: flex;

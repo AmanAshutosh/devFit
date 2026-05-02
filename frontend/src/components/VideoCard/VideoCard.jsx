@@ -8,7 +8,9 @@ const VideoCard = ({ video, exerciseName, onPlay }) => {
   const title = exerciseName || video?.title || "Workout Video";
   const duration = video?.duration || "";
   const category = video?.category || "";
-  const thumbUrl = video?.thumbUrl || (video?.id ? `https://img.youtube.com/vi/${video.id}/mqdefault.jpg` : null);
+  const thumbUrl =
+    video?.thumbUrl ||
+    (video?.id ? `https://img.youtube.com/vi/${video.id}/mqdefault.jpg` : null);
 
   return (
     <motion.div

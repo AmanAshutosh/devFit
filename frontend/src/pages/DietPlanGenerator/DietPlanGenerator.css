@@ -104,9 +104,15 @@
   margin-bottom: 4px;
 }
 
-.dg-macro--protein .dg-macro-value { color: #3b82f6; }
-.dg-macro--carbs .dg-macro-value   { color: var(--warning); }
-.dg-macro--fat .dg-macro-value     { color: var(--danger); }
+.dg-macro--protein .dg-macro-value {
+  color: #3b82f6;
+}
+.dg-macro--carbs .dg-macro-value {
+  color: var(--warning);
+}
+.dg-macro--fat .dg-macro-value {
+  color: var(--danger);
+}
 
 .dg-macro-label {
   font-size: 0.7rem;

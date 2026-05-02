@@ -16,10 +16,10 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 [data-theme="dark"] .landing-nav {
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
 .landing-nav-logo {
@@ -142,16 +142,16 @@
   position: relative;
 }
 .landing-stat:not(:last-child)::after {
-  content: '';
+  content: "";
   position: absolute;
   right: 0;
   top: 20%;
   height: 60%;
   width: 1px;
-  background: rgba(0,0,0,0.1);
+  background: rgba(0, 0, 0, 0.1);
 }
 [data-theme="dark"] .landing-stat:not(:last-child)::after {
-  background: rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.06);
 }
 .landing-stat:hover {
   box-shadow: var(--shadow-inset-sm);
@@ -319,10 +319,12 @@
   background: rgba(255, 255, 255, 0.06);
   border-radius: var(--radius);
   padding: 12px 14px;
-  box-shadow: inset 2px 2px 6px rgba(0,0,0,0.2), inset -2px -2px 6px rgba(255,255,255,0.05);
+  box-shadow:
+    inset 2px 2px 6px rgba(0, 0, 0, 0.2),
+    inset -2px -2px 6px rgba(255, 255, 255, 0.05);
 }
 [data-theme="dark"] .bento-workout-preview {
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
   box-shadow: var(--shadow-inset-sm);
 }
 
@@ -409,13 +411,13 @@
 .bento-cal-bar-wrap {
   width: 100%;
   height: 5px;
-  background: rgba(0,0,0,0.08);
+  background: rgba(0, 0, 0, 0.08);
   border-radius: 3px;
   overflow: hidden;
   margin-bottom: 6px;
 }
 [data-theme="dark"] .bento-cal-bar-wrap {
-  background: rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.06);
 }
 .bento-cal-bar {
   height: 100%;
@@ -715,10 +717,10 @@
   flex-wrap: wrap;
   gap: 12px;
   background: var(--surface);
-  box-shadow: 0 -6px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.08);
 }
 [data-theme="dark"] .landing-footer {
-  box-shadow: 0 -6px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .landing-footer-logo {
@@ -792,7 +794,7 @@
     display: none;
   }
   .landing-stat:not(:last-child) {
-    box-shadow: 0 1px 0 rgba(0,0,0,0.08);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
   }
   .landing-nav {
     padding: 14px 18px;
