@@ -137,9 +137,10 @@
 }
 .chart-tooltip-row {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin-top: 2px;
+  gap: 12px;
+  margin-top: 3px;
 }
 .chart-tooltip-row strong {
   font-family: var(--font-mono);
@@ -159,7 +160,7 @@
   color: var(--text-primary);
 }
 
-/* ── Checkbox toggle legend ── */
+/* ── Checkbox toggle legend ─────────────────────────────────────────────── */
 .analytics-legend {
   display: flex;
   flex-wrap: wrap;
@@ -200,7 +201,6 @@
   transition: background 0.2s;
 }
 
-/* ── Custom tooltip dot ── */
 .chart-tooltip-dot {
   width: 8px;
   height: 8px;
@@ -209,17 +209,34 @@
   display: inline-block;
 }
 
-.chart-tooltip-row {
+/* ── Health Trends grid ──────────────────────────────────────────────────── */
+.analytics-health-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.analytics-health-panel {
+  min-width: 0;
+}
+
+.analytics-health-panel-title {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 3px;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
 }
 
 @media (max-width: 768px) {
   .analytics-stats {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .analytics-health-grid {
+    grid-template-columns: 1fr;
   }
   .page-header {
     flex-direction: column;

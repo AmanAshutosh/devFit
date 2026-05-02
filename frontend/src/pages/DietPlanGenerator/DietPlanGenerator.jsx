@@ -39,11 +39,16 @@ function generateDietPlan(data) {
   const tdee = Math.round(bmr * ACTIVITY_MULTIPLIERS[data.activityLevel]);
 
   let calories = tdee;
-  if (data.goal === "weight_loss") calories = tdee - 500;
+  if (data.goal === "weight_loss") calories = Math.max(1200, tdee - 400);
   if (data.goal === "muscle_gain") calories = tdee + 300;
 
-  const proteinG = Math.round(Number(data.weight) * 2);
-  const fatG = Math.round((calories * 0.25) / 9);
+  // Protein: 1.6g/kg maintenance · 1.8g/kg fat loss · 2.2g/kg muscle gain (NASM)
+  const proteinPerKg =
+    data.goal === "muscle_gain" ? 2.2 : data.goal === "weight_loss" ? 1.8 : 1.6;
+  const proteinG = Math.round(Number(data.weight) * proteinPerKg);
+  // Fat: 30% of calories for maintenance, 25% for cut/bulk
+  const fatPct = data.goal === "maintenance" ? 0.30 : 0.25;
+  const fatG = Math.round((calories * fatPct) / 9);
   const carbG = Math.round((calories - proteinG * 4 - fatG * 9) / 4);
 
   const diet = data.dietPreference; // "vegetarian" | "non_vegetarian" | "vegan" | "eggetarian"

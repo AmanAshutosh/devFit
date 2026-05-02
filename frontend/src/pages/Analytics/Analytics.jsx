@@ -9,6 +9,10 @@ import {
   RiScales3Line,
   RiTrophyLine,
   RiTimeLine,
+  RiMoonLine,
+  RiDropLine,
+  RiWalkLine,
+  RiHeartPulseLine,
 } from "react-icons/ri";
 import {
   LineChart,
@@ -105,10 +109,7 @@ const Analytics = () => {
     setLoading(true);
     fetchData();
 
-    /* Auto-refresh every 30 s so charts stay live */
     intervalRef.current = setInterval(fetchData, 30000);
-
-    /* Also refresh when tab gains focus (user comes back from logging) */
     const onFocus = () => fetchData();
     window.addEventListener("focus", onFocus);
 
@@ -118,7 +119,7 @@ const Analytics = () => {
     };
   }, [fetchData]);
 
-  /* ── Derived chart data ── */
+  // ── Derived chart data ──────────────────────────────────────────────────────
   const workoutData =
     data?.workoutDays?.map((d) => ({
       date: d._id.slice(5),
@@ -138,7 +139,28 @@ const Analytics = () => {
       fats: d.totalFats,
     })) || [];
 
-  /* Muscle group multi-line data */
+  // Health trend data (sleep h, water L, steps)
+  const sleepChartData = (data?.sleepHistory || []).map((d) => ({
+    date: d.date.slice(5),
+    hours: d.hours,
+  }));
+
+  const waterChartData = (data?.waterHistory || []).map((d) => ({
+    date: d.date.slice(5),
+    L: Math.round((d.totalMl / 1000) * 10) / 10,
+  }));
+
+  const stepsChartData = (data?.stepsHistory || []).map((d) => ({
+    date: d.date.slice(5),
+    steps: d.steps,
+  }));
+
+  const hasHealthData =
+    sleepChartData.length > 0 ||
+    waterChartData.length > 0 ||
+    stepsChartData.length > 0;
+
+  // Muscle group multi-line data
   const allMuscles = [
     ...new Set(
       (data?.workoutDays || [])
@@ -155,7 +177,6 @@ const Analytics = () => {
     return row;
   });
 
-  /* Init toggles for newly seen muscles */
   useEffect(() => {
     if (!allMuscles.length) return;
     setVisibleLines((prev) => {
@@ -174,7 +195,8 @@ const Analytics = () => {
   const avgCalories =
     calorieData.length > 0
       ? Math.round(
-          calorieData.reduce((s, d) => s + d.calories, 0) / calorieData.length,
+          calorieData.reduce((s, d) => s + (d.calories || 0), 0) /
+            calorieData.length,
         )
       : 0;
 
@@ -207,7 +229,7 @@ const Analytics = () => {
           <div className="dash-loading">Loading analytics…</div>
         ) : (
           <>
-            {/* Stat boxes */}
+            {/* ── Stat boxes ────────────────────────────────────────────── */}
             <div className="analytics-stats">
               <StatBox
                 icon={RiFireLine}
@@ -240,7 +262,9 @@ const Analytics = () => {
               <StatBox
                 icon={RiScales3Line}
                 label="Weight"
-                value={data?.currentWeight ? `${data.currentWeight}kg` : "—"}
+                value={
+                  data?.currentWeight ? `${data.currentWeight}kg` : "—"
+                }
                 color="#ef4444"
               />
               <StatBox
@@ -250,9 +274,40 @@ const Analytics = () => {
                 color="#14b8a6"
                 sub="kcal/day"
               />
+              <StatBox
+                icon={RiMoonLine}
+                label="Avg Sleep"
+                value={
+                  data?.avgSleep != null ? `${data.avgSleep}h` : "—"
+                }
+                color="#a18cd1"
+                sub={`over ${range} days`}
+              />
+              <StatBox
+                icon={RiDropLine}
+                label="Avg Water"
+                value={
+                  data?.avgWaterMl != null
+                    ? `${(data.avgWaterMl / 1000).toFixed(1)}L`
+                    : "—"
+                }
+                color="#4facfe"
+                sub="per logged day"
+              />
+              <StatBox
+                icon={RiWalkLine}
+                label="Avg Steps"
+                value={
+                  data?.avgSteps != null
+                    ? data.avgSteps.toLocaleString()
+                    : "—"
+                }
+                color="#f093fb"
+                sub="per logged day"
+              />
             </div>
 
-            {/* ── Weekly Progress: muscle group multi-line chart ── */}
+            {/* ── Weekly Progress: muscle group multi-line chart ─────────── */}
             <div className="card analytics-chart-card">
               <div className="analytics-chart-head">
                 <div>
@@ -268,7 +323,6 @@ const Analytics = () => {
                 </div>
               </div>
 
-              {/* Checkbox legend */}
               {allMuscles.length > 0 && (
                 <div className="analytics-legend">
                   {allMuscles.map((m, i) => (
@@ -346,7 +400,7 @@ const Analytics = () => {
               )}
             </div>
 
-            {/* Workout Consistency bar chart */}
+            {/* ── Workout Consistency bar chart ──────────────────────────── */}
             <div className="card analytics-chart-card">
               <div className="analytics-chart-head">
                 <div>
@@ -402,7 +456,7 @@ const Analytics = () => {
               )}
             </div>
 
-            {/* Calorie & Macro multi-line chart */}
+            {/* ── Calorie & Macro intake chart ───────────────────────────── */}
             <div className="card analytics-chart-card">
               <div className="analytics-chart-head">
                 <div>
@@ -418,7 +472,6 @@ const Analytics = () => {
                 </div>
               </div>
 
-              {/* Static macro legend */}
               <div className="analytics-legend">
                 {[
                   {
@@ -455,7 +508,13 @@ const Analytics = () => {
                     margin={{ top: 8, right: 4, left: -24, bottom: 0 }}
                   >
                     <defs>
-                      <linearGradient id="calGrad" x1="0" y1="0" x2="0" y2="1">
+                      <linearGradient
+                        id="calGrad"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
                         <stop
                           offset="5%"
                           stopColor="var(--text-primary)"
@@ -534,6 +593,222 @@ const Analytics = () => {
                 </ResponsiveContainer>
               )}
             </div>
+
+            {/* ── Health Trends: Sleep / Water / Steps ───────────────────── */}
+            {hasHealthData && (
+              <div className="card analytics-chart-card">
+                <div className="analytics-chart-head">
+                  <div>
+                    <h2 className="analytics-chart-title">
+                      <RiHeartPulseLine size={16} /> Health Trends
+                    </h2>
+                    <p className="analytics-chart-sub">
+                      Sleep · Water · Steps over the period
+                    </p>
+                  </div>
+                </div>
+
+                <div className="analytics-health-grid">
+                  {/* Sleep */}
+                  <div className="analytics-health-panel">
+                    <div
+                      className="analytics-health-panel-title"
+                      style={{ color: "#a18cd1" }}
+                    >
+                      <RiMoonLine size={13} /> Sleep (hours)
+                    </div>
+                    {sleepChartData.length === 0 ? (
+                      <div
+                        className="analytics-empty"
+                        style={{ padding: "20px 0" }}
+                      >
+                        <p style={{ fontSize: "0.78rem" }}>No sleep data</p>
+                      </div>
+                    ) : (
+                      <ResponsiveContainer width="100%" height={140}>
+                        <AreaChart
+                          data={sleepChartData}
+                          margin={{ top: 4, right: 4, left: -28, bottom: 0 }}
+                        >
+                          <defs>
+                            <linearGradient
+                              id="sleepGrad"
+                              x1="0"
+                              y1="0"
+                              x2="0"
+                              y2="1"
+                            >
+                              <stop
+                                offset="5%"
+                                stopColor="#a18cd1"
+                                stopOpacity={0.3}
+                              />
+                              <stop
+                                offset="95%"
+                                stopColor="#a18cd1"
+                                stopOpacity={0}
+                              />
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid
+                            strokeDasharray="3 3"
+                            stroke="var(--border-light)"
+                            vertical={false}
+                          />
+                          <XAxis
+                            dataKey="date"
+                            tick={{ fontSize: 9, fill: "var(--text-muted)" }}
+                            axisLine={false}
+                            tickLine={false}
+                          />
+                          <YAxis
+                            domain={[0, 12]}
+                            tick={{ fontSize: 9, fill: "var(--text-muted)" }}
+                            axisLine={false}
+                            tickLine={false}
+                          />
+                          <Tooltip content={<CustomTooltip />} />
+                          <Area
+                            type="monotone"
+                            dataKey="hours"
+                            name="Sleep (h)"
+                            stroke="#a18cd1"
+                            fill="url(#sleepGrad)"
+                            strokeWidth={2}
+                            dot={{ r: 2, fill: "#a18cd1", strokeWidth: 0 }}
+                            activeDot={{ r: 4 }}
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    )}
+                  </div>
+
+                  {/* Water */}
+                  <div className="analytics-health-panel">
+                    <div
+                      className="analytics-health-panel-title"
+                      style={{ color: "#4facfe" }}
+                    >
+                      <RiDropLine size={13} /> Water (L)
+                    </div>
+                    {waterChartData.length === 0 ? (
+                      <div
+                        className="analytics-empty"
+                        style={{ padding: "20px 0" }}
+                      >
+                        <p style={{ fontSize: "0.78rem" }}>No water data</p>
+                      </div>
+                    ) : (
+                      <ResponsiveContainer width="100%" height={140}>
+                        <AreaChart
+                          data={waterChartData}
+                          margin={{ top: 4, right: 4, left: -28, bottom: 0 }}
+                        >
+                          <defs>
+                            <linearGradient
+                              id="waterGrad"
+                              x1="0"
+                              y1="0"
+                              x2="0"
+                              y2="1"
+                            >
+                              <stop
+                                offset="5%"
+                                stopColor="#4facfe"
+                                stopOpacity={0.3}
+                              />
+                              <stop
+                                offset="95%"
+                                stopColor="#4facfe"
+                                stopOpacity={0}
+                              />
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid
+                            strokeDasharray="3 3"
+                            stroke="var(--border-light)"
+                            vertical={false}
+                          />
+                          <XAxis
+                            dataKey="date"
+                            tick={{ fontSize: 9, fill: "var(--text-muted)" }}
+                            axisLine={false}
+                            tickLine={false}
+                          />
+                          <YAxis
+                            tick={{ fontSize: 9, fill: "var(--text-muted)" }}
+                            axisLine={false}
+                            tickLine={false}
+                          />
+                          <Tooltip content={<CustomTooltip />} />
+                          <Area
+                            type="monotone"
+                            dataKey="L"
+                            name="Water (L)"
+                            stroke="#4facfe"
+                            fill="url(#waterGrad)"
+                            strokeWidth={2}
+                            dot={{ r: 2, fill: "#4facfe", strokeWidth: 0 }}
+                            activeDot={{ r: 4 }}
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    )}
+                  </div>
+
+                  {/* Steps */}
+                  <div className="analytics-health-panel">
+                    <div
+                      className="analytics-health-panel-title"
+                      style={{ color: "#f093fb" }}
+                    >
+                      <RiWalkLine size={13} /> Steps
+                    </div>
+                    {stepsChartData.length === 0 ? (
+                      <div
+                        className="analytics-empty"
+                        style={{ padding: "20px 0" }}
+                      >
+                        <p style={{ fontSize: "0.78rem" }}>No steps data</p>
+                      </div>
+                    ) : (
+                      <ResponsiveContainer width="100%" height={140}>
+                        <BarChart
+                          data={stepsChartData}
+                          margin={{ top: 4, right: 4, left: -28, bottom: 0 }}
+                        >
+                          <CartesianGrid
+                            strokeDasharray="3 3"
+                            stroke="var(--border-light)"
+                            vertical={false}
+                          />
+                          <XAxis
+                            dataKey="date"
+                            tick={{ fontSize: 9, fill: "var(--text-muted)" }}
+                            axisLine={false}
+                            tickLine={false}
+                          />
+                          <YAxis
+                            tick={{ fontSize: 9, fill: "var(--text-muted)" }}
+                            axisLine={false}
+                            tickLine={false}
+                          />
+                          <Tooltip content={<CustomTooltip />} />
+                          <Bar
+                            dataKey="steps"
+                            name="Steps"
+                            fill="#f093fb"
+                            radius={[3, 3, 0, 0]}
+                            animationDuration={600}
+                            animationEasing="ease-out"
+                          />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
 
             {data?.memberSince && (
               <div className="analytics-since">

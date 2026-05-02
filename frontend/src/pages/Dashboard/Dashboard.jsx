@@ -15,6 +15,7 @@ import {
   RiHeartPulseLine,
   RiFlashlightLine,
   RiSaveLine,
+  RiSettings3Line,
 } from "react-icons/ri";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../utils/api";
@@ -25,7 +26,7 @@ import { formatDate, todayISO } from "../../utils/helpers";
 import Leaderboard from "../../components/Leaderboard/Leaderboard";
 import "./Dashboard.css";
 
-// ── Animation presets ───────────────────────────────────────────────────────
+// ── Animation presets ────────────────────────────────────────────────────────
 const stagger = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.08 } },
@@ -181,9 +182,10 @@ const ScrollCard = ({ children, onClick, linkTo, accent }) => {
   );
 };
 
-const WaterCard = ({ totalMl, goalMl, glassSize, onAdd }) => {
+// ── Water card — shows glass size, settings + add buttons ───────────────────
+const WaterCard = ({ totalMl, goalMl, glassSize, onAdd, onSettings }) => {
   const pct = Math.min(100, Math.round((totalMl / goalMl) * 100));
-  const glasses = Math.round(totalMl / glassSize);
+  const glasses = goalMl > 0 ? Math.round(totalMl / glassSize) : 0;
   return (
     <ScrollCard accent="#4facfe">
       <div className="dash-sc-header">
@@ -193,20 +195,32 @@ const WaterCard = ({ totalMl, goalMl, glassSize, onAdd }) => {
           style={{ color: "#4facfe" }}
         />
         <span className="dash-sc-title">Water</span>
-        <button
-          className="dash-sc-add-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            onAdd();
-          }}
-          title="Add a glass"
-        >
-          <RiAddLine size={14} />
-        </button>
+        <div style={{ display: "flex", gap: 4 }}>
+          <button
+            className="dash-sc-add-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              onSettings();
+            }}
+            title="Water settings"
+          >
+            <RiSettings3Line size={13} />
+          </button>
+          <button
+            className="dash-sc-add-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              onAdd();
+            }}
+            title={`Add ${glassSize}ml`}
+          >
+            <RiAddLine size={14} />
+          </button>
+        </div>
       </div>
       <div className="dash-sc-big">{(totalMl / 1000).toFixed(1)}L</div>
       <div className="dash-sc-sub">
-        {glasses} glasses · goal {(goalMl / 1000).toFixed(1)}L
+        {glasses} glasses · {glassSize}ml each · goal {(goalMl / 1000).toFixed(1)}L
       </div>
       <div className="dash-sc-bar-wrap">
         <div
@@ -324,7 +338,10 @@ const StepsCard = ({ steps, onLog }) => {
         <span className="dash-sc-title">Steps</span>
         <button
           className="dash-sc-add-btn"
-          onClick={(e) => { e.stopPropagation(); onLog(); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onLog();
+          }}
           title="Log steps"
         >
           <RiAddLine size={14} />
@@ -367,7 +384,11 @@ const HealthScoreCard = ({ score, mood, stress }) => {
       <div className="dash-sc-big" style={{ color }}>
         {score}
         <span
-          style={{ fontSize: "0.8rem", color: "var(--text-muted)", fontFamily: "inherit" }}
+          style={{
+            fontSize: "0.8rem",
+            color: "var(--text-muted)",
+            fontFamily: "inherit",
+          }}
         >
           /100
         </span>
@@ -386,6 +407,131 @@ const HealthScoreCard = ({ score, mood, stress }) => {
         {stress} stress
       </div>
     </ScrollCard>
+  );
+};
+
+// ── Water settings modal ─────────────────────────────────────────────────────
+const GLASS_PRESETS = [150, 200, 250, 300];
+
+const WaterSettingsModal = ({ current, onClose, onSave }) => {
+  const isPreset = GLASS_PRESETS.includes(current.glassSize);
+  const [glassSize, setGlassSize] = useState(isPreset ? current.glassSize : 250);
+  const [useCustom, setUseCustom] = useState(!isPreset);
+  const [customMl, setCustomMl] = useState(!isPreset ? String(current.glassSize) : "");
+  const [goalMl, setGoalMl] = useState(current.goalMl);
+  const [saving, setSaving] = useState(false);
+
+  const effectiveSize = useCustom ? (parseInt(customMl) || 250) : glassSize;
+
+  const handleSave = async () => {
+    if (effectiveSize < 50 || effectiveSize > 1000) return;
+    const goal = Number(goalMl);
+    if (goal < 500 || goal > 6000) return;
+    setSaving(true);
+    try {
+      await onSave({ glassSize: effectiveSize, goalMl: goal });
+      onClose();
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="dash-modal-overlay" onClick={onClose}>
+      <div className="dash-modal" onClick={(e) => e.stopPropagation()}>
+        <h3 className="dash-modal-title">
+          <RiDropLine size={16} /> Water Settings
+        </h3>
+
+        <div className="form-group">
+          <label className="form-label">Glass Size</label>
+          <div
+            style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 0 }}
+          >
+            {GLASS_PRESETS.map((ml) => (
+              <button
+                key={ml}
+                type="button"
+                className={`btn ${!useCustom && glassSize === ml ? "btn-primary" : "btn-ghost"}`}
+                style={{ fontSize: "0.82rem", padding: "6px 12px" }}
+                onClick={() => {
+                  setGlassSize(ml);
+                  setUseCustom(false);
+                }}
+              >
+                {ml}ml
+              </button>
+            ))}
+            <button
+              type="button"
+              className={`btn ${useCustom ? "btn-primary" : "btn-ghost"}`}
+              style={{ fontSize: "0.82rem", padding: "6px 12px" }}
+              onClick={() => setUseCustom(true)}
+            >
+              Custom
+            </button>
+          </div>
+          {useCustom && (
+            <input
+              className="form-input"
+              type="number"
+              min={50}
+              max={1000}
+              placeholder="Enter ml (e.g. 350)"
+              value={customMl}
+              onChange={(e) => setCustomMl(e.target.value)}
+              style={{ marginTop: 8 }}
+            />
+          )}
+          <span
+            style={{
+              fontSize: "0.74rem",
+              color: "var(--text-muted)",
+              marginTop: 6,
+              display: "block",
+            }}
+          >
+            Currently logging {effectiveSize}ml per glass
+          </span>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Daily Water Goal (ml)</label>
+          <input
+            className="form-input"
+            type="number"
+            min={500}
+            max={6000}
+            step={100}
+            value={goalMl}
+            onChange={(e) => setGoalMl(e.target.value)}
+          />
+          <span
+            style={{
+              fontSize: "0.74rem",
+              color: "var(--text-muted)",
+              marginTop: 4,
+              display: "block",
+            }}
+          >
+            Recommended: 2000–3000 ml/day
+          </span>
+        </div>
+
+        <div className="dash-modal-actions">
+          <button className="btn btn-ghost" onClick={onClose}>
+            Cancel
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={handleSave}
+            disabled={saving}
+          >
+            <RiCheckLine size={14} /> {saving ? "Saving…" : "Save"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -505,7 +651,7 @@ const StepsModal = ({ currentSteps, onClose, onSave }) => {
   );
 };
 
-// ── Exercise log modal (from active plan) ─────────────────────────────────
+// ── Exercise log modal (from active plan) ────────────────────────────────────
 const ExerciseLogModal = ({ exercise, onClose, onSave }) => {
   const [sets, setSets] = useState(3);
   const [reps, setReps] = useState(10);
@@ -583,7 +729,11 @@ const Dashboard = () => {
   const [analytics, setAnalytics] = useState(null);
   const [todayExercises, setTodayExercises] = useState([]);
   const [todayDiet, setTodayDiet] = useState(null);
-  const [water, setWater] = useState({ totalMl: 0, goalMl: 2500, glassSize: 250 });
+  const [water, setWater] = useState({
+    totalMl: 0,
+    goalMl: 2500,
+    glassSize: 250,
+  });
   const [sleep, setSleep] = useState(null);
   const [steps, setSteps] = useState(0);
   const [healthScore, setHealthScore] = useState(null);
@@ -593,11 +743,15 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [showSleepModal, setShowSleepModal] = useState(false);
   const [showStepsModal, setShowStepsModal] = useState(false);
+  const [showWaterSettings, setShowWaterSettings] = useState(false);
   const [logExercise, setLogExercise] = useState(null);
-  // meal completion (stored locally per user/date, cleared daily)
+
+  // Meal completion stored locally per day — auto-clears at midnight
   const [completedMeals, setCompletedMeals] = useState(() => {
     try {
-      const stored = JSON.parse(localStorage.getItem("devfit_meal_done") || "{}");
+      const stored = JSON.parse(
+        localStorage.getItem("devfit_meal_done") || "{}",
+      );
       const todayKey = new Date().toISOString().slice(0, 10);
       return stored.date === todayKey ? stored.meals : {};
     } catch {
@@ -624,15 +778,19 @@ const Dashboard = () => {
       ]);
 
       if (a.status === "fulfilled") setAnalytics(a.value.data);
-      if (e.status === "fulfilled") setTodayExercises(e.value.data.exercises || []);
+      if (e.status === "fulfilled")
+        setTodayExercises(e.value.data.exercises || []);
       if (d.status === "fulfilled") setTodayDiet(d.value.data.diet || null);
       if (w.status === "fulfilled") setWater(w.value.data);
       if (s.status === "fulfilled") setSleep(s.value.data.log || null);
       if (st.status === "fulfilled") setSteps(st.value.data.steps ?? 0);
       if (hs.status === "fulfilled") setHealthScore(hs.value.data);
-      if (wp.status === "fulfilled") setActiveWorkoutPlan(wp.value.data.plan || null);
-      if (dp.status === "fulfilled") setActiveDietPlan(dp.value.data.plan || null);
-      if (sh.status === "fulfilled") setStepsHistory(sh.value.data.history || []);
+      if (wp.status === "fulfilled")
+        setActiveWorkoutPlan(wp.value.data.plan || null);
+      if (dp.status === "fulfilled")
+        setActiveDietPlan(dp.value.data.plan || null);
+      if (sh.status === "fulfilled")
+        setStepsHistory(sh.value.data.history || []);
     } catch {
       // partial data is fine
     } finally {
@@ -650,7 +808,28 @@ const Dashboard = () => {
         date: today,
         ml: water.glassSize,
       });
-      setWater({ totalMl: data.totalMl, goalMl: data.goalMl, glassSize: data.glassSize });
+      setWater({
+        totalMl: data.totalMl,
+        goalMl: data.goalMl,
+        glassSize: data.glassSize,
+      });
+    } catch {
+      // no-op
+    }
+  };
+
+  const handleUpdateWaterSettings = async ({ glassSize, goalMl }) => {
+    try {
+      const { data } = await api.put("/water/settings", {
+        date: today,
+        glassSize,
+        goalMl,
+      });
+      setWater((prev) => ({
+        ...prev,
+        glassSize: data.record.glassSize,
+        goalMl: data.record.goalMl,
+      }));
     } catch {
       // no-op
     }
@@ -659,7 +838,6 @@ const Dashboard = () => {
   const handleSaveSleep = async (hours, quality) => {
     const { data } = await api.post("/sleep", { date: today, hours, quality });
     setSleep(data.log);
-    // Refresh health score after sleep log
     try {
       const { data: hs } = await api.get("/health-score");
       setHealthScore(hs);
@@ -667,9 +845,11 @@ const Dashboard = () => {
   };
 
   const handleSaveSteps = async (stepsCount) => {
-    const { data } = await api.post("/steps", { steps: stepsCount, date: today });
+    const { data } = await api.post("/steps", {
+      steps: stepsCount,
+      date: today,
+    });
     setSteps(data.log.steps);
-    // Refresh health score and history
     try {
       const [hs, sh] = await Promise.all([
         api.get("/health-score"),
@@ -705,6 +885,7 @@ const Dashboard = () => {
   const greeting =
     hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
+  // Estimate calorie goal from user's Mifflin-St Jeor BMR × moderate activity
   const calorieGoal = (() => {
     if (!user?.weight || !user?.age) return 2200;
     const heightCm = user.heightFeet
@@ -714,18 +895,32 @@ const Dashboard = () => {
     return Math.round((bmr * 1.55) / 50) * 50;
   })();
 
+  // Fix: calorieHistory items use totalCalories, not calories
   const calorieAvg = (() => {
     if (!analytics?.calorieHistory?.length) return 0;
-    const sum = analytics.calorieHistory.reduce((s, d) => s + (d.calories || 0), 0);
+    const sum = analytics.calorieHistory.reduce(
+      (s, d) => s + (d.totalCalories || 0),
+      0,
+    );
     return sum / analytics.calorieHistory.length;
   })();
 
-  // Map today's weekday to the active workout plan's schedule day
+  // Map today's weekday name to the active workout plan's schedule
   const todayWorkout = (() => {
     if (!activeWorkoutPlan?.schedule?.length) return null;
-    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const dayNames = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
     const todayName = dayNames[new Date().getDay()];
-    return activeWorkoutPlan.schedule.find((d) => d.day === todayName) || null;
+    return (
+      activeWorkoutPlan.schedule.find((d) => d.day === todayName) || null
+    );
   })();
 
   const MEAL_ORDER = [
@@ -801,20 +996,18 @@ const Dashboard = () => {
               goalMl={water.goalMl}
               glassSize={water.glassSize}
               onAdd={handleAddWater}
+              onSettings={() => setShowWaterSettings(true)}
             />
             <SleepCard
               hours={sleep?.hours}
               quality={sleep?.quality}
               onLog={() => setShowSleepModal(true)}
             />
-            <StepsCard
-              steps={steps}
-              onLog={() => setShowStepsModal(true)}
-            />
+            <StepsCard steps={steps} onLog={() => setShowStepsModal(true)} />
           </motion.div>
         </section>
 
-        {/* ── Health Score detail card ──────────────────────────────────── */}
+        {/* ── Health Score detail card ───────────────────────────────────── */}
         {healthScore && (
           <section className="dash-section">
             <h2 className="dash-section-title">Health Score</h2>
@@ -828,10 +1021,10 @@ const Dashboard = () => {
                         healthScore.score >= 80
                           ? "#43e97b"
                           : healthScore.score >= 60
-                          ? "#4facfe"
-                          : healthScore.score >= 40
-                          ? "#f6d365"
-                          : "#f093fb",
+                            ? "#4facfe"
+                            : healthScore.score >= 40
+                              ? "#f6d365"
+                              : "#f093fb",
                     }}
                   >
                     {healthScore.score}
@@ -847,8 +1040,8 @@ const Dashboard = () => {
                         healthScore.stress === "Low"
                           ? "#43e97b"
                           : healthScore.stress === "Medium"
-                          ? "#f6d365"
-                          : "#f5576c",
+                            ? "#f6d365"
+                            : "#f5576c",
                     }}
                   >
                     {healthScore.stress} Stress
@@ -968,7 +1161,10 @@ const Dashboard = () => {
                     title="Tap to log"
                   >
                     <div className="dash-workout-ex-left">
-                      <RiWeightLine size={14} className="dash-workout-ex-icon" />
+                      <RiWeightLine
+                        size={14}
+                        className="dash-workout-ex-icon"
+                      />
                       <span className="dash-workout-ex-name">{ex.name}</span>
                     </div>
                     <div className="dash-workout-ex-right">
@@ -1006,7 +1202,9 @@ const Dashboard = () => {
           ) : (
             <div className="card dash-diet-plan-card">
               <div className="dash-diet-plan-header">
-                <div className="dash-diet-plan-name">{activeDietPlan.planName}</div>
+                <div className="dash-diet-plan-name">
+                  {activeDietPlan.planName}
+                </div>
                 <span className="badge badge-info">
                   {activeDietPlan.calories} kcal
                 </span>
@@ -1028,7 +1226,9 @@ const Dashboard = () => {
                       <button
                         className={`dash-diet-done-btn ${completedMeals[key] ? "dash-diet-done-btn--done" : ""}`}
                         onClick={() => toggleMealDone(key)}
-                        title={completedMeals[key] ? "Mark undone" : "Mark as Done"}
+                        title={
+                          completedMeals[key] ? "Mark undone" : "Mark as Done"
+                        }
                       >
                         <RiCheckLine size={14} />
                         {completedMeals[key] ? "Done" : "Mark as Done"}
@@ -1055,23 +1255,30 @@ const Dashboard = () => {
             </div>
             <div className="card dash-steps-chart">
               {stepsHistory.map(({ date, steps: s }, i) => {
-                const dayName = new Date(date + "T12:00:00")
-                  .toLocaleDateString("en", { weekday: "short" });
+                const dayName = new Date(
+                  date + "T12:00:00",
+                ).toLocaleDateString("en", { weekday: "short" });
                 const pct = Math.min(100, (s / 8000) * 100);
                 const isToday = date === today;
                 return (
                   <div key={i} className="dash-steps-bar-col">
-                    <div className="dash-steps-val">{s >= 1000 ? (s / 1000).toFixed(1) + "k" : s}</div>
+                    <div className="dash-steps-val">
+                      {s >= 1000 ? (s / 1000).toFixed(1) + "k" : s}
+                    </div>
                     <div className="dash-steps-bar-track">
                       <div
                         className="dash-steps-bar-fill"
                         style={{
                           height: `${Math.max(4, pct)}%`,
-                          background: isToday ? "#f093fb" : "var(--accent-subtle)",
+                          background: isToday
+                            ? "#f093fb"
+                            : "var(--accent-subtle)",
                         }}
                       />
                     </div>
-                    <div className={`dash-steps-day ${isToday ? "dash-steps-day--today" : ""}`}>
+                    <div
+                      className={`dash-steps-day ${isToday ? "dash-steps-day--today" : ""}`}
+                    >
                       {dayName}
                     </div>
                   </div>
@@ -1117,7 +1324,9 @@ const Dashboard = () => {
                     <div>
                       <div className="dash-ex-name">{ex.name}</div>
                       {ex.muscleGroup && (
-                        <span className="badge badge-info">{ex.muscleGroup}</span>
+                        <span className="badge badge-info">
+                          {ex.muscleGroup}
+                        </span>
                       )}
                     </div>
                   </div>
@@ -1134,6 +1343,13 @@ const Dashboard = () => {
         <Footer />
       </main>
 
+      {showWaterSettings && (
+        <WaterSettingsModal
+          current={{ glassSize: water.glassSize, goalMl: water.goalMl }}
+          onClose={() => setShowWaterSettings(false)}
+          onSave={handleUpdateWaterSettings}
+        />
+      )}
       {showSleepModal && (
         <SleepModal
           onClose={() => setShowSleepModal(false)}
