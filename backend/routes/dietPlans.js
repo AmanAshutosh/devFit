@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../middleware/auth");
+const { protect } = require("../middleware/auth");
 const c = require("../controllers/dietPlansController");
 
-router.use(auth);
+router.use(protect);
 
 router.get("/", c.list);
 router.get("/active", c.getActive);
