@@ -11,6 +11,9 @@ const dietRoutes = require("./routes/diet");
 const supplementRoutes = require("./routes/supplements");
 const gymPlanRoutes = require("./routes/gymPlan");
 const analyticsRoutes = require("./routes/analytics");
+const nutritionRoutes = require("./routes/nutrition");
+const waterRoutes = require("./routes/water");
+const sleepRoutes = require("./routes/sleep");
 
 const app = express();
 
@@ -57,6 +60,9 @@ app.use("/api/diet", dietRoutes);
 app.use("/api/supplements", supplementRoutes);
 app.use("/api/gymplan", gymPlanRoutes);
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/nutrition", nutritionRoutes);
+app.use("/api/water", waterRoutes);
+app.use("/api/sleep", sleepRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

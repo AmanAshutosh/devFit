@@ -1,224 +1,75 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import MobileHeader from "../../components/MobileHeader/MobileHeader";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   RiWeightLine,
-  RiCalendarCheckLine,
-  RiLineChartLine,
-  RiLeafLine,
-  RiCapsuleLine,
-  RiYoutubeLine,
-  RiUserLine,
   RiFireLine,
-  RiHeartPulseLine,
-  RiScales3Line,
   RiArrowRightLine,
-  RiTrophyLine,
-  RiBodyScanLine,
+  RiLeafLine,
+  RiDropLine,
+  RiMoonLine,
+  RiAddLine,
+  RiLineChartLine,
+  RiCheckLine,
+  RiRestTimeLine,
 } from "react-icons/ri";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../utils/api";
 import Sidebar from "../../components/Sidebar/Sidebar";
+import MobileHeader from "../../components/MobileHeader/MobileHeader";
 import Footer from "../../components/Footer/Footer";
-import { formatDate, getBMICategory, calculateBMI } from "../../utils/helpers";
+import { formatDate, todayISO } from "../../utils/helpers";
 import Leaderboard from "../../components/Leaderboard/Leaderboard";
 import "./Dashboard.css";
 
-const bentoContainer = {
+// ── Animation presets ───────────────────────────────────────────────────────
+const stagger = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.09 } },
+  visible: { transition: { staggerChildren: 0.08 } },
 };
-const bentoItem = {
-  hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.38, ease: "easeOut" } },
+const fadeUp = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" } },
 };
 
-const BentoCard = ({ icon: Icon, label, value, sub, dark, wide }) => (
-  <motion.div
-    variants={bentoItem}
-    whileHover={{ y: -2, transition: { duration: 0.15 } }}
-    className={`bento-card ${dark ? "bento-card--dark" : ""} ${wide ? "bento-card--wide" : ""}`}
-  >
-    <div className="bento-icon">
-      <Icon size={22} />
-    </div>
-    <div className="bento-value">{value}</div>
-    <div className="bento-label">{label}</div>
-    {sub && <div className="bento-sub">{sub}</div>}
-  </motion.div>
-);
-
-const QuickBtn = ({ to, icon: Icon, label }) => (
-  <Link to={to} className="dash-quick-btn">
-    <span className="dash-quick-icon">
-      <Icon size={20} />
-    </span>
-    <span className="dash-quick-label">{label}</span>
-    <RiArrowRightLine size={14} className="dash-quick-arrow" />
-  </Link>
-);
-
+// ── Motivational quotes ──────────────────────────────────────────────────────
 const QUOTES = [
-  { text: "The only bad workout is the one that didn't happen.", author: null },
-  {
-    text: "Push yourself, because no one else is going to do it for you.",
-    author: null,
-  },
-  {
-    text: "Your body can stand almost anything. It's your mind you have to convince.",
-    author: null,
-  },
-  { text: "Success starts with self-discipline.", author: null },
-  {
-    text: "The pain you feel today will be the strength you feel tomorrow.",
-    author: null,
-  },
-  {
-    text: "Don't stop when you're tired. Stop when you're done.",
-    author: null,
-  },
-  {
-    text: "Wake up with determination. Go to bed with satisfaction.",
-    author: null,
-  },
-  {
-    text: "Do something today that your future self will thank you for.",
-    author: "Sean Patrick Flanery",
-  },
-  { text: "It never gets easier, you just get stronger.", author: null },
-  { text: "Train insane or remain the same.", author: null },
-  { text: "Strive for progress, not perfection.", author: null },
-  {
-    text: "The hard days are the best days because that's when champions are made.",
-    author: "Gabby Douglas",
-  },
-  {
-    text: "You don't have to be great to start, but you have to start to be great.",
-    author: "Zig Ziglar",
-  },
-  { text: "A one hour workout is 4% of your day. No excuses.", author: null },
-  { text: "Sweat is just fat crying.", author: null },
-  {
-    text: "Every champion was once a contender who refused to give up.",
-    author: "Rocky Balboa",
-  },
-  { text: "Be stronger than your strongest excuse.", author: null },
-  { text: "Your only limit is you.", author: null },
-  {
-    text: "Fitness is not about being better than someone else. It's about being better than you used to be.",
-    author: null,
-  },
-  { text: "The body achieves what the mind believes.", author: null },
-  {
-    text: "Discipline is doing what needs to be done even when you don't want to.",
-    author: null,
-  },
-  {
-    text: "No matter how slow you go, you're still lapping everyone on the couch.",
-    author: null,
-  },
-  {
-    text: "Take care of your body. It's the only place you have to live.",
-    author: "Jim Rohn",
-  },
-  {
-    text: "Results happen over time, not overnight. Work hard, stay consistent.",
-    author: null,
-  },
-  {
-    text: "What seems impossible today will become your warm-up tomorrow.",
-    author: null,
-  },
-  {
-    text: "The difference between try and triumph is a little umph.",
-    author: null,
-  },
-  { text: "Hustle for that muscle.", author: null },
-  { text: "Your health is an investment, not an expense.", author: null },
-  { text: "Motivation gets you started. Habit keeps you going.", author: null },
-  { text: "If you're tired of starting over, stop giving up.", author: null },
-  {
-    text: "Believe in yourself and all that you are.",
-    author: "Christian D. Larson",
-  },
-  { text: "You are one workout away from a good mood.", author: null },
-  {
-    text: "Energy and persistence conquer all things.",
-    author: "Benjamin Franklin",
-  },
-  {
-    text: "The secret of getting ahead is getting started.",
-    author: "Mark Twain",
-  },
-  {
-    text: "Your future self is watching you right now through memories.",
-    author: "Aubrey de Grey",
-  },
-  {
-    text: "Champions keep playing until they get it right.",
-    author: "Billie Jean King",
-  },
-  { text: "Don't wish for a good body, work for it.", author: null },
-  {
-    text: "It's not about perfect. It's about effort.",
-    author: "Jillian Michaels",
-  },
-  {
-    text: "The gym is not a place of punishment — it's a place of growth.",
-    author: null,
-  },
-  {
-    text: "Run when you can, walk if you have to, crawl if you must; just never give up.",
-    author: "Dean Karnazes",
-  },
-  { text: "Strong is the new beautiful.", author: null },
-  { text: "Fall in love with taking care of your body.", author: null },
-  {
-    text: "One workout at a time. One rep at a time. One day at a time.",
-    author: null,
-  },
-  { text: "Sore today, strong tomorrow.", author: null },
-  {
-    text: "Work hard in silence, let success be your noise.",
-    author: "Frank Ocean",
-  },
-  { text: "Be the best version of yourself.", author: null },
-  {
-    text: "You can feel sore tomorrow or you can feel sorry tomorrow. Choose wisely.",
-    author: null,
-  },
-  {
-    text: "Strength doesn't come from what you can do. It comes from overcoming things you couldn't.",
-    author: "Rikki Rogers",
-  },
-  {
-    text: "Push harder than yesterday if you want a different tomorrow.",
-    author: null,
-  },
-  { text: "Once you see results, it becomes an addiction.", author: null },
-  { text: "Good things come to those who sweat.", author: null },
-  { text: "Excuses don't burn calories.", author: null },
-  { text: "You've survived 100% of your worst days so far.", author: null },
-  {
-    text: "Every rep counts. Every set matters. Every session is progress.",
-    author: null,
-  },
-  {
-    text: "The clock is ticking. Are you becoming the person you want to be?",
-    author: "Greg Plitt",
-  },
-  {
-    text: "Success is walking from failure to failure with no loss of enthusiasm.",
-    author: "Winston Churchill",
-  },
-  { text: "Fitness is a journey, not a destination.", author: null },
-  { text: "Abs are built in the kitchen, sculpted in the gym.", author: null },
-  { text: "Your goals don't care how you feel.", author: null },
-  {
-    text: "Today I will do what others won't, so tomorrow I can do what others can't.",
-    author: "Jerry Rice",
-  },
+  { text: "The only bad workout is the one that didn't happen." },
+  { text: "Push yourself, because no one else is going to do it for you." },
+  { text: "Your body can stand almost anything. It's your mind you have to convince." },
+  { text: "Success starts with self-discipline." },
+  { text: "The pain you feel today will be the strength you feel tomorrow." },
+  { text: "Don't stop when you're tired. Stop when you're done." },
+  { text: "Wake up with determination. Go to bed with satisfaction." },
+  { text: "Do something today that your future self will thank you for.", author: "Sean Patrick Flanery" },
+  { text: "It never gets easier, you just get stronger." },
+  { text: "Train insane or remain the same." },
+  { text: "Strive for progress, not perfection." },
+  { text: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+  { text: "A one hour workout is 4% of your day. No excuses." },
+  { text: "Every champion was once a contender who refused to give up." },
+  { text: "Be stronger than your strongest excuse." },
+  { text: "Your only limit is you." },
+  { text: "The body achieves what the mind believes." },
+  { text: "Discipline is doing what needs to be done even when you don't want to." },
+  { text: "Take care of your body. It's the only place you have to live.", author: "Jim Rohn" },
+  { text: "Results happen over time, not overnight. Work hard, stay consistent." },
+  { text: "What seems impossible today will become your warm-up tomorrow." },
+  { text: "Hustle for that muscle." },
+  { text: "Your health is an investment, not an expense." },
+  { text: "Motivation gets you started. Habit keeps you going." },
+  { text: "If you're tired of starting over, stop giving up." },
+  { text: "You are one workout away from a good mood." },
+  { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+  { text: "Once you see results, it becomes an addiction." },
+  { text: "Good things come to those who sweat." },
+  { text: "Excuses don't burn calories." },
+  { text: "You've survived 100% of your worst days so far." },
+  { text: "Every rep counts. Every set matters. Every session is progress." },
+  { text: "Fitness is a journey, not a destination." },
+  { text: "Abs are built in the kitchen, sculpted in the gym." },
+  { text: "Sore today, strong tomorrow." },
+  { text: "Fall in love with taking care of your body." },
 ];
 
 const GRADIENTS = [
@@ -228,86 +79,310 @@ const GRADIENTS = [
   { bg: "linear-gradient(135deg,#43e97b,#38f9d7)", text: "#1a3a2a" },
   { bg: "linear-gradient(135deg,#fa709a,#fee140)", text: "#3a1a00" },
   { bg: "linear-gradient(135deg,#a18cd1,#fbc2eb)", text: "#2a1040" },
-  { bg: "linear-gradient(135deg,#ff9a9e,#fad0c4)", text: "#3a0a10" },
-  { bg: "linear-gradient(135deg,#a1c4fd,#c2e9fb)", text: "#0a1a40" },
-  { bg: "linear-gradient(135deg,#d4fc79,#96e6a1)", text: "#1a3a1a" },
   { bg: "linear-gradient(135deg,#f6d365,#fda085)", text: "#3a1a00" },
   { bg: "linear-gradient(135deg,#89f7fe,#66a6ff)", text: "#0a1040" },
+  { bg: "linear-gradient(135deg,#d4fc79,#96e6a1)", text: "#1a3a1a" },
   { bg: "linear-gradient(135deg,#fddb92,#d1fdff)", text: "#1a2a3a" },
 ];
 
 const getDailyIndex = (arr) => {
   const now = new Date();
-  const dayOfYear = Math.floor(
-    (now - new Date(now.getFullYear(), 0, 0)) / 86400000,
-  );
-  return dayOfYear % arr.length;
+  const day = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+  return day % arr.length;
 };
 
+// ── Sub-components ───────────────────────────────────────────────────────────
 const QuoteCard = () => {
-  const quote = QUOTES[getDailyIndex(QUOTES)];
-  const grad = GRADIENTS[getDailyIndex(GRADIENTS)];
+  const q = QUOTES[getDailyIndex(QUOTES)];
+  const g = GRADIENTS[getDailyIndex(GRADIENTS)];
   return (
-    <div
-      className="dash-quote-card"
-      style={{ background: grad.bg, color: grad.text }}
-    >
-      <div className="dash-quote-mark" style={{ color: grad.text }}>
-        "
-      </div>
-      <p className="dash-quote-text">{quote.text}</p>
-      {quote.author && (
-        <p className="dash-quote-author" style={{ color: grad.text }}>
-          — {quote.author}
-        </p>
-      )}
+    <div className="dash-quote-card" style={{ background: g.bg, color: g.text }}>
+      <div className="dash-quote-mark">"</div>
+      <p className="dash-quote-text">{q.text}</p>
+      {q.author && <p className="dash-quote-author">— {q.author}</p>}
     </div>
   );
 };
 
+const SummaryBento = ({ totalExercises, streak }) => (
+  <motion.div
+    className="bento-grid bento-grid--2"
+    variants={stagger}
+    initial="hidden"
+    animate="visible"
+  >
+    <motion.div variants={fadeUp} className="bento-card">
+      <div className="bento-icon"><RiWeightLine size={20} /></div>
+      <div className="bento-value">{totalExercises ?? "—"}</div>
+      <div className="bento-label">Total Exercises</div>
+      <div className="bento-sub">all time</div>
+    </motion.div>
+    <motion.div variants={fadeUp} className="bento-card bento-card--dark">
+      <div className="bento-icon"><RiFireLine size={20} /></div>
+      <div className="bento-value">{streak ?? 0}d</div>
+      <div className="bento-label">Streak</div>
+      <div className="bento-sub">keep it up!</div>
+    </motion.div>
+  </motion.div>
+);
+
+// Horizontal scroll card
+const ScrollCard = ({ children, onClick, linkTo, accent }) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    if (onClick) onClick();
+    else if (linkTo) navigate(linkTo);
+  };
+  return (
+    <motion.div
+      variants={fadeUp}
+      whileHover={{ y: -3, transition: { duration: 0.15 } }}
+      className="dash-scroll-card"
+      style={accent ? { borderTop: `3px solid ${accent}` } : {}}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === "Enter" && handleClick()}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+// Water intake mini-widget inside scroll card
+const WaterCard = ({ totalMl, goalMl, glassSize, onAdd }) => {
+  const pct = Math.min(100, Math.round((totalMl / goalMl) * 100));
+  const glasses = Math.round(totalMl / glassSize);
+  return (
+    <ScrollCard accent="#4facfe">
+      <div className="dash-sc-header">
+        <RiDropLine size={18} className="dash-sc-icon" style={{ color: "#4facfe" }} />
+        <span className="dash-sc-title">Water</span>
+        <button
+          className="dash-sc-add-btn"
+          onClick={(e) => { e.stopPropagation(); onAdd(); }}
+          title="Add a glass"
+        >
+          <RiAddLine size={14} />
+        </button>
+      </div>
+      <div className="dash-sc-big">{(totalMl / 1000).toFixed(1)}L</div>
+      <div className="dash-sc-sub">{glasses} glasses · goal {(goalMl / 1000).toFixed(1)}L</div>
+      <div className="dash-sc-bar-wrap">
+        <div className="dash-sc-bar" style={{ width: `${pct}%`, background: "#4facfe" }} />
+      </div>
+      <div className="dash-sc-pct">{pct}%</div>
+    </ScrollCard>
+  );
+};
+
+// Sleep mini-widget
+const SleepCard = ({ hours, quality, onLog }) => {
+  const qualityColor = { poor: "#e53e3e", fair: "#dd6b20", good: "#38a169", excellent: "#3182ce" };
+  return (
+    <ScrollCard accent="#a18cd1" onClick={onLog}>
+      <div className="dash-sc-header">
+        <RiMoonLine size={18} className="dash-sc-icon" style={{ color: "#a18cd1" }} />
+        <span className="dash-sc-title">Sleep</span>
+      </div>
+      {hours != null ? (
+        <>
+          <div className="dash-sc-big">{hours}h</div>
+          <div className="dash-sc-sub" style={{ color: qualityColor[quality] || "var(--text-muted)" }}>
+            {quality}
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="dash-sc-big" style={{ fontSize: "1.1rem", color: "var(--text-muted)" }}>—</div>
+          <div className="dash-sc-sub">Tap to log</div>
+        </>
+      )}
+      <div className="dash-sc-hint">Last night</div>
+    </ScrollCard>
+  );
+};
+
+// Diet summary mini-widget
+const DietCard = ({ calories, protein, calorieGoal }) => {
+  const pct = Math.min(100, Math.round((calories / calorieGoal) * 100));
+  return (
+    <ScrollCard accent="#43e97b" linkTo="/diet">
+      <div className="dash-sc-header">
+        <RiLeafLine size={18} className="dash-sc-icon" style={{ color: "#43e97b" }} />
+        <span className="dash-sc-title">Diet</span>
+        <RiArrowRightLine size={13} className="dash-sc-arrow" />
+      </div>
+      <div className="dash-sc-big">{Math.round(calories)} kcal</div>
+      <div className="dash-sc-sub">{Math.round(protein)}g protein · goal {calorieGoal}</div>
+      <div className="dash-sc-bar-wrap">
+        <div className="dash-sc-bar" style={{ width: `${pct}%`, background: "#43e97b" }} />
+      </div>
+      <div className="dash-sc-pct">{pct}%</div>
+    </ScrollCard>
+  );
+};
+
+// Analytics card
+const AnalyticsCard = ({ workoutDays, calorieAvg }) => (
+  <ScrollCard accent="#f6d365" linkTo="/analytics">
+    <div className="dash-sc-header">
+      <RiLineChartLine size={18} className="dash-sc-icon" style={{ color: "#f6d365" }} />
+      <span className="dash-sc-title">Analytics</span>
+      <RiArrowRightLine size={13} className="dash-sc-arrow" />
+    </div>
+    <div className="dash-sc-big">{workoutDays ?? 0}d</div>
+    <div className="dash-sc-sub">workouts this month</div>
+    {calorieAvg > 0 && (
+      <div className="dash-sc-hint">{Math.round(calorieAvg)} kcal avg/day</div>
+    )}
+  </ScrollCard>
+);
+
+// ── Sleep log modal ──────────────────────────────────────────────────────────
+const SleepModal = ({ onClose, onSave }) => {
+  const [hours, setHours] = useState(7);
+  const [quality, setQuality] = useState("good");
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await onSave(hours, quality);
+      onClose();
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="dash-modal-overlay" onClick={onClose}>
+      <div className="dash-modal" onClick={(e) => e.stopPropagation()}>
+        <h3 className="dash-modal-title"><RiMoonLine size={16} /> Log Sleep</h3>
+        <div className="form-group">
+          <label className="form-label">Hours slept</label>
+          <input
+            className="form-input"
+            type="number"
+            min={0}
+            max={24}
+            step={0.5}
+            value={hours}
+            onChange={(e) => setHours(Number(e.target.value))}
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label">Quality</label>
+          <select
+            className="form-select"
+            value={quality}
+            onChange={(e) => setQuality(e.target.value)}
+          >
+            {["poor", "fair", "good", "excellent"].map((q) => (
+              <option key={q} value={q}>
+                {q.charAt(0).toUpperCase() + q.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="dash-modal-actions">
+          <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
+          <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
+            <RiCheckLine size={14} /> {saving ? "Saving…" : "Save"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── Main component ───────────────────────────────────────────────────────────
 const Dashboard = () => {
   const { user } = useAuth();
   const [analytics, setAnalytics] = useState(null);
   const [todayExercises, setTodayExercises] = useState([]);
+  const [todayDiet, setTodayDiet] = useState(null);
+  const [water, setWater] = useState({ totalMl: 0, goalMl: 2500, glassSize: 250 });
+  const [sleep, setSleep] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showSleepModal, setShowSleepModal] = useState(false);
 
-  useEffect(() => {
-    const today = new Date().toISOString().split("T")[0];
-    Promise.all([
-      api.get("/analytics/overview?days=30"),
-      api.get(`/exercise?date=${today}&limit=5`),
-    ])
-      .then(([a, e]) => {
-        setAnalytics(a.data);
-        setTodayExercises(e.data.exercises || []);
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
+  const today = todayISO();
 
-  const bmi = user
-    ? calculateBMI(user.weight, user.heightFeet, user.heightInches)
-    : null;
-  const bmiInfo = bmi ? getBMICategory(bmi) : null;
+  const fetchAll = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [a, e, d, w, s] = await Promise.allSettled([
+        api.get("/analytics/overview?days=30"),
+        api.get(`/exercise?date=${today}&limit=5`),
+        api.get(`/diet?date=${today}`),
+        api.get(`/water?date=${today}`),
+        api.get(`/sleep?date=${today}`),
+      ]);
+
+      if (a.status === "fulfilled") setAnalytics(a.value.data);
+      if (e.status === "fulfilled") setTodayExercises(e.value.data.exercises || []);
+      if (d.status === "fulfilled") setTodayDiet(d.value.data.diet || null);
+      if (w.status === "fulfilled") setWater(w.value.data);
+      if (s.status === "fulfilled") setSleep(s.value.data.log || null);
+    } catch {
+      // silently continue — partial data is fine
+    } finally {
+      setLoading(false);
+    }
+  }, [today]);
+
+  useEffect(() => { fetchAll(); }, [fetchAll]);
+
+  const handleAddWater = async () => {
+    try {
+      const { data } = await api.post("/water/add", {
+        date: today,
+        ml: water.glassSize,
+      });
+      setWater({ totalMl: data.totalMl, goalMl: data.goalMl, glassSize: data.glassSize });
+    } catch {
+      // no-op
+    }
+  };
+
+  const handleSaveSleep = async (hours, quality) => {
+    const { data } = await api.post("/sleep", { date: today, hours, quality });
+    setSleep(data.log);
+  };
 
   const hour = new Date().getHours();
-  const greeting =
-    hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+
+  // Calorie goal derived from user profile (simple TDEE estimation)
+  const calorieGoal = (() => {
+    if (!user?.weight || !user?.age) return 2200;
+    const heightCm = user.heightFeet
+      ? user.heightFeet * 30.48 + (user.heightInches || 0) * 2.54
+      : 170;
+    // Mifflin-St Jeor (male default, ×1.55 moderate activity)
+    const bmr = 10 * user.weight + 6.25 * heightCm - 5 * user.age + 5;
+    return Math.round(bmr * 1.55 / 50) * 50; // round to nearest 50
+  })();
+
+  const calorieAvg = (() => {
+    if (!analytics?.calorieHistory?.length) return 0;
+    const sum = analytics.calorieHistory.reduce((s, d) => s + (d.calories || 0), 0);
+    return sum / analytics.calorieHistory.length;
+  })();
 
   return (
     <div className="page-layout">
       <Sidebar />
+      <MobileHeader />
       <main className="page-content">
         {/* Header */}
         <div className="dash-header">
           <div>
             <h1 className="page-title">
-              {greeting},<br className="dash-break" />{" "}
-              {user?.name?.split(" ")[0]}
+              {greeting},<br className="dash-break" /> {user?.name?.split(" ")[0]}
             </h1>
-            <p className="page-subtitle">
-              {formatDate(new Date())} · Let's make it count.
-            </p>
+            <p className="page-subtitle">{formatDate(new Date())} · Let's make it count.</p>
           </div>
           {user?.streak > 0 && (
             <div className="dash-streak-pill">
@@ -317,99 +392,47 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* Bento Stats Grid */}
-        <motion.div
-          className="bento-grid"
-          variants={bentoContainer}
-          initial="hidden"
-          animate="visible"
-        >
-          <BentoCard
-            icon={RiWeightLine}
-            label="Total Exercises"
-            value={analytics?.totalExercises ?? "—"}
-            sub="all time"
-          />
-          <BentoCard
-            icon={RiCalendarCheckLine}
-            label="Active Days"
-            value={analytics?.workoutDays?.length ?? "—"}
-            sub="this month"
-          />
-          <BentoCard
-            icon={RiScales3Line}
-            label="BMI"
-            value={bmi ?? "—"}
-            sub={bmiInfo?.label || "add stats"}
-          />
-          <BentoCard
-            icon={RiFireLine}
-            label="Streak"
-            value={`${user?.streak ?? 0}d`}
-            sub="keep it up!"
-            dark
-          />
-        </motion.div>
-
-        {/* Body chips */}
-        {(user?.weight || user?.heightFeet) && (
-          <div className="dash-body-row">
-            {user.weight && (
-              <div className="dash-body-chip">
-                <RiBodyScanLine size={14} />
-                <span>{user.weight} kg</span>
-              </div>
-            )}
-            {user.heightFeet && (
-              <div className="dash-body-chip">
-                <RiHeartPulseLine size={14} />
-                <span>
-                  {user.heightFeet}'{user.heightInches || 0}"
-                </span>
-              </div>
-            )}
-            {bmi && (
-              <div
-                className="dash-body-chip"
-                style={{ borderColor: bmiInfo.color, color: bmiInfo.color }}
-              >
-                <RiScales3Line size={14} />
-                <span>
-                  BMI {bmi} · {bmiInfo.label}
-                </span>
-              </div>
-            )}
-          </div>
-        )}
+        {/* Bento — 2 cards: Total Exercises + Streak */}
+        <SummaryBento
+          totalExercises={analytics?.totalExercises}
+          streak={user?.streak}
+        />
 
         {/* Daily quote — mobile only */}
         <section className="dash-section dash-mobile-only">
           <QuoteCard />
         </section>
 
-        {/* Quick Actions — desktop only */}
-        <section className="dash-section dash-desktop-only">
-          <h2 className="dash-section-title">Quick Actions</h2>
-          <div className="dash-quick-grid">
-            <QuickBtn to="/exercises" icon={RiWeightLine} label="Log Workout" />
-            <QuickBtn to="/diet" icon={RiLeafLine} label="Track Meal" />
-            <QuickBtn
-              to="/supplements"
-              icon={RiCapsuleLine}
-              label="Log Supplement"
+        {/* Horizontal scroll cards */}
+        <section className="dash-section">
+          <h2 className="dash-section-title">Today's Overview</h2>
+          <motion.div
+            className="dash-scroll-row"
+            variants={stagger}
+            initial="hidden"
+            animate="visible"
+          >
+            <AnalyticsCard
+              workoutDays={analytics?.workoutDays?.length}
+              calorieAvg={calorieAvg}
             />
-            <QuickBtn
-              to="/analytics"
-              icon={RiLineChartLine}
-              label="Analytics"
+            <DietCard
+              calories={todayDiet?.totalCalories || 0}
+              protein={todayDiet?.totalProtein || 0}
+              calorieGoal={calorieGoal}
             />
-            <QuickBtn
-              to="/gym-plan"
-              icon={RiCalendarCheckLine}
-              label="My Plan"
+            <WaterCard
+              totalMl={water.totalMl}
+              goalMl={water.goalMl}
+              glassSize={water.glassSize}
+              onAdd={handleAddWater}
             />
-            <QuickBtn to="/profile" icon={RiUserLine} label="Profile" />
-          </div>
+            <SleepCard
+              hours={sleep?.hours}
+              quality={sleep?.quality}
+              onLog={() => setShowSleepModal(true)}
+            />
+          </motion.div>
         </section>
 
         {/* Leaderboard */}
@@ -417,7 +440,7 @@ const Dashboard = () => {
           <Leaderboard />
         </section>
 
-        {/* Today's Workouts */}
+        {/* Today's Exercises */}
         <section className="dash-section">
           <div className="dash-section-head">
             <h2 className="dash-section-title">Today's Exercises</h2>
@@ -426,16 +449,12 @@ const Dashboard = () => {
             </Link>
           </div>
           {loading ? (
-            <div className="dash-loading">Loading workout data…</div>
+            <div className="dash-loading">Loading…</div>
           ) : todayExercises.length === 0 ? (
             <div className="dash-empty-card">
               <RiWeightLine size={28} className="dash-empty-icon" />
               <p>No exercises logged today.</p>
-              <Link
-                to="/exercises"
-                className="btn btn-accent"
-                style={{ marginTop: 12, fontSize: "0.85rem" }}
-              >
+              <Link to="/exercises" className="btn btn-accent" style={{ marginTop: 12, fontSize: "0.85rem" }}>
                 Log your first set
               </Link>
             </div>
@@ -448,15 +467,12 @@ const Dashboard = () => {
                     <div>
                       <div className="dash-ex-name">{ex.name}</div>
                       {ex.muscleGroup && (
-                        <span className="badge badge-info">
-                          {ex.muscleGroup}
-                        </span>
+                        <span className="badge badge-info">{ex.muscleGroup}</span>
                       )}
                     </div>
                   </div>
                   <div className="dash-ex-meta">
-                    {ex.sets}×{ex.reps}
-                    {ex.weight ? ` @ ${ex.weight}kg` : ""}
+                    {ex.sets}×{ex.reps}{ex.weight ? ` @ ${ex.weight}kg` : ""}
                   </div>
                 </div>
               ))}
@@ -466,6 +482,13 @@ const Dashboard = () => {
 
         <Footer />
       </main>
+
+      {showSleepModal && (
+        <SleepModal
+          onClose={() => setShowSleepModal(false)}
+          onSave={handleSaveSleep}
+        />
+      )}
     </div>
   );
 };

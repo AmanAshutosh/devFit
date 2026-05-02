@@ -24,9 +24,13 @@ const MUSCLE_GROUPS = [
   "Shoulders",
   "Biceps",
   "Triceps",
+  "Forearms",
   "Legs",
   "Glutes",
+  "Abs",
   "Core",
+  "Cardio",
+  "Functional / Mobility",
   "Full Body",
 ];
 

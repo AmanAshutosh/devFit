@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import MobileHeader from "../../components/MobileHeader/MobileHeader";
 import {
   RiLeafLine,
@@ -748,6 +748,10 @@ const DietTracker = () => {
   const [success, setSuccess] = useState("");
   const [autoFilled, setAutoFilled] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [searching, setSearching] = useState(false);
+  const [apiSource, setApiSource] = useState(null);
+  const searchTimerRef = useRef(null);
 
   const fetchDiet = useCallback(async () => {
     setLoading(true);
@@ -765,21 +769,53 @@ const DietTracker = () => {
     fetchDiet();
   }, [fetchDiet]);
 
+  const triggerAPISearch = useCallback(
+    (foodName, quantity) => {
+      if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+      if (!foodName || foodName.trim().length < 2) {
+        setSearchResults([]);
+        return;
+      }
+      searchTimerRef.current = setTimeout(async () => {
+        setSearching(true);
+        try {
+          const qty = Number(quantity) || 100;
+          const { data } = await api.get(
+            `/nutrition/search?q=${encodeURIComponent(foodName.trim())}&qty=${qty}`,
+          );
+          setSearchResults(data.results || []);
+        } catch {
+          setSearchResults([]);
+        } finally {
+          setSearching(false);
+        }
+      }, 600);
+    },
+    [],
+  );
+
   const update = (field) => (e) => {
     const val = e.target.value;
     setForm((p) => {
       const next = { ...p, [field]: val };
       if (field === "foodName" || field === "quantity") {
         setAutoFilled(false);
+        setApiSource(null);
         if (field === "foodName") {
+          // Fast local suggestions from FOOD_DB
           const q = val.toLowerCase();
           setSuggestions(
             q.length > 1
               ? Object.keys(FOOD_DB)
                   .filter((k) => k.includes(q) || q.includes(k))
-                  .slice(0, 6)
+                  .slice(0, 4)
               : [],
           );
+          // Trigger USDA/OFF API search with debounce
+          triggerAPISearch(val, next.quantity);
+        }
+        if (field === "quantity") {
+          triggerAPISearch(next.foodName, val);
         }
         const name = field === "foodName" ? val : next.foodName;
         const qty = field === "quantity" ? Number(val) : Number(next.quantity);
@@ -793,6 +829,22 @@ const DietTracker = () => {
       }
       return next;
     });
+  };
+
+  const applyAPIResult = (food) => {
+    const s = food.scaled || {};
+    setForm((p) => ({
+      ...p,
+      foodName: food.name,
+      calories: Math.round(s.calories || 0),
+      protein: parseFloat((s.protein || 0).toFixed(1)),
+      carbs: parseFloat((s.carbs || 0).toFixed(1)),
+      fats: parseFloat((s.fats || 0).toFixed(1)),
+    }));
+    setAutoFilled(true);
+    setApiSource(food.source);
+    setSearchResults([]);
+    setSuggestions([]);
   };
 
   const applySuggestion = (name) => {
@@ -898,6 +950,8 @@ const DietTracker = () => {
               setForm(BLANK);
               setAutoFilled(false);
               setSuggestions([]);
+              setSearchResults([]);
+              setApiSource(null);
             }}
           >
             {showForm ? (
@@ -956,8 +1010,8 @@ const DietTracker = () => {
               <RiLeafLine size={16} /> Add Food Entry
             </h3>
             <div className="diet-auto-note">
-              <RiInformationLine size={13} /> Type any food name — macros
-              auto-fill from our 50+ food database.
+              <RiInformationLine size={13} /> Type a food name — macros
+              auto-fill from USDA FoodData Central &amp; Open Food Facts.
             </div>
             <form onSubmit={handleAdd}>
               <div className="diet-top-fields">
@@ -982,7 +1036,8 @@ const DietTracker = () => {
                       </span>
                     )}
                   </div>
-                  {suggestions.length > 0 && (
+                  {/* Local fast suggestions */}
+                  {suggestions.length > 0 && searchResults.length === 0 && (
                     <div className="diet-suggestions">
                       {suggestions.map((s) => (
                         <button
@@ -992,6 +1047,34 @@ const DietTracker = () => {
                           onClick={() => applySuggestion(s)}
                         >
                           {s.charAt(0).toUpperCase() + s.slice(1)}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {/* USDA / Open Food Facts API results */}
+                  {(searchResults.length > 0 || searching) && (
+                    <div className="diet-suggestions diet-suggestions--api">
+                      {searching && (
+                        <div className="diet-suggestion-searching">
+                          <RiRefreshLine size={12} className="spin" /> Searching USDA &amp; Open Food Facts…
+                        </div>
+                      )}
+                      {searchResults.map((food, i) => (
+                        <button
+                          key={food.fdcId || i}
+                          type="button"
+                          className="diet-suggestion-item diet-suggestion-item--api"
+                          onClick={() => applyAPIResult(food)}
+                        >
+                          <span className="diet-sugg-name">
+                            {food.name}
+                            {food.brand && (
+                              <span className="diet-sugg-brand"> · {food.brand}</span>
+                            )}
+                          </span>
+                          <span className={`diet-sugg-source diet-sugg-source--${food.source}`}>
+                            {food.source === "usda" ? "USDA" : "OFF"}
+                          </span>
                         </button>
                       ))}
                     </div>
@@ -1066,8 +1149,11 @@ const DietTracker = () => {
 
               {autoFilled && (
                 <div className="diet-autofill-info">
-                  <RiCheckLine size={12} /> Macros auto-filled. Edit any value
-                  if needed.
+                  <RiCheckLine size={12} /> Macros auto-filled
+                  {apiSource === "usda" && " from USDA FoodData Central"}
+                  {apiSource === "openfoodfacts" && " from Open Food Facts"}
+                  {!apiSource && " from local database"}
+                  . Edit any value if needed.
                 </div>
               )}
               <div className="diet-form-actions">
@@ -1077,6 +1163,8 @@ const DietTracker = () => {
                   onClick={() => {
                     setShowForm(false);
                     setSuggestions([]);
+                    setSearchResults([]);
+                    setApiSource(null);
                   }}
                 >
                   <RiCloseLine size={14} /> Cancel
