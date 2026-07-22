@@ -1,4 +1,4 @@
-# devFit 
+# devFit || GYM TRACKING 
 
 A modern, minimalist full-stack fitness tracking platform.
 
